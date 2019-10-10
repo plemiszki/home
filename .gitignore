@@ -1,0 +1,5 @@
+.DS_Store
+*.sw?
+.env
+__pycache__/
+/venv
