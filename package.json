@@ -1,0 +1,27 @@
+{
+  "name": "jarvis",
+  "scripts": {
+    "start": "NODE_ENV=development webpack --config webpack.config.development.js --watch",
+    "build:dev": "NODE_ENV=development webpack --config webpack.config.development.js",
+    "build:prod": "NODE_ENV=production webpack --config webpack.config.production.js"
+  },
+  "dependencies": {
+    "@babel/core": "^7.6.4",
+    "babel-loader": "^8.0.6",
+    "jquery": "^3.4.1",
+    "jquery-ui": "^1.12.1",
+    "react": "^16.10.2",
+    "react-dom": "^16.10.2",
+    "react-modal": "^3.10.1",
+    "react-redux": "^7.1.1",
+    "redux": "^4.0.4",
+    "redux-thunk": "^2.3.0",
+    "webpack": "^4.41.1"
+  },
+  "devDependencies": {
+    "webpack-cli": "^3.3.9"
+  },
+  "engines": {
+    "node": "10.16.3"
+  }
+}
