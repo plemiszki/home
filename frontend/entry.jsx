@@ -21,15 +21,20 @@ $(document).ready(() => {
     };
   })
 
-  if (document.querySelector('#favorites-index')) {
+  window.Errors = {
+    album: [
+      "Album can't be blank"
+    ]
+  }
+
+  if (document.querySelector('#albums-index')) {
     ReactDOM.render(
       <Provider context={ MyContext } store={ store }>
         <StandardIndex
           context={ MyContext }
-          entityName='favorite'
+          entityName='album'
           columns={ ['artistName', 'name'] }
           columnHeaders={ ['Artist', 'Album'] }
-          modalRows={ 2 }
           modalDimensions={ { width: 900 } }
         >
           <NewEntity
@@ -38,7 +43,7 @@ $(document).ready(() => {
           />
         </StandardIndex>
       </Provider>,
-      document.querySelector('#favorites-index')
+      document.querySelector('#albums-index')
     );
   }
 });
