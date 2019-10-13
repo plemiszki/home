@@ -13,11 +13,11 @@ def play():
     return render_template('play.html')
 
 @app.route('/albums')
-def favorites():
-    return render_template('albums.html')
+def albums_index():
+    return render_template('albums_index.html')
 
 @app.route('/api/albums', methods=['GET', 'POST'])
-def api_index():
+def api_albums_index():
     if request.method == 'POST':
         artist_name = request.form['album[artist_name]']
         name = request.form['album[name]']
@@ -33,4 +33,30 @@ def api_index():
         album_dicts.append(dict)
     result = {}
     result['albums'] = to_camel_case(album_dicts)
+    return result
+
+@app.route('/albums/<album_id>')
+def album_details(album_id):
+    return render_template('album_details.html')
+
+@app.route('/api/albums/<album_id>', methods=['GET', 'PATCH', 'DELETE'])
+def api_album_details(album_id):
+    if request.method == 'DELETE':
+        album = Album.query.get(album_id)
+        db.session.delete(album)
+        db.session.commit()
+        return 'ok'
+    elif request.method == 'PATCH':
+        album = Album.query.get(album_id)
+        album.artist_name = request.form['album[artist_name]']
+        album.name = request.form['album[name]']
+        album.order = request.form['album[order]']
+        db.session.commit()
+    album = Album.query.get(album_id)
+    album_dict = album.__dict__
+    del album_dict['_sa_instance_state']
+    for keys in album_dict:
+        album_dict[keys] = str(album_dict[keys])
+    result = {}
+    result['album'] = to_camel_case(album_dict)
     return result

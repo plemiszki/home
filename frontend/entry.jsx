@@ -21,11 +21,7 @@ $(document).ready(() => {
     };
   })
 
-  window.Errors = {
-    album: [
-      "Album can't be blank"
-    ]
-  }
+  window.Errors = {}
 
   if (document.querySelector('#albums-index')) {
     ReactDOM.render(
@@ -44,6 +40,24 @@ $(document).ready(() => {
         </StandardIndex>
       </Provider>,
       document.querySelector('#albums-index')
+    );
+  }
+
+  if (document.querySelector('#album-details')) {
+    ReactDOM.render(
+      <Provider context={ MyContext } store={ store }>
+        <SimpleDetails
+          context={ MyContext }
+          entityName='album'
+          initialEntity={ { artistName: '', name: '' } }
+          fields={ [[
+            { columnWidth: 5, entity: 'album', property: 'artistName' },
+            { columnWidth: 5, entity: 'album', property: 'name' },
+            { columnWidth: 2, entity: 'album', property: 'order' }
+          ]] }
+        />
+      </Provider>,
+      document.querySelector('#album-details')
     );
   }
 });
