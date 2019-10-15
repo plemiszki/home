@@ -7,3 +7,47 @@ $imgpath: '/static/images';
 @import '../../node_modules/handy-tools/styles/buttons';
 @import '../../node_modules/handy-components/styles/admin-layout';
 @import '../../node_modules/handy-components/styles/admin-table';
+
+body.homepage {
+  background-color: black;
+
+  div.link-container {
+    display: inline-block;
+    width: 33%;
+    text-align: center;
+
+    a {
+      margin-top: 40px;
+      display: inline-block;
+      background-color: black;
+      padding: 40px;
+      text-align: center;
+      border: solid 1px gray;
+      width: 75%;
+      vertical-align: middle;
+
+      h1 {
+        font-family: 'TeachableSans-Regular';
+        font-size: 30px;
+        color: white;
+        line-height: 40px;
+        padding-bottom: 10px;
+      }
+
+      p {
+        font-family: 'TeachableSans-Bold';
+        color: green;
+        font-size: 20px;
+      }
+
+      &:active {
+        background-color: green;
+        border: solid 1px black;
+
+        h1, p {
+          color: black;
+        }
+      }
+    }
+  }
+}

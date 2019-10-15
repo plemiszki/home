@@ -1,5 +1,14 @@
 {% extends "layout.html" %}
 
 {% block content %}
-  homepage
+  <body class="homepage">
+    {% for album in albums %}
+      <div class="link-container">
+        <a href="/play/{{ album.id }}">
+          <h1>{{ album.name }}</h1>
+          <p>{{ album.artist_name }}</p>
+        </a>
+      </div>
+    {% endfor %}
+  </body>
 {% endblock %}

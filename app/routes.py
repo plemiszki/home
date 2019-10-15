@@ -6,7 +6,8 @@ from to_camel_case import to_camel_case
 @app.route('/')
 @app.route('/home')
 def home():
-    return render_template('home.html')
+    albums = Album.query.order_by('artist_name', 'name').all()
+    return render_template('home.html', albums=albums)
 
 @app.route('/play')
 def play():
