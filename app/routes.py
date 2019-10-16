@@ -9,9 +9,10 @@ def home():
     albums = Album.query.order_by('artist_name', 'name').all()
     return render_template('home.html', albums=albums)
 
-@app.route('/play')
-def play():
-    return render_template('play.html')
+@app.route('/play/<album_id>')
+def play(album_id):
+    album = Album.query.get(album_id)
+    return render_template('play.html', album=album)
 
 @app.route('/albums')
 def albums_index():

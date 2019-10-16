@@ -1,5 +1,12 @@
 {% extends "layout.html" %}
 
 {% block content %}
-  play page
+  <body class="play">
+    <a class="back-arrow" href="/">
+      <img src="/static/images/green-arrow.png" />
+    </a>
+    <h2>Playing</h2>
+    <h1>{{ album.name }}</h1>
+    <p>{{ album.artist_name }}</p>
+  </body>
 {% endblock %}
