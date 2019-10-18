@@ -16,7 +16,7 @@ def play(album_id):
     music_directory = os.getenv('MUSIC_DIRECTORY')
     filenames = os.listdir(f"{music_directory}/{album.artist_name}/{album.name}")
     filenames.sort()
-    os.system(f"omxplayer {music_directory}/{album.artist_name}/{album.name}/'{filenames[0]}'")
+    os.system(f"omxplayer '{music_directory}/{album.artist_name}/{album.name}/{filenames[0]}'")
     return render_template('play.html', album=album)
 
 @app.route('/albums')
