@@ -3,6 +3,7 @@ from app import app, db
 from flask import render_template, jsonify, request
 from app.models import Album
 from to_camel_case import to_camel_case
+from subprocess import Popen
 
 @app.route('/')
 @app.route('/home')
@@ -16,7 +17,7 @@ def play(album_id):
     music_directory = os.getenv('MUSIC_DIRECTORY')
     filenames = os.listdir(f"{music_directory}/{album.artist_name}/{album.name}")
     filenames.sort()
-    os.system(f"omxplayer '{music_directory}/{album.artist_name}/{album.name}/{filenames[0]}'")
+    process = Popen(['omxplayer', f"{music_directory}/{album.artist_name}/{album.name}/{filenames[0]}"])
     return render_template('play.html', album=album)
 
 @app.route('/albums')
