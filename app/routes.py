@@ -13,6 +13,10 @@ def home():
 @app.route('/play/<album_id>')
 def play(album_id):
     album = Album.query.get(album_id)
+    music_directory = os.getenv('MUSIC_DIRECTORY')
+    filenames = os.listdir(f"{music_directory}/{album.artist_name}/{album.name}")
+    filenames.sort()
+    os.system(f"omxplayer '{filenames[0]}'")
     return render_template('play.html', album=album)
 
 @app.route('/albums')
