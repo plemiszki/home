@@ -4,6 +4,8 @@ from flask import render_template, jsonify, request
 from app.models import Album
 from to_camel_case import to_camel_case
 from subprocess import Popen
+from flask_redis import FlaskRedis
+redis_client = FlaskRedis(app)
 
 @app.route('/')
 @app.route('/home')
@@ -13,11 +15,19 @@ def home():
 
 @app.route('/play/<album_id>')
 def play(album_id):
+    # stop any playing songs
+    process_ids = list(redis_client.smembers('processes'))
+    for process_id in process_ids:
+        process_id = process_id.decode("utf-8")
+        Popen(['kill', '-9', process_id])
+    redis_client.delete('processes')
+    # play first song
     album = Album.query.get(album_id)
     music_directory = os.getenv('MUSIC_DIRECTORY')
     filenames = os.listdir(f"{music_directory}/{album.artist_name}/{album.name}")
     filenames.sort()
-    process = Popen(['omxplayer', f"{music_directory}/{album.artist_name}/{album.name}/{filenames[0]}"])
+    process_id = Popen(['omxplayer', f"{music_directory}/{album.artist_name}/{album.name}/{filenames[0]}"]).pid
+    redis_client.sadd('processes', process_id)
     return render_template('play.html', album=album)
 
 @app.route('/albums')
