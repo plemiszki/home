@@ -79,3 +79,10 @@ def api_album_details(album_id):
     result = {}
     result['album'] = to_camel_case(album_dict)
     return result
+
+@app.route('/api/status', methods=['GET'])
+def api_status():
+    process_id = list(redis_client.smembers('processes'))[0]
+    process_id = process_id.decode("utf-8")
+    child_process_id = os.popen(f"ps --ppid {process_id} -o pid=").read().split("\n")[0].strip()
+    return child_process_id

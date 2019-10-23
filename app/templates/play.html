@@ -1,6 +1,18 @@
 {% extends "layout.html" %}
 
 {% block content %}
+  <script>
+    var xhr = new XMLHttpRequest();
+    window.setInterval(() => {
+      xhr.open('GET', '/api/status');
+      xhr.onload = function() {
+        if (xhr.readyState === xhr.DONE) {
+          console.log(xhr.responseText);
+        }
+      };
+      xhr.send();
+    }, 1000)
+  </script>
   <body class="play">
     <a class="back-arrow" href="/">
       <img src="/static/images/green-arrow.png" />
