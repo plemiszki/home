@@ -29,6 +29,8 @@ def play(album_id):
     filenames.sort()
     process_id = Popen(['omxplayer', f"{music_directory}/{album.artist_name}/{album.name}/{filenames[0]}"]).pid
     redis_client.sadd('processes', process_id)
+    redis_client.set('album_id', album.id)
+    redis_client.set('track', 1)
     return render_template('play.html', album=album)
 
 @app.route('/albums')
@@ -85,4 +87,17 @@ def api_status():
     process_id = list(redis_client.smembers('processes'))[0]
     process_id = process_id.decode("utf-8")
     child_process_id = os.popen(f"ps --ppid {process_id} -o pid=").read().split("\n")[0].strip()
-    return child_process_id
+    if child_process_id:
+        return 'still playing'
+    else:
+        album_id = redis_client.get('album_id')
+        album = Album.query.get(album_id)
+        music_directory = os.getenv('MUSIC_DIRECTORY')
+        filenames = os.listdir(f"{music_directory}/{album.artist_name}/{album.name}")
+        filenames.sort()
+        track = redis_client.get('track')
+        track += 1
+        if filenames[track - 1]:
+            return filenames[track - 1]
+        else:
+            return 'album is over!'
