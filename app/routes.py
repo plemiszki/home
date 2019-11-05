@@ -100,7 +100,9 @@ def api_status():
         try:
             next_song_file = filenames[track - 1]
             process_id = Popen(['omxplayer', f"{music_directory}/{album.artist_name}/{album.name}/{next_song_file}"]).pid
+            redis_client.delete('processes')
             redis_client.sadd('processes', process_id)
             redis_client.set('track', track)
+            return 'playing next song'
         except IndexError:
             return 'album is over!'
