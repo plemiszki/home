@@ -89,5 +89,33 @@ body.play {
     font-family: 'TeachableSans-Bold';
     color: green;
     font-size: 20px;
+    margin-bottom: 30px;
+  }
+
+  table {
+    margin: auto;
+    font-family: 'TeachableSans-Regular';
+    font-size: 20px;
+    color: gray;
+    border: solid 1px gray;
+    border-radius: 10px;
+    width: 60%;
+
+    td {
+      padding: 20px 0;
+      text-align: center;
+
+      &.playing {
+        color: white;
+      }
+    }
+
+    tr:first-of-type td {
+      padding-top: 40px;
+    }
+
+    tr:last-of-type td {
+      padding-bottom: 40px;
+    }
   }
 }

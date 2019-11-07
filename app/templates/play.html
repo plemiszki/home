@@ -1,18 +1,6 @@
 {% extends "layout.html" %}
 
 {% block content %}
-  <script>
-    var xhr = new XMLHttpRequest();
-    window.setInterval(() => {
-      xhr.open('GET', '/api/status');
-      xhr.onload = function() {
-        if (xhr.readyState === xhr.DONE) {
-          console.log(xhr.responseText);
-        }
-      };
-      xhr.send();
-    }, 1000)
-  </script>
   <body class="play">
     <a class="back-arrow" href="/">
       <img src="/static/images/green-arrow.png" />
@@ -20,5 +8,10 @@
     <h2>Playing</h2>
     <h1>{{ album.name }}</h1>
     <p>{{ album.artist_name }}</p>
+    <table>
+      {% for song_title in song_titles %}
+        <tr><td class="{{ "playing" if loop.index0 == 0 else ""  }}" data-track="{{ loop.index }}">{{ song_title }}</td></tr>
+      {% endfor %}
+    </table>
   </body>
 {% endblock %}

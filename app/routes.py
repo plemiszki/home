@@ -1,4 +1,5 @@
 import os
+import json
 from app import app, db
 from flask import render_template, jsonify, request
 from app.models import Album
@@ -27,11 +28,62 @@ def play(album_id):
     music_directory = os.getenv('MUSIC_DIRECTORY')
     filenames = os.listdir(f"{music_directory}/{album.artist_name}/{album.name}")
     filenames.sort()
+    song_titles = map(lambda song_title: song_title.split('.')[0][2:], filenames)
     process_id = Popen(['omxplayer', f"{music_directory}/{album.artist_name}/{album.name}/{filenames[0]}"]).pid
     redis_client.sadd('processes', process_id)
     redis_client.set('album_id', album.id)
     redis_client.set('track', 1)
-    return render_template('play.html', album=album)
+    return render_template('play.html', album=album, song_titles=song_titles)
+
+# play page api:
+
+@app.route('/api/play_song', methods=['POST'])
+def api_play_song():
+    request_body = json.loads(request.get_data().decode("utf-8"))
+    track = request_body['track']
+    process_ids = list(redis_client.smembers('processes'))
+    for process_id in process_ids:
+        process_id = process_id.decode("utf-8")
+        child_process_id = os.popen(f"ps --ppid {process_id} -o pid=").read().split("\n")[0].strip()
+        os.system(f"kill -9 {child_process_id}")
+    redis_client.delete('processes')
+    album_id = redis_client.get('album_id').decode('utf-8')
+    album = Album.query.get(album_id)
+    music_directory = os.getenv('MUSIC_DIRECTORY')
+    filenames = os.listdir(f"{music_directory}/{album.artist_name}/{album.name}")
+    filenames.sort()
+    song_titles = map(lambda song_title: song_title.split('.')[0][2:], filenames)
+    process_id = Popen(['omxplayer', f"{music_directory}/{album.artist_name}/{album.name}/{filenames[0]}"]).pid
+    redis_client.sadd('processes', process_id)
+    redis_client.set('track', track)
+    return 'OK'
+
+@app.route('/api/status', methods=['GET'])
+def api_status():
+    process_id = list(redis_client.smembers('processes'))[0]
+    process_id = process_id.decode("utf-8")
+    child_process_id = os.popen(f"ps --ppid {process_id} -o pid=").read().split("\n")[0].strip()
+    if child_process_id:
+        return 'still playing'
+    else:
+        album_id = redis_client.get('album_id').decode('utf-8')
+        album = Album.query.get(album_id)
+        music_directory = os.getenv('MUSIC_DIRECTORY')
+        filenames = os.listdir(f"{music_directory}/{album.artist_name}/{album.name}")
+        filenames.sort()
+        track = int(redis_client.get('track').decode('utf-8'))
+        track += 1
+        try:
+            next_song_file = filenames[track - 1]
+            process_id = Popen(['omxplayer', f"{music_directory}/{album.artist_name}/{album.name}/{next_song_file}"]).pid
+            redis_client.delete('processes')
+            redis_client.sadd('processes', process_id)
+            redis_client.set('track', track)
+            return 'playing next song'
+        except IndexError:
+            return 'album is over!'
+
+# admin area:
 
 @app.route('/albums')
 def albums_index():
@@ -81,28 +133,3 @@ def api_album_details(album_id):
     result = {}
     result['album'] = to_camel_case(album_dict)
     return result
-
-@app.route('/api/status', methods=['GET'])
-def api_status():
-    process_id = list(redis_client.smembers('processes'))[0]
-    process_id = process_id.decode("utf-8")
-    child_process_id = os.popen(f"ps --ppid {process_id} -o pid=").read().split("\n")[0].strip()
-    if child_process_id:
-        return 'still playing'
-    else:
-        album_id = redis_client.get('album_id').decode('utf-8')
-        album = Album.query.get(album_id)
-        music_directory = os.getenv('MUSIC_DIRECTORY')
-        filenames = os.listdir(f"{music_directory}/{album.artist_name}/{album.name}")
-        filenames.sort()
-        track = int(redis_client.get('track').decode('utf-8'))
-        track += 1
-        try:
-            next_song_file = filenames[track - 1]
-            process_id = Popen(['omxplayer', f"{music_directory}/{album.artist_name}/{album.name}/{next_song_file}"]).pid
-            redis_client.delete('processes')
-            redis_client.sadd('processes', process_id)
-            redis_client.set('track', track)
-            return 'playing next song'
-        except IndexError:
-            return 'album is over!'
