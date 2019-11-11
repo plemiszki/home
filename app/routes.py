@@ -79,9 +79,9 @@ def api_status():
             redis_client.delete('processes')
             redis_client.sadd('processes', process_id)
             redis_client.set('track', track)
-            return 'playing next song'
+            return 'next track'
         except IndexError:
-            return 'album is over!'
+            return 'next album'
 
 # admin area:
 
