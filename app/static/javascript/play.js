@@ -40,7 +40,7 @@ Play = {
           case 'next track':
             let lastTrack = parseInt(document.querySelector('.playing').dataset.track, 10);
             let nextTrack = lastTrack + 1;
-            Login.removeHighlight();
+            Play.removeHighlight();
             // add playing class to next song
             break;
           case 'next album':
