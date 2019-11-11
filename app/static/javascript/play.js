@@ -41,7 +41,7 @@ Play = {
             let lastTrack = parseInt(document.querySelector('.playing').dataset.track, 10);
             let nextTrack = lastTrack + 1;
             Play.removeHighlight();
-            // add playing class to next song
+            document.querySelectorAll('td')[nextTrack - 1].classList.add('playing')
             break;
           case 'next album':
             console.log('play next album');
