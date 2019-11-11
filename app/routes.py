@@ -40,7 +40,7 @@ def play(album_id):
 @app.route('/api/play_song', methods=['POST'])
 def api_play_song():
     request_body = json.loads(request.get_data().decode("utf-8"))
-    track = request_body['track']
+    track = int(request_body['track'])
     process_ids = list(redis_client.smembers('processes'))
     for process_id in process_ids:
         process_id = process_id.decode("utf-8")
@@ -53,7 +53,7 @@ def api_play_song():
     filenames = os.listdir(f"{music_directory}/{album.artist_name}/{album.name}")
     filenames.sort()
     song_titles = map(lambda song_title: song_title.split('.')[0][2:], filenames)
-    process_id = Popen(['omxplayer', f"{music_directory}/{album.artist_name}/{album.name}/{filenames[track]}"]).pid
+    process_id = Popen(['omxplayer', f"{music_directory}/{album.artist_name}/{album.name}/{filenames[track - 1]}"]).pid
     redis_client.sadd('processes', process_id)
     redis_client.set('track', track)
     return 'OK'
