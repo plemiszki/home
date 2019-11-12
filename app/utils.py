@@ -1,3 +1,4 @@
+import os
 from app import app
 from flask_redis import FlaskRedis
 redis_client = FlaskRedis(app)
