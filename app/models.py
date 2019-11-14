@@ -18,6 +18,9 @@ class Album(db.Model):
                         record = Album.query.filter_by(artist_name=artist_folder).filter_by(name=album_folder).first()
                         if record == None:
                             print(f"adding {artist_folder}: {album_folder}")
+                            new_album = Album(artist_name=artist_folder, name=album_folder, order=0)
+                            db.session.add(new_album)
+                            db.session.commit()
 
     def __repr__(self):
         return '<Album - {}>'.format(self.name)
