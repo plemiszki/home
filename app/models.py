@@ -7,8 +7,8 @@ class Album(db.Model):
     artist_name = db.Column(db.String(128), nullable=False)
     order = db.Column(db.Integer, nullable=False)
 
-    def add_songs_to_database():
-        music_directory = './music'
+    def update_db():
+        music_directory = '/mnt/seagate/music'
         artist_folders = os.listdir(f"{music_directory}")
         for artist_folder in artist_folders:
             if artist_folder != '.DS_Store':
