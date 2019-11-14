@@ -16,7 +16,7 @@ class Album(db.Model):
                 for album_folder in album_folders:
                     if album_folder != '.DS_Store':
                         record = Album.query.filter_by(artist_name=artist_folder).filter_by(name=album_folder).first()
-                        if record != None:
+                        if record == None:
                             print(f"adding {artist_folder}: {album_folder}")
 
     def __repr__(self):
