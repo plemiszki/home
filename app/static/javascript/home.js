@@ -15,9 +15,13 @@ Home = {
   },
 
   clickRandom() {
-    let totalAlbums = document.querySelectorAll('.album').length;
-    let selectedId = Math.floor(Math.random() * (totalAlbums)) + 1;
-    window.location.pathname = `/play/${selectedId}`;
+    let albumIds = [];
+    let albumButtons = document.querySelectorAll('.album');
+    for (let i = 0; i < albumButtons.length; i++) {
+      albumIds.push(albumButtons[i].dataset.id);
+    }
+    let randomId = albumIds[Math.floor(Math.random() * albumIds.length)];
+    window.location.pathname = `/play/${randomId}`;
   },
 
   clickAlbum(e) {

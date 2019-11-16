@@ -1,3 +1,4 @@
+# /etc/lightdm/lightdm.conf
 import os
 import json
 from app import app, db
