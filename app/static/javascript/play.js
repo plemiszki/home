@@ -35,11 +35,16 @@ Play = {
     var xhr = new XMLHttpRequest();
     xhr.open('GET', '/api/status');
     xhr.onload = () => {
-      if (xhr.readyState === xhr.DONE && xhr.responseText === 'next track') {
-        let lastTrack = parseInt(document.querySelector('.playing').dataset.track, 10);
-        let nextTrack = lastTrack + 1;
-        Play.removeHighlight();
-        document.querySelectorAll('td')[nextTrack - 1].classList.add('playing');
+      if (xhr.readyState === xhr.DONE) {
+        let response = JSON.parse(xhr.response);
+        if (response.message === 'next track') {
+          let lastTrack = parseInt(document.querySelector('.playing').dataset.track, 10);
+          let nextTrack = lastTrack + 1;
+          Play.removeHighlight();
+          document.querySelectorAll('td')[nextTrack - 1].classList.add('playing');
+        } else if (response.message === 'next album') {
+          window.location.pathname = `/play/${response.albumId}`;
+        }
       }
     };
     xhr.send();

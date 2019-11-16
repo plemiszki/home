@@ -61,7 +61,7 @@ def api_status():
     process_id = process_id.decode("utf-8")
     child_process_id = os.popen(f"ps --ppid {process_id} -o pid=").read().split("\n")[0].strip()
     if child_process_id:
-        return 'still playing'
+        return { 'message': 'still playing' }
     else:
         album_id = redis_client.get('album_id').decode('utf-8')
         album = Album.query.get(album_id)
@@ -76,11 +76,11 @@ def api_status():
             redis_client.delete('processes')
             redis_client.sadd('processes', process_id)
             redis_client.set('track', track)
-            return 'next track'
+            return { 'message': 'next track' }
         except IndexError:
             albums = Album.query.filter(Album.id != album_id).all()
             random_album = random.choice(albums)
-            return redirect(f"/play/{random_album.id}")
+            return { 'message': 'next album', 'albumId': random_album.id }
 
 # admin area:
 
