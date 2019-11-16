@@ -1,13 +1,17 @@
 {% extends "layout.html" %}
 
 {% block content %}
+
   <body class="homepage">
+    <div class="link-container">
+      <div id="random-album"></div>
+    </div>
     {% for album in albums %}
       <div class="link-container">
-        <a href="/play/{{ album.id }}">
+        <div class="album" data-id="{{ album.id }}">
           <h1>{{ album.name }}</h1>
           <p>{{ album.artist_name }}</p>
-        </a>
+        </div>
       </div>
     {% endfor %}
   </body>

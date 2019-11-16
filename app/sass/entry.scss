@@ -15,8 +15,18 @@ body.homepage {
     display: inline-block;
     width: 33%;
     text-align: center;
+    user-select: none;
+    vertical-align: middle;
 
-    a {
+    div#random-album {
+      background-image: url('/static/images/random.svg');
+      width: 200px;
+      height: 200px;
+      margin: auto;
+      margin-top: 40px;
+    }
+
+    div.album {
       margin-top: 40px;
       display: inline-block;
       background-color: black;
