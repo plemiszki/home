@@ -25,7 +25,7 @@ def play(album_id):
     music_directory = os.getenv('MUSIC_DIRECTORY')
     filenames = os.listdir(f"{music_directory}/{album.artist_name}/{album.name}")
     filenames.sort()
-    song_titles = map(lambda song_title: " ".join(song_title.split('.')[0].split(' ')[1:]), filenames)
+    song_titles = map(lambda song_title: ' '.join('.'.join(song_title.split('.')[:-1]).split(' ')[1:]), filenames)
     process_id = Popen(['omxplayer', f"{music_directory}/{album.artist_name}/{album.name}/{filenames[0]}"]).pid
     redis_client.sadd('processes', process_id)
     redis_client.set('album_id', album.id)
