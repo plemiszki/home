@@ -1,6 +1,7 @@
 # /etc/lightdm/lightdm.conf
 import os
 import json
+import random
 from app import app, db
 from flask import render_template, jsonify, request
 from app.utils import stop_everything
@@ -77,7 +78,9 @@ def api_status():
             redis_client.set('track', track)
             return 'next track'
         except IndexError:
-            return 'next album'
+            albums = Album.query.filter(Album.id != album_id).all()
+            random_album = random.choice(albums)
+            return redirect(f"/play/{random_album.id}")
 
 # admin area:
 
