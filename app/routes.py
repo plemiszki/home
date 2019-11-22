@@ -26,7 +26,7 @@ def play(album_id):
     filenames = os.listdir(f"{music_directory}/{album.artist_name}/{album.name}")
     filenames.sort()
     song_titles = map(lambda song_title: ' '.join('.'.join(song_title.split('.')[:-1]).split(' ')[1:]), filenames)
-    process_id = Popen(['omxplayer', f"{music_directory}/{album.artist_name}/{album.name}/{filenames[0]}"]).pid
+    process_id = Popen(['omxplayer', '-o', 'local', f"{music_directory}/{album.artist_name}/{album.name}/{filenames[0]}"]).pid
     redis_client.sadd('processes', process_id)
     redis_client.set('album_id', album.id)
     redis_client.set('track', 1)
@@ -50,7 +50,7 @@ def api_play_song():
     filenames = os.listdir(f"{music_directory}/{album.artist_name}/{album.name}")
     filenames.sort()
     song_titles = map(lambda song_title: song_title.split('.')[0][2:], filenames)
-    process_id = Popen(['omxplayer', f"{music_directory}/{album.artist_name}/{album.name}/{filenames[track - 1]}"]).pid
+    process_id = Popen(['omxplayer', '-o', 'local', f"{music_directory}/{album.artist_name}/{album.name}/{filenames[track - 1]}"]).pid
     redis_client.sadd('processes', process_id)
     redis_client.set('track', track)
     return 'OK'
@@ -72,7 +72,7 @@ def api_status():
         track += 1
         try:
             next_song_file = filenames[track - 1]
-            process_id = Popen(['omxplayer', f"{music_directory}/{album.artist_name}/{album.name}/{next_song_file}"]).pid
+            process_id = Popen(['omxplayer', '-o', 'local', f"{music_directory}/{album.artist_name}/{album.name}/{next_song_file}"]).pid
             redis_client.delete('processes')
             redis_client.sadd('processes', process_id)
             redis_client.set('track', track)
