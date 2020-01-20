@@ -21,7 +21,7 @@ AlbumSelect = {
       albumIds.push(albumButtons[i].dataset.id);
     }
     let randomId = albumIds[Math.floor(Math.random() * albumIds.length)];
-    window.location.pathname = `/play/${randomId}`;
+    window.location.pathname = `/music/play/${randomId}`;
   },
 
   clickAlbum(e) {
@@ -30,6 +30,6 @@ AlbumSelect = {
       target = e.target.parentElement;
     }
     let albumId = target.dataset.id;
-    window.location.pathname = `/play/${albumId}`;
+    window.location.pathname = `/music/play/${albumId}`;
   }
 }

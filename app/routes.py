@@ -27,7 +27,7 @@ def music_classical():
     albums = Album.query.order_by('artist_name', 'name').all()
     return render_template('public/music/classical.html', albums=albums)
 
-@app.route('/public/music/play/<album_id>')
+@app.route('/music/play/<album_id>')
 def play(album_id):
     stop_everything()
     album = Album.query.get(album_id)
