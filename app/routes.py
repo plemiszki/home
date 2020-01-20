@@ -39,7 +39,7 @@ def play(album_id):
     redis_client.sadd('processes', process_id)
     redis_client.set('album_id', album.id)
     redis_client.set('track', 1)
-    return render_template('play.html', album=album, song_titles=song_titles)
+    return render_template('/public/music/play.html', album=album, song_titles=song_titles)
 
 # public apis:
 
