@@ -22,7 +22,32 @@ div.menu-button {
   background-position: 50%;
 }
 
-body.homepage {
+body.menu {
+  background-color: black;
+
+  div.inner {
+    position: absolute;
+    top: calc(50% - 200px);
+    width: 100%;
+  }
+
+  div.guitar, div.violin {
+    display: block;
+    width: 400px;
+    height: 400px;
+    margin: auto;
+  }
+
+  div.guitar {
+    background-image: url('/static/images/guitar.svg');
+  }
+
+  div.violin {
+    background-image: url('/static/images/violin.svg');
+  }
+}
+
+body.album-select {
   background-color: black;
   padding-bottom: 40px;
 

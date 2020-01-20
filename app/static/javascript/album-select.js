@@ -1,16 +1,16 @@
 window.addEventListener('DOMContentLoaded', () => {
-  if (window.location.pathname === '/' || window.location.pathname === '/home') {
-    Home.initialize();
+  if (window.location.pathname.slice(0, 6) === '/music' && window.location.pathname.indexOf('/play/') === -1) {
+    AlbumSelect.initialize();
   }
 });
 
-Home = {
+AlbumSelect = {
 
   initialize() {
-    document.getElementById('random-album').addEventListener('click', Home.clickRandom);
+    document.getElementById('random-album').addEventListener('click', AlbumSelect.clickRandom);
     let albumButtons = document.querySelectorAll('.album');
     for (let i = 0; i < albumButtons.length; i++) {
-      albumButtons[i].addEventListener('click', Home.clickAlbum);
+      albumButtons[i].addEventListener('click', AlbumSelect.clickAlbum);
     }
   },
 

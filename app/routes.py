@@ -12,13 +12,22 @@ from flask_redis import FlaskRedis
 redis_client = FlaskRedis(app)
 
 @app.route('/')
-@app.route('/home')
 def home():
+    return render_template('public/home.html')
+
+@app.route('/music/modern')
+def music_modern():
     stop_everything()
     albums = Album.query.order_by('artist_name', 'name').all()
-    return render_template('home.html', albums=albums)
+    return render_template('public/music/modern.html', albums=albums)
 
-@app.route('/play/<album_id>')
+@app.route('/music/classical')
+def music_classical():
+    stop_everything()
+    albums = Album.query.order_by('artist_name', 'name').all()
+    return render_template('public/music/classical.html', albums=albums)
+
+@app.route('/public/music/play/<album_id>')
 def play(album_id):
     stop_everything()
     album = Album.query.get(album_id)
@@ -32,7 +41,7 @@ def play(album_id):
     redis_client.set('track', 1)
     return render_template('play.html', album=album, song_titles=song_titles)
 
-# play page api:
+# public apis:
 
 @app.route('/api/play_song', methods=['POST'])
 def api_play_song():
@@ -84,9 +93,9 @@ def api_status():
 
 # admin area:
 
-@app.route('/albums')
+@app.route('/admin/albums')
 def albums_index():
-    return render_template('albums_index.html')
+    return render_template('admin/albums_index.html')
 
 @app.route('/api/albums', methods=['GET', 'POST'])
 def api_albums_index():
@@ -107,9 +116,9 @@ def api_albums_index():
     result['albums'] = to_camel_case(album_dicts)
     return result
 
-@app.route('/albums/<album_id>')
+@app.route('/admin/albums/<album_id>')
 def album_details(album_id):
-    return render_template('album_details.html')
+    return render_template('admin/album_details.html')
 
 @app.route('/api/albums/<album_id>', methods=['GET', 'PATCH', 'DELETE'])
 def api_album_details(album_id):

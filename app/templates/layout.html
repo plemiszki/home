@@ -5,17 +5,20 @@
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/3.4.1/css/bootstrap.min.css" integrity="sha384-HSMxcRTRxnN+Bdg0JdbxYKrThecOKuH5zCYotlSAcp1+c8xmyTe9GYg1l9a69psu" crossorigin="anonymous" />
     <link rel="stylesheet" type="text/css" href="{{ url_for("static", filename="styles.css") }}" />
     <script src="{{ url_for("static", filename="javascript/bundle.js") }}"></script>
-    <script src="{{ url_for("static", filename="javascript/home.js") }}"></script>
+    <script src="{{ url_for("static", filename="javascript/album-select.js") }}"></script>
+    <script src="{{ url_for("static", filename="javascript/menu.js") }}"></script>
+    <script src="{{ url_for("static", filename="javascript/menu-button.js") }}"></script>
     <script src="{{ url_for("static", filename="javascript/play.js") }}"></script>
   </head>
   {% block admin_layout %}
     <body class="admin">
       <div id="admin-framework">
         <div id="admin-row" class="row">
+          <div id="admin-sidebar-background" class="col-xs-2"></div>
           <div id="admin-sidebar" class="col-xs-2 match-height-layout">
             <div id="admin-sidebar-body">
               <ul>
-                <li><a href="/albums">Albums</a></li>
+                <li><a href="/admin/albums">Albums</a></li>
               </ul>
             </div>
           </div>

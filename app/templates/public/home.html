@@ -1,0 +1,21 @@
+{% extends "layout.html" %}
+
+{% block admin_layout %}{% endblock %}
+{% block menu_button %}{% endblock %}
+
+{% block public_content %}
+  <body class="menu">
+    <div class="inner">
+      <div class="container-fluid">
+        <div class="row">
+          <div class="col-xs-6">
+            <div class="guitar" data-url="/music/modern"></div>
+          </div>
+          <div class="col-xs-6">
+            <div class="violin" data-url="/music/classical"></div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </body>
+{% endblock %}
