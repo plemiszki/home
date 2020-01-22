@@ -6,6 +6,7 @@ class Album(db.Model):
     name = db.Column(db.String(128), unique=True, nullable=False)
     artist_name = db.Column(db.String(128), nullable=False)
     order = db.Column(db.Integer, nullable=False)
+    category = db.Column(db.Integer, server_default="1")
 
     def update_db():
         music_directory = '/mnt/seagate/music'
