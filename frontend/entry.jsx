@@ -53,7 +53,7 @@ $(document).ready(() => {
           fields={ [[
             { columnWidth: 5, entity: 'album', property: 'artistName' },
             { columnWidth: 5, entity: 'album', property: 'name' },
-            { columnWidth: 2, entity: 'album', property: 'order' }
+            { columnWidth: 2, entity: 'album', property: 'category' }
           ]] }
         />
       </Provider>,

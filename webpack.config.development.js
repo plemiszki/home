@@ -3,7 +3,7 @@ module.exports = {
   context: __dirname,
   entry: './frontend/entry.jsx',
   output: {
-    path: __dirname + '/app/static',
+    path: __dirname + '/app/static/javascript',
     filename: 'bundle.js',
     devtoolModuleFilenameTemplate: '[resourcePath]',
     devtoolFallbackModuleFilenameTemplate: '[resourcePath]?[hash]'

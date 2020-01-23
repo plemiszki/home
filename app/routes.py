@@ -131,7 +131,7 @@ def api_album_details(album_id):
         album = Album.query.get(album_id)
         album.artist_name = request.form['album[artist_name]']
         album.name = request.form['album[name]']
-        album.order = request.form['album[order]']
+        album.category = request.form['album[category]']
         db.session.commit()
     album = Album.query.get(album_id)
     album_dict = album.__dict__
