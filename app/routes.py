@@ -29,16 +29,16 @@ def music_classical():
 
 @app.route('/music/now_playing')
 def now_playing():
-    currently_playing_album_id = redis_client.get('album_id').decode('utf-8')
+    currently_playing_album_id = redis_client.get('album_id')
     if currently_playing_album_id != None:
-        return redirect(f"/music/play/{currently_playing_album_id}")
+        return redirect(f"/music/play/{currently_playing_album_id.decode('utf-8')}")
     return redirect('/music/modern')
 
 @app.route('/music/play/<album_id>')
 def play(album_id):
     music_directory = os.getenv('MUSIC_DIRECTORY')
-    currently_playing_album_id = redis_client.get('album_id').decode('utf-8')
-    if currently_playing_album_id == None or currently_playing_album_id != album_id:
+    currently_playing_album_id = redis_client.get('album_id')
+    if currently_playing_album_id == None or currently_playing_album_id.decode('utf-8') != album_id:
         stop_everything()
         album = Album.query.get(album_id)
         filenames = os.listdir(f"{music_directory}/{album.artist_name}/{album.name}")
@@ -49,7 +49,7 @@ def play(album_id):
         redis_client.set('album_id', album.id)
         redis_client.set('track', 1)
     else:
-        album = Album.query.get(currently_playing_album_id)
+        album = Album.query.get(currently_playing_album_id.decode('utf-8'))
         filenames = os.listdir(f"{music_directory}/{album.artist_name}/{album.name}")
         filenames.sort()
         song_titles = map(lambda song_title: ' '.join('.'.join(song_title.split('.')[:-1]).split(' ')[1:]), filenames)
