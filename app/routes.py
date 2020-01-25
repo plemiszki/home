@@ -3,7 +3,7 @@ import os
 import json
 import random
 from app import app, db
-from flask import render_template, jsonify, request
+from flask import render_template, jsonify, request, redirect
 from app.utils import stop_everything
 from app.models import Album
 from to_camel_case import to_camel_case
@@ -27,18 +27,32 @@ def music_classical():
     albums = Album.query.filter(Album.category == '2').order_by('artist_name', 'name').all()
     return render_template('public/music/classical.html', albums=albums)
 
+@app.route('/music/now_playing')
+def now_playing():
+    currently_playing_album_id = redis_client.get('album_id')
+    if currently_playing_album_id != None:
+        return redirect(f"/music/play/{currently_playing_album_id}")
+    return redirect('/music/modern')
+
 @app.route('/music/play/<album_id>')
 def play(album_id):
-    stop_everything()
-    album = Album.query.get(album_id)
     music_directory = os.getenv('MUSIC_DIRECTORY')
-    filenames = os.listdir(f"{music_directory}/{album.artist_name}/{album.name}")
-    filenames.sort()
-    song_titles = map(lambda song_title: ' '.join('.'.join(song_title.split('.')[:-1]).split(' ')[1:]), filenames)
-    process_id = Popen(['omxplayer', '-o', 'local', f"{music_directory}/{album.artist_name}/{album.name}/{filenames[0]}"]).pid
-    redis_client.sadd('processes', process_id)
-    redis_client.set('album_id', album.id)
-    redis_client.set('track', 1)
+    currently_playing_album_id = redis_client.get('album_id')
+    if currently_playing_album_id == None or currently_playing_album_id != album_id:
+        stop_everything()
+        album = Album.query.get(album_id)
+        filenames = os.listdir(f"{music_directory}/{album.artist_name}/{album.name}")
+        filenames.sort()
+        song_titles = map(lambda song_title: ' '.join('.'.join(song_title.split('.')[:-1]).split(' ')[1:]), filenames)
+        process_id = Popen(['omxplayer', '-o', 'local', f"{music_directory}/{album.artist_name}/{album.name}/{filenames[0]}"]).pid
+        redis_client.sadd('processes', process_id)
+        redis_client.set('album_id', album.id)
+        redis_client.set('track', 1)
+    else:
+        album = Album.query.get(currently_playing_album_id)
+        filenames = os.listdir(f"{music_directory}/{album.artist_name}/{album.name}")
+        filenames.sort()
+        song_titles = map(lambda song_title: ' '.join('.'.join(song_title.split('.')[:-1]).split(' ')[1:]), filenames)
     return render_template('/public/music/play.html', album=album, song_titles=song_titles)
 
 # public apis:
