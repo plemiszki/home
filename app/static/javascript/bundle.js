@@ -2548,8 +2548,8 @@ $(document).ready(() => {
     }, react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(handy_components__WEBPACK_IMPORTED_MODULE_4__["StandardIndex"], {
       context: MyContext,
       entityName: "album",
-      columns: ['artistName', 'name'],
-      columnHeaders: ['Artist', 'Album'],
+      columns: ['artistName', 'name', 'category'],
+      columnHeaders: ['Artist', 'Album', 'Category'],
       modalDimensions: {
         width: 900
       }

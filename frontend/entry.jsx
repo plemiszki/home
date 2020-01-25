@@ -28,8 +28,8 @@ $(document).ready(() => {
         <StandardIndex
           context={ MyContext }
           entityName='album'
-          columns={ ['artistName', 'name'] }
-          columnHeaders={ ['Artist', 'Album'] }
+          columns={ ['artistName', 'name', 'category'] }
+          columnHeaders={ ['Artist', 'Album', 'Category'] }
           modalDimensions={ { width: 900 } }
         >
           <NewEntity

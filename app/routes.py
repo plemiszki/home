@@ -131,6 +131,7 @@ def api_albums_index():
     album_dicts = []
     for album in albums:
         dict = album.__dict__
+        dict['category'] = ['Modern', 'Classical'][album.category - 1]
         del dict['_sa_instance_state']
         album_dicts.append(dict)
     result = {}
