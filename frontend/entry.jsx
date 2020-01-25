@@ -1,4 +1,3 @@
-import $ from 'jquery'
 import React from 'react'
 import ReactDOM from 'react-dom'
 import { Provider } from 'react-redux'
@@ -49,11 +48,18 @@ $(document).ready(() => {
         <SimpleDetails
           context={ MyContext }
           entityName='album'
-          initialEntity={ { artistName: '', name: '' } }
+          initialEntity={ { artistName: '', name: '', category: '1' } }
           fields={ [[
             { columnWidth: 5, entity: 'album', property: 'artistName' },
             { columnWidth: 5, entity: 'album', property: 'name' },
-            { columnWidth: 2, entity: 'album', property: 'category', type: 'dropdown' }
+            { columnWidth: 2,
+              entity: 'album',
+              property: 'category',
+              type: 'dropdown',
+              options: [{ id: '1', text: 'Modern' }, { id: '2', text: 'Classical' }],
+              optionDisplayProperty: 'text',
+              maxOptions: 3
+            }
           ]] }
         />
       </Provider>,

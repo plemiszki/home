@@ -1,4 +1,3 @@
-import $ from 'jquery'
 import HandyTools from 'handy-tools'
 
 export function createEntity(args, arrayName) {
