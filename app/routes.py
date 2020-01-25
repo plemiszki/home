@@ -29,7 +29,7 @@ def music_classical():
 
 @app.route('/music/now_playing')
 def now_playing():
-    currently_playing_album_id = redis_client.get('album_id')
+    currently_playing_album_id = redis_client.get('album_id').decode('utf-8')
     if currently_playing_album_id != None:
         return redirect(f"/music/play/{currently_playing_album_id}")
     return redirect('/music/modern')
@@ -37,7 +37,7 @@ def now_playing():
 @app.route('/music/play/<album_id>')
 def play(album_id):
     music_directory = os.getenv('MUSIC_DIRECTORY')
-    currently_playing_album_id = redis_client.get('album_id')
+    currently_playing_album_id = redis_client.get('album_id').decode('utf-8')
     if currently_playing_album_id == None or currently_playing_album_id != album_id:
         stop_everything()
         album = Album.query.get(album_id)
