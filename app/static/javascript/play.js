@@ -43,7 +43,7 @@ Play = {
           Play.removeHighlight();
           document.querySelectorAll('td')[nextTrack - 1].classList.add('playing');
         } else if (response.message === 'next album') {
-          window.location.pathname = `/play/${response.albumId}`;
+          window.location.pathname = `/music/play/${response.albumId}`;
         }
       }
     };

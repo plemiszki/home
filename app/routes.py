@@ -18,13 +18,13 @@ def home():
 @app.route('/music/modern')
 def music_modern():
     stop_everything()
-    albums = Album.query.order_by('artist_name', 'name').all()
+    albums = Album.query.filter(Album.category == '1').order_by('artist_name', 'name').all()
     return render_template('public/music/modern.html', albums=albums)
 
 @app.route('/music/classical')
 def music_classical():
     stop_everything()
-    albums = Album.query.order_by('artist_name', 'name').all()
+    albums = Album.query.filter(Album.category == '2').order_by('artist_name', 'name').all()
     return render_template('public/music/classical.html', albums=albums)
 
 @app.route('/music/play/<album_id>')
