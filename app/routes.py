@@ -32,7 +32,7 @@ def now_playing():
     currently_playing_album_id = redis_client.get('album_id')
     if currently_playing_album_id != None:
         return redirect(f"/music/play/{currently_playing_album_id.decode('utf-8')}")
-    return redirect('/music/modern')
+    return redirect(f"/music/{request.args.get('category')}")
 
 @app.route('/music/play/<album_id>')
 def play(album_id):
