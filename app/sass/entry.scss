@@ -22,8 +22,9 @@ div.menu-button {
   background-position: 50%;
 }
 
-body.menu {
+body {
   background-color: black;
+  color: white;
 
   div.inner {
     position: absolute;
@@ -31,10 +32,10 @@ body.menu {
     width: 100%;
   }
 
-  div.guitar, div.violin {
+  div.menu-icon {
     display: block;
-    width: 400px;
-    height: 400px;
+    width: 350px;
+    height: 350px;
     margin: auto;
   }
 
@@ -44,6 +45,10 @@ body.menu {
 
   div.violin {
     background-image: url('/static/images/violin.svg');
+  }
+
+  div.subway {
+    background-image: url('/static/images/subway.svg');
   }
 }
 

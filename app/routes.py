@@ -1,7 +1,9 @@
-# /etc/lightdm/lightdm.conf
 import os
 import json
 import random
+import requests
+from google.transit import gtfs_realtime_pb2
+from google.protobuf import json_format
 from app import app, db
 from flask import render_template, jsonify, request, redirect
 from app.utils import stop_everything
@@ -10,6 +12,8 @@ from to_camel_case import to_camel_case
 from subprocess import Popen
 from flask_redis import FlaskRedis
 redis_client = FlaskRedis(app)
+from datetime import datetime, timezone, timedelta
+from dateutil import tz
 
 @app.route('/')
 def home():
@@ -62,6 +66,17 @@ def play(album_id):
         song_titles = map(lambda song_title: ' '.join('.'.join(song_title.split('.')[:-1]).split(' ')[1:]), filenames)
     return render_template('/public/music/play.html', album=album, song_titles=song_titles)
 
+@app.route('/mta')
+def mta():
+    feed = gtfs_realtime_pb2.FeedMessage()
+    mta_api_key = os.getenv('MTA_API_KEY')
+    data = []
+    q_response = requests.get(f"http://datamine.mta.info/mta_esi.php?key={mta_api_key}&feed_id=16", allow_redirects=True)
+    process_mta_response(q_response, feed, 'Q', data)
+    b_response = requests.get(f"http://datamine.mta.info/mta_esi.php?key={mta_api_key}&feed_id=21", allow_redirects=True)
+    process_mta_response(b_response, feed, 'B', data)
+    return render_template('/public/mta.html', data=data)
+
 # public apis:
 
 @app.route('/api/play_song', methods=['POST'])
@@ -108,7 +123,7 @@ def api_status():
             redis_client.set('track', track)
             return { 'message': 'next track' }
         except IndexError:
-            albums = Album.query.filter(Album.id != album_id).all()
+            albums = Album.query.filter(Album.id != album_id, Album.category == album.category).all()
             random_album = random.choice(albums)
             return { 'message': 'next album', 'albumId': random_album.id }
 
@@ -163,3 +178,33 @@ def api_album_details(album_id):
     result = {}
     result['album'] = to_camel_case(album_dict)
     return result
+
+# helper methods:
+
+def process_mta_response(response, feed, train, output):
+    feed.ParseFromString(response.content)
+    for entity in feed.entity:
+        if entity.HasField('trip_update') and entity.trip_update.trip.route_id == train:
+            obj = json.loads(json_format.MessageToJson(entity.trip_update))
+            if 'stopTimeUpdate' in obj:
+                for stop_time in obj['stopTimeUpdate']:
+                    if stop_time['stopId'] == 'D26N':
+                        departure_utc_naive = datetime.utcfromtimestamp(int(stop_time['departure']['time']))
+                        departure_utc_aware = departure_utc_naive.replace(tzinfo=timezone.utc)
+                        depature_local = departure_utc_aware.astimezone(tz.gettz('America/New_York'))
+                        now_utc_naive = datetime.utcnow()
+                        if departure_utc_naive > now_utc_naive:
+                            eta_minutes = (departure_utc_naive - now_utc_naive).seconds // 60
+                            walk_time = int(os.getenv(f"{train}_TRAIN_WALK_TIME"))
+                            leave_at_utc_naive = departure_utc_naive - timedelta(seconds=walk_time)
+                            leave_at_utc_aware = leave_at_utc_naive.replace(tzinfo=timezone.utc)
+                            leave_at_local = leave_at_utc_aware.astimezone(tz.gettz('America/New_York'))
+                            leave_in = (leave_at_utc_naive - now_utc_naive).seconds // 60
+                            if leave_at_utc_naive > now_utc_naive:
+                                output.append({
+                                    'train': train,
+                                    'time': depature_local.strftime('%-l:%M'),
+                                    'eta_minutes': eta_minutes,
+                                    'leave_at': leave_at_local.strftime('%-l:%M'),
+                                    'leave_in': leave_in
+                                })
