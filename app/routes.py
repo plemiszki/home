@@ -75,6 +75,7 @@ def mta():
     process_mta_response(q_response, feed, 'Q', data)
     b_response = requests.get(f"http://datamine.mta.info/mta_esi.php?key={mta_api_key}&feed_id=21", allow_redirects=True)
     process_mta_response(b_response, feed, 'B', data)
+    data.sort(key=lambda x: x['eta_minutes'])
     return render_template('/public/mta.html', data=data)
 
 # public apis:

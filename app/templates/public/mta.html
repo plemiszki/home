@@ -4,6 +4,39 @@
 
 {% block public_content %}
   <body class="mta">
-    {{ data }}
+    <div class="container-fluid">
+      <div class="row">
+        <div class="col-xs-12">
+          <table>
+            <tr>
+              <th></th>
+              <th class="unimportant">Arrival</th>
+              <th></th>
+              <th>Leave By</th>
+              <th></th>
+            </tr>
+            {% for element in data %}
+              <tr>
+                <td>
+                  <div class="image train-{{ element['train'] }}"></div>
+                </td>
+                <td class="unimportant">
+                  {{ element['time'] }}
+                </td>
+                <td class="unimportant">
+                  {{ element['eta_minutes'] }} min
+                </td>
+                <td>
+                  {{ element['leave_at'] }}
+                </td>
+                <td>
+                  {{ element['leave_in'] }} min
+                </td>
+              </tr>
+            {% endfor %}
+          </table>
+        </div>
+      </div>
+    </div>
   </body>
 {% endblock %}

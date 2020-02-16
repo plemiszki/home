@@ -175,3 +175,41 @@ body.play {
     }
   }
 }
+
+body.mta {
+
+  table {
+    width: 100%;
+    font-size: 50px;
+
+    th {
+      padding-top: 20px;
+      padding-bottom: 20px;
+    }
+
+    th, td {
+      padding-left: 20px;
+      padding-right: 20px;
+
+      &.unimportant {
+        color: gray;
+      }
+
+      div.image {
+        $image_size: 140px;
+        width: $image_size;
+        height: $image_size;
+        margin-top: 40px;
+        margin-bottom: 40px;
+
+        &.train-Q {
+          background-image: url('/static/images/subway-line-Q.svg')
+        }
+
+        &.train-B {
+          background-image: url('/static/images/subway-line-B.svg')
+        }
+      }
+    }
+  }
+}
