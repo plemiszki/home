@@ -72,9 +72,9 @@ def mta():
     mta_api_key = os.getenv('MTA_API_KEY')
     data = []
     q_response = requests.get(f"http://datamine.mta.info/mta_esi.php?key={mta_api_key}&feed_id=16", allow_redirects=True)
-    process_mta_response(q_response, feed, 'Q', data)
+    data = process_mta_response(q_response, feed, 'Q', data)
     b_response = requests.get(f"http://datamine.mta.info/mta_esi.php?key={mta_api_key}&feed_id=21", allow_redirects=True)
-    process_mta_response(b_response, feed, 'B', data)
+    data = process_mta_response(b_response, feed, 'B', data)
     data.sort(key=lambda x: x['eta_minutes'])
     return render_template('/public/mta.html', data=data)
 
@@ -183,7 +183,10 @@ def api_album_details(album_id):
 # helper methods:
 
 def process_mta_response(response, feed, train, output):
-    feed.ParseFromString(response.content)
+    try:
+        feed.ParseFromString(response.content)
+    except:
+        return []
     for entity in feed.entity:
         if entity.HasField('trip_update') and entity.trip_update.trip.route_id == train:
             obj = json.loads(json_format.MessageToJson(entity.trip_update))
@@ -209,3 +212,4 @@ def process_mta_response(response, feed, train, output):
                                     'leave_at': leave_at_local.strftime('%-l:%M'),
                                     'leave_in': leave_in
                                 })
+    return output
