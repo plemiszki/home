@@ -25,7 +25,7 @@ if app.config['ENV'] == 'production':
 
 @app.route('/')
 def home():
-    temp_f, temp_c = read_temp() if app.config['ENV'] == 'production' else ['TEMP_F', 'TEMP_C']
+    temp_c, temp_f = read_temp() if app.config['ENV'] == 'production' else ['TEMP_C', 'TEMP_F']
     return render_template('public/home.html', temp_f=temp_f, temp_c=temp_c)
 
 @app.route('/music/modern')
