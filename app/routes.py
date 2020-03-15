@@ -26,8 +26,7 @@ if app.config['ENV'] == 'production':
 
 @app.route('/')
 def home():
-    temp_c, temp_f = read_temp() if app.config['ENV'] == 'production' else ['TEMP_C', 'TEMP_F']
-    return render_template('public/home.html', temp_f=temp_f, temp_c=temp_c)
+    return render_template('public/home.html')
 
 @app.route('/music/modern')
 def music_modern():
@@ -137,6 +136,11 @@ def api_status():
             albums = Album.query.filter(Album.id != album_id, Album.category == album.category).all()
             random_album = random.choice(albums)
             return { 'message': 'next album', 'albumId': random_album.id }
+
+@app.route('/api/indoor_temp', methods=['GET'])
+def api_indoor_temp():
+    temp_c, temp_f = read_temp() if app.config['ENV'] == 'production' else ['TEMP_C', 'TEMP_F']
+    return { 'tempC': temp_c, 'tempF': temp_f }
 
 # admin area:
 
