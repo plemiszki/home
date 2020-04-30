@@ -77,12 +77,13 @@ def play(album_id):
 
 @app.route('/mta')
 def mta():
+    base_url = "https://api-endpoint.mta.info/Dataservice/mtagtfsfeeds/nyct%2Fgtfs-nqrw"
     feed = gtfs_realtime_pb2.FeedMessage()
     mta_api_key = os.getenv('MTA_API_KEY')
     data = []
-    q_response = requests.get(f"http://datamine.mta.info/mta_esi.php?key={mta_api_key}&feed_id=16", allow_redirects=True)
+    q_response = requests.get(base_url, allow_redirects=True, headers={ "x-api-key": mta_api_key })
     data = process_mta_response(q_response, feed, 'Q', data)
-    b_response = requests.get(f"http://datamine.mta.info/mta_esi.php?key={mta_api_key}&feed_id=21", allow_redirects=True)
+    b_response = requests.get(base_url, allow_redirects=True, headers={ "x-api-key": mta_api_key })
     data = process_mta_response(b_response, feed, 'B', data)
     data.sort(key=lambda x: x['eta_minutes'])
     return render_template('/public/mta.html', data=data)
