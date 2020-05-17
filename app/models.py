@@ -9,7 +9,7 @@ class Album(db.Model):
     category = db.Column(db.Integer, server_default="1")
 
     def update_db():
-        music_directory = '/mnt/seagate/music'
+        music_directory = os.getenv('MUSIC_DIRECTORY')
         artist_folders = os.listdir(f"{music_directory}")
         for artist_folder in artist_folders:
             if artist_folder != '.DS_Store':
