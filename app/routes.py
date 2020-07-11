@@ -28,6 +28,10 @@ if app.config['ENV'] == 'production':
 def home():
     return render_template('public/home.html')
 
+@app.route('/subway')
+def subway():
+    return render_template('public/subway.html')
+
 @app.route('/music/modern')
 def music_modern():
     stop_everything()
@@ -74,19 +78,6 @@ def play(album_id):
         filenames.sort()
         song_titles = map(lambda song_title: ' '.join('.'.join(song_title.split('.')[:-1]).split(' ')[1:]), filenames)
     return render_template('/public/music/play.html', album=album, song_titles=song_titles)
-
-@app.route('/mta')
-def mta():
-    base_url = "https://api-endpoint.mta.info/Dataservice/mtagtfsfeeds/nyct%2Fgtfs-nqrw"
-    feed = gtfs_realtime_pb2.FeedMessage()
-    mta_api_key = os.getenv('MTA_API_KEY')
-    data = []
-    q_response = requests.get(base_url, allow_redirects=True, headers={ "x-api-key": mta_api_key })
-    data = process_mta_response(q_response, feed, 'Q', data)
-    b_response = requests.get(base_url, allow_redirects=True, headers={ "x-api-key": mta_api_key })
-    data = process_mta_response(b_response, feed, 'B', data)
-    data.sort(key=lambda x: x['eta_minutes'])
-    return render_template('/public/mta.html', data=data)
 
 # public apis:
 
@@ -142,6 +133,19 @@ def api_status():
 def api_indoor_temp():
     temp_c, temp_f = read_temp() if app.config['ENV'] == 'production' else ['TEMP_C', 'TEMP_F']
     return { 'tempC': temp_c, 'tempF': temp_f }
+
+@app.route('/api/subway')
+def api_subway():
+    base_url = 'https://api-endpoint.mta.info/Dataservice/mtagtfsfeeds/nyct%2Fgtfs-nqrw'
+    feed = gtfs_realtime_pb2.FeedMessage()
+    mta_api_key = os.getenv('MTA_API_KEY')
+    data = []
+    q_response = requests.get(base_url, allow_redirects=True, headers={ 'x-api-key': mta_api_key })
+    data = process_mta_response(q_response, feed, 'Q', data)
+    b_response = requests.get(base_url, allow_redirects=True, headers={ 'x-api-key': mta_api_key })
+    data = process_mta_response(b_response, feed, 'B', data)
+    data.sort(key=lambda x: x['eta_minutes'])
+    return { 'subwayData': data }
 
 # admin area:
 

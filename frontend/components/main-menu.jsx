@@ -39,7 +39,7 @@ class MainMenu extends React.Component {
                 <div className="menu-icon violin" onClick={ () => window.location = '/music/now_playing?category=classical' }></div>
               </div>
               <div className="col-xs-4">
-                <div className="menu-icon subway" onClick={ () => window.location = '/mta' }></div>
+                <div className="menu-icon subway" onClick={ () => window.location = '/subway' }></div>
               </div>
             </div>
           </div>

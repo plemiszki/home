@@ -1,10 +1,12 @@
 import React from 'react'
 import ReactDOM from 'react-dom'
 import { Provider } from 'react-redux'
-import ReactModal from 'react-modal'
-import { SimpleDetails, StandardIndex } from 'handy-components'
 
 import MainMenu from './components/main-menu'
+import Subway from './components/subway'
+
+import ReactModal from 'react-modal'
+import { SimpleDetails, StandardIndex } from 'handy-components'
 import NewEntity from './components/new-entity'
 
 import configureStore from './store/store'
@@ -25,6 +27,17 @@ window.addEventListener('DOMContentLoaded', () => {
         />
       </Provider>,
       document.querySelector('#main-menu')
+    );
+  }
+
+  if (document.querySelector('#subway')) {
+    ReactDOM.render(
+      <Provider context={ MyContext } store={ store }>
+        <Subway
+          context={ MyContext }
+        />
+      </Provider>,
+      document.querySelector('#subway')
     );
   }
 

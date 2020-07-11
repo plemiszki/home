@@ -1,6 +1,6 @@
 window.addEventListener('DOMContentLoaded', () => {
   let { pathname } = window.location;
-  if (pathname !== '/' && pathname.slice(0, 6) !== '/admin') {
+  if (document.querySelector('.old-menu-button')) {
     MenuButton.initialize();
   }
 });
@@ -8,7 +8,7 @@ window.addEventListener('DOMContentLoaded', () => {
 MenuButton = {
 
   initialize() {
-    document.querySelector('.menu-button').addEventListener('click', MenuButton.clickMenuButton);
+    document.querySelector('.old-menu-button').addEventListener('click', MenuButton.clickMenuButton);
   },
 
   clickMenuButton() {
