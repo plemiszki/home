@@ -8,6 +8,8 @@ $imgpath: '/static/images';
 @import '../../node_modules/handy-components/styles/admin-layout';
 @import '../../node_modules/handy-components/styles/admin-table';
 
+@import './main-menu';
+
 div.menu-button {
   position: fixed;
   bottom: 50px;
@@ -20,45 +22,6 @@ div.menu-button {
   background-image: url('/static/images/grid.svg');
   background-size: 60%;
   background-position: 50%;
-}
-
-body {
-  background-color: black;
-  color: white;
-
-  div.inner {
-    position: absolute;
-    top: calc(50% - 200px);
-    width: 100%;
-  }
-
-  div.temperature-container {
-    position: absolute;
-    bottom: 20px;
-    width: 100%;
-    text-align: center;
-    font-family: 'TeachableSans-Bold';
-    font-size: 40px;
-  }
-
-  div.menu-icon {
-    display: block;
-    width: 350px;
-    height: 350px;
-    margin: auto;
-  }
-
-  div.guitar {
-    background-image: url('/static/images/guitar.svg');
-  }
-
-  div.violin {
-    background-image: url('/static/images/violin.svg');
-  }
-
-  div.subway {
-    background-image: url('/static/images/subway.svg');
-  }
 }
 
 body.album-select {

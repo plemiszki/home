@@ -1,0 +1,40 @@
+.main-menu {
+  width: 100%;
+  height: 100%;
+  background-color: black;
+  color: white;
+
+  div.inner {
+    position: absolute;
+    top: calc(50% - 200px);
+    width: 100%;
+  }
+
+  div.temperature-container {
+    position: absolute;
+    bottom: 20px;
+    width: 100%;
+    text-align: center;
+    font-family: 'TeachableSans-Bold';
+    font-size: 40px;
+  }
+
+  div.menu-icon {
+    display: block;
+    width: 350px;
+    height: 350px;
+    margin: auto;
+  }
+
+  div.guitar {
+    background-image: url('/static/images/guitar.svg');
+  }
+
+  div.violin {
+    background-image: url('/static/images/violin.svg');
+  }
+
+  div.subway {
+    background-image: url('/static/images/subway.svg');
+  }
+}

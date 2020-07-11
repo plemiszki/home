@@ -1,6 +1,6 @@
 window.addEventListener('DOMContentLoaded', () => {
   if (window.location.pathname === '/') {
-    Menu.initialize();
+    // Menu.initialize();
   }
 });
 

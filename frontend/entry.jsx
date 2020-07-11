@@ -4,19 +4,35 @@ import { Provider } from 'react-redux'
 import ReactModal from 'react-modal'
 import { SimpleDetails, StandardIndex } from 'handy-components'
 
+import MainMenu from './components/main-menu'
 import NewEntity from './components/new-entity'
 
 import configureStore from './store/store'
 let store = configureStore();
 
-$(document).ready(() => {
+window.addEventListener('DOMContentLoaded', () => {
 
   ReactModal.setAppElement(document.body);
   const MyContext = React.createContext();
 
-  $('#admin-sidebar ul a').each(function() {
-    if (this.getAttribute('href') == window.location.pathname) {
-      this.classList.add('highlight');
+  // PUBLIC:
+
+  if (document.querySelector('#main-menu')) {
+    ReactDOM.render(
+      <Provider context={ MyContext } store={ store }>
+        <MainMenu
+          context={ MyContext }
+        />
+      </Provider>,
+      document.querySelector('#main-menu')
+    );
+  }
+
+  // ADMIN AREA:
+
+  document.querySelectorAll('#admin-sidebar ul a').forEach((element) => {
+    if (element.getAttribute('href') == window.location.pathname) {
+      element.classList.add('highlight');
     };
   })
 
@@ -66,4 +82,5 @@ $(document).ready(() => {
       document.querySelector('#album-details')
     );
   }
+
 });

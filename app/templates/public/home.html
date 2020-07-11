@@ -4,24 +4,7 @@
 {% block menu_button %}{% endblock %}
 
 {% block public_content %}
-  <body class="menu">
-    <div class="inner">
-      <div class="container-fluid">
-        <div class="row">
-          <div class="col-xs-4">
-            <div class="menu-icon guitar" data-url="/music/now_playing?category=modern"></div>
-          </div>
-          <div class="col-xs-4">
-            <div class="menu-icon violin" data-url="/music/now_playing?category=classical"></div>
-          </div>
-          <div class="col-xs-4">
-            <div class="menu-icon subway" data-url="/mta"></div>
-          </div>
-        </div>
-      </div>
-    </div>
-    <div class="temperature-container hidden">
-      <p>Indoor Temp: <span id="temp-f"></span> &#176;F (<span id="temp-c"></span> &#176;C)</p>
-    </div>
+  <body>
+    <div id="main-menu"></div>
   </body>
 {% endblock %}

@@ -20,3 +20,19 @@ export function createEntity(args, arrayName) {
     );
   }
 }
+
+export function sendRequest(args) {
+  let { url, method, data } = args;
+  return (dispatch) => {
+    return $.ajax({
+      method: method.toUpperCase(),
+      url,
+      data
+    }).then(
+      (response) => {
+        let obj = Object.assign(response, { type: 'SEND_REQUEST' });
+        dispatch(obj);
+      }
+    );
+  }
+}
