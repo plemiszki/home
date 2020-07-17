@@ -147,6 +147,19 @@ def api_subway():
     data.sort(key=lambda x: x['eta_minutes'])
     return { 'subwayData': data }
 
+@app.route('/api/music/<category>')
+def api_albums(category):
+    categoryId = ['modern', 'classical'].index(category) + 1
+    albums = Album.query.filter(Album.category == categoryId).order_by('artist_name', 'name').all()
+    album_dicts = []
+    for album in albums:
+        dict = album.__dict__
+        del dict['_sa_instance_state']
+        album_dicts.append(dict)
+    result = {}
+    result['albums'] = to_camel_case(album_dicts)
+    return result
+
 # admin area:
 
 @app.route('/admin/albums')

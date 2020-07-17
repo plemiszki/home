@@ -1,19 +1,10 @@
 {% extends "layout.html" %}
 
 {% block admin_layout %}{% endblock %}
+{% block menu_button %}{% endblock %}
 
 {% block public_content %}
-  <body class="album-select">
-    <div class="link-container">
-      <div id="random-album"></div>
-    </div>
-    {% for album in albums %}
-      <div class="link-container">
-        <div class="album" data-id="{{ album.id }}">
-          <h1>{{ album.name }}</h1>
-          <p>{{ album.artist_name }}</p>
-        </div>
-      </div>
-    {% endfor %}
+  <body class="public">
+    <div id="album-list-classical"></div>
   </body>
 {% endblock %}

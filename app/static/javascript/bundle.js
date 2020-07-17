@@ -141,6 +141,118 @@ function sendRequest(args) {
 
 /***/ }),
 
+/***/ "./frontend/components/album-list.jsx":
+/*!********************************************!*\
+  !*** ./frontend/components/album-list.jsx ***!
+  \********************************************/
+/*! exports provided: default */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony import */ var react__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! react */ "./node_modules/react/index.js");
+/* harmony import */ var react__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(react__WEBPACK_IMPORTED_MODULE_0__);
+/* harmony import */ var react_redux__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! react-redux */ "./node_modules/react-redux/es/index.js");
+/* harmony import */ var redux__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! redux */ "./node_modules/redux/es/redux.js");
+/* harmony import */ var _actions_index__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ../actions/index */ "./frontend/actions/index.js");
+/* harmony import */ var _spinner__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ./spinner */ "./frontend/components/spinner.jsx");
+/* harmony import */ var _main_menu_button__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! ./main-menu-button */ "./frontend/components/main-menu-button.jsx");
+
+
+
+
+
+
+
+class AlbumList extends react__WEBPACK_IMPORTED_MODULE_0___default.a.Component {
+  constructor(props) {
+    super(props);
+    this.state = {
+      fetching: true,
+      albums: []
+    };
+  }
+
+  componentDidMount() {
+    this.props.sendRequest({
+      url: `/api/music/${this.props.category}`,
+      method: 'get'
+    }).then(() => {
+      this.setState({
+        fetching: false,
+        albums: this.props.albums
+      });
+    });
+  }
+
+  clickRandom() {
+    const {
+      albums
+    } = this.state;
+    let randomAlbum = albums[Math.floor(Math.random() * albums.length)];
+    window.location.pathname = `/music/play/${randomAlbum.id}`;
+  }
+
+  clickAlbum(albumId) {
+    window.location.pathname = `/music/play/${albumId}`;
+  }
+
+  render() {
+    return react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
+      className: "album-list"
+    }, react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(_spinner__WEBPACK_IMPORTED_MODULE_4__["default"], {
+      visible: this.state.fetching
+    }), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(_main_menu_button__WEBPACK_IMPORTED_MODULE_5__["default"], null), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
+      className: 'link-container' + (this.state.albums.length > 0 ? '' : ' hidden')
+    }, react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
+      id: "random-album",
+      onClick: this.clickRandom.bind(this)
+    })), this.renderAlbums());
+  }
+
+  renderAlbums() {
+    return this.state.albums.map(album => {
+      return react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
+        key: album.id,
+        className: "link-container",
+        onClick: this.clickAlbum.bind(this, album.id)
+      }, react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
+        className: "album"
+      }, react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("h1", null, album.name), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("p", null, album.artistName)));
+    });
+  }
+
+} // {% block public_content %}
+//   <body class="album-select">
+//     <div class="link-container">
+//       <div id="random-album"></div>
+//     </div>
+//     {% for album in albums %}
+//       <div class="link-container">
+//         <div class="album" data-id="{{ album.id }}">
+//           <h1>{{ album.name }}</h1>
+//           <p>{{ album.artist_name }}</p>
+//         </div>
+//       </div>
+//     {% endfor %}
+//   </body>
+// {% endblock %}
+
+
+const mapStateToProps = reducers => {
+  return reducers.standardReducer;
+};
+
+function mapDispatchToProps(dispatch) {
+  return Object(redux__WEBPACK_IMPORTED_MODULE_2__["bindActionCreators"])({
+    sendRequest: _actions_index__WEBPACK_IMPORTED_MODULE_3__["sendRequest"]
+  }, dispatch);
+}
+
+/* harmony default export */ __webpack_exports__["default"] = (Object(react_redux__WEBPACK_IMPORTED_MODULE_1__["connect"])(mapStateToProps, mapDispatchToProps)(AlbumList));
+
+/***/ }),
+
 /***/ "./frontend/components/main-menu-button.jsx":
 /*!**************************************************!*\
   !*** ./frontend/components/main-menu-button.jsx ***!
@@ -453,7 +565,7 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var redux__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! redux */ "./node_modules/redux/es/redux.js");
 /* harmony import */ var _actions_index__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ../actions/index */ "./frontend/actions/index.js");
 /* harmony import */ var _spinner__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ./spinner */ "./frontend/components/spinner.jsx");
-/* harmony import */ var _main_menu_button__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! ./main-menu-button */ "./frontend/components/main-menu-button.jsx");
+/* harmony import */ var _main_menu_button__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! ./main-menu-button */ "./frontend/components/main-menu-button.jsx");
 
 
 
@@ -491,7 +603,7 @@ class Subway extends react__WEBPACK_IMPORTED_MODULE_0___default.a.Component {
       className: "row"
     }, react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(_spinner__WEBPACK_IMPORTED_MODULE_4__["default"], {
       visible: this.state.fetching
-    }), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(_main_menu_button__WEBPACK_IMPORTED_MODULE_6__["default"], null), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
+    }), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(_main_menu_button__WEBPACK_IMPORTED_MODULE_5__["default"], null), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
       className: "col-xs-12"
     }, react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("table", null, react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("thead", {
       className: this.state.fetching ? ' hidden' : ''
@@ -545,13 +657,14 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var react_dom__WEBPACK_IMPORTED_MODULE_1___default = /*#__PURE__*/__webpack_require__.n(react_dom__WEBPACK_IMPORTED_MODULE_1__);
 /* harmony import */ var react_redux__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! react-redux */ "./node_modules/react-redux/es/index.js");
 /* harmony import */ var _components_main_menu__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ./components/main-menu */ "./frontend/components/main-menu.jsx");
-/* harmony import */ var _components_subway__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ./components/subway */ "./frontend/components/subway.jsx");
-/* harmony import */ var react_modal__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! react-modal */ "./node_modules/react-modal/lib/index.js");
-/* harmony import */ var react_modal__WEBPACK_IMPORTED_MODULE_5___default = /*#__PURE__*/__webpack_require__.n(react_modal__WEBPACK_IMPORTED_MODULE_5__);
-/* harmony import */ var handy_components__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! handy-components */ "./node_modules/handy-components/build/index.js");
-/* harmony import */ var handy_components__WEBPACK_IMPORTED_MODULE_6___default = /*#__PURE__*/__webpack_require__.n(handy_components__WEBPACK_IMPORTED_MODULE_6__);
-/* harmony import */ var _components_new_entity__WEBPACK_IMPORTED_MODULE_7__ = __webpack_require__(/*! ./components/new-entity */ "./frontend/components/new-entity.jsx");
-/* harmony import */ var _store_store__WEBPACK_IMPORTED_MODULE_8__ = __webpack_require__(/*! ./store/store */ "./frontend/store/store.js");
+/* harmony import */ var _components_album_list__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ./components/album-list */ "./frontend/components/album-list.jsx");
+/* harmony import */ var _components_subway__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! ./components/subway */ "./frontend/components/subway.jsx");
+/* harmony import */ var react_modal__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! react-modal */ "./node_modules/react-modal/lib/index.js");
+/* harmony import */ var react_modal__WEBPACK_IMPORTED_MODULE_6___default = /*#__PURE__*/__webpack_require__.n(react_modal__WEBPACK_IMPORTED_MODULE_6__);
+/* harmony import */ var handy_components__WEBPACK_IMPORTED_MODULE_7__ = __webpack_require__(/*! handy-components */ "./node_modules/handy-components/build/index.js");
+/* harmony import */ var handy_components__WEBPACK_IMPORTED_MODULE_7___default = /*#__PURE__*/__webpack_require__.n(handy_components__WEBPACK_IMPORTED_MODULE_7__);
+/* harmony import */ var _components_new_entity__WEBPACK_IMPORTED_MODULE_8__ = __webpack_require__(/*! ./components/new-entity */ "./frontend/components/new-entity.jsx");
+/* harmony import */ var _store_store__WEBPACK_IMPORTED_MODULE_9__ = __webpack_require__(/*! ./store/store */ "./frontend/store/store.js");
 
 
 
@@ -561,9 +674,10 @@ __webpack_require__.r(__webpack_exports__);
 
 
 
-let store = Object(_store_store__WEBPACK_IMPORTED_MODULE_8__["default"])();
+
+let store = Object(_store_store__WEBPACK_IMPORTED_MODULE_9__["default"])();
 window.addEventListener('DOMContentLoaded', () => {
-  react_modal__WEBPACK_IMPORTED_MODULE_5___default.a.setAppElement(document.body);
+  react_modal__WEBPACK_IMPORTED_MODULE_6___default.a.setAppElement(document.body);
   const MyContext = react__WEBPACK_IMPORTED_MODULE_0___default.a.createContext(); // PUBLIC:
 
   if (document.querySelector('#main-menu')) {
@@ -575,11 +689,31 @@ window.addEventListener('DOMContentLoaded', () => {
     })), document.querySelector('#main-menu'));
   }
 
+  if (document.querySelector('#album-list-modern')) {
+    react_dom__WEBPACK_IMPORTED_MODULE_1___default.a.render(react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(react_redux__WEBPACK_IMPORTED_MODULE_2__["Provider"], {
+      context: MyContext,
+      store: store
+    }, react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(_components_album_list__WEBPACK_IMPORTED_MODULE_4__["default"], {
+      context: MyContext,
+      category: 'modern'
+    })), document.querySelector('#album-list-modern'));
+  }
+
+  if (document.querySelector('#album-list-classical')) {
+    react_dom__WEBPACK_IMPORTED_MODULE_1___default.a.render(react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(react_redux__WEBPACK_IMPORTED_MODULE_2__["Provider"], {
+      context: MyContext,
+      store: store
+    }, react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(_components_album_list__WEBPACK_IMPORTED_MODULE_4__["default"], {
+      context: MyContext,
+      category: 'classical'
+    })), document.querySelector('#album-list-classical'));
+  }
+
   if (document.querySelector('#subway')) {
     react_dom__WEBPACK_IMPORTED_MODULE_1___default.a.render(react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(react_redux__WEBPACK_IMPORTED_MODULE_2__["Provider"], {
       context: MyContext,
       store: store
-    }, react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(_components_subway__WEBPACK_IMPORTED_MODULE_4__["default"], {
+    }, react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(_components_subway__WEBPACK_IMPORTED_MODULE_5__["default"], {
       context: MyContext
     })), document.querySelector('#subway'));
   } // ADMIN AREA:
@@ -598,7 +732,7 @@ window.addEventListener('DOMContentLoaded', () => {
     react_dom__WEBPACK_IMPORTED_MODULE_1___default.a.render(react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(react_redux__WEBPACK_IMPORTED_MODULE_2__["Provider"], {
       context: MyContext,
       store: store
-    }, react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(handy_components__WEBPACK_IMPORTED_MODULE_6__["StandardIndex"], {
+    }, react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(handy_components__WEBPACK_IMPORTED_MODULE_7__["StandardIndex"], {
       context: MyContext,
       entityName: "album",
       columns: ['artistName', 'name', 'category'],
@@ -606,7 +740,7 @@ window.addEventListener('DOMContentLoaded', () => {
       modalDimensions: {
         width: 900
       }
-    }, react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(_components_new_entity__WEBPACK_IMPORTED_MODULE_7__["default"], {
+    }, react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(_components_new_entity__WEBPACK_IMPORTED_MODULE_8__["default"], {
       context: MyContext,
       initialEntity: {
         artistName: '',
@@ -619,7 +753,7 @@ window.addEventListener('DOMContentLoaded', () => {
     react_dom__WEBPACK_IMPORTED_MODULE_1___default.a.render(react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(react_redux__WEBPACK_IMPORTED_MODULE_2__["Provider"], {
       context: MyContext,
       store: store
-    }, react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(handy_components__WEBPACK_IMPORTED_MODULE_6__["SimpleDetails"], {
+    }, react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(handy_components__WEBPACK_IMPORTED_MODULE_7__["SimpleDetails"], {
       context: MyContext,
       entityName: "album",
       initialEntity: {

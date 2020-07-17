@@ -3,6 +3,7 @@ import ReactDOM from 'react-dom'
 import { Provider } from 'react-redux'
 
 import MainMenu from './components/main-menu'
+import AlbumList from './components/album-list'
 import Subway from './components/subway'
 
 import ReactModal from 'react-modal'
@@ -27,6 +28,30 @@ window.addEventListener('DOMContentLoaded', () => {
         />
       </Provider>,
       document.querySelector('#main-menu')
+    );
+  }
+
+  if (document.querySelector('#album-list-modern')) {
+    ReactDOM.render(
+      <Provider context={ MyContext } store={ store }>
+        <AlbumList
+          context={ MyContext }
+          category={ 'modern' }
+        />
+      </Provider>,
+      document.querySelector('#album-list-modern')
+    );
+  }
+
+  if (document.querySelector('#album-list-classical')) {
+    ReactDOM.render(
+      <Provider context={ MyContext } store={ store }>
+        <AlbumList
+          context={ MyContext }
+          category={ 'classical' }
+        />
+      </Provider>,
+      document.querySelector('#album-list-classical')
     );
   }
 
