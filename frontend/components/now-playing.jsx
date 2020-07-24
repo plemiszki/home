@@ -37,13 +37,13 @@ class NowPlaying extends React.Component {
     this.props.sendRequest({
       url: '/api/status',
       method: 'get'
-    }).then((response) => {
-      let message = { response };
+    }).then(() => {
+      let message = this.props.message;
       if (message === 'next track') {
         this.setState({
           trackPlaying: this.state.trackPlaying + 1
         });
-      } else if (message === '') {
+      } else if (message === 'next album') {
         window.location.pathname = `/music/play/${response.albumId}`;
       }
     });
