@@ -4,6 +4,7 @@ import { Provider } from 'react-redux'
 
 import MainMenu from './components/main-menu'
 import AlbumList from './components/album-list'
+import NowPlaying from './components/now-playing'
 import Subway from './components/subway'
 
 import ReactModal from 'react-modal'
@@ -52,6 +53,17 @@ window.addEventListener('DOMContentLoaded', () => {
         />
       </Provider>,
       document.querySelector('#album-list-classical')
+    );
+  }
+
+  if (document.querySelector('#now-playing')) {
+    ReactDOM.render(
+      <Provider context={ MyContext } store={ store }>
+        <NowPlaying
+          context={ MyContext }
+        />
+      </Provider>,
+      document.querySelector('#now-playing')
     );
   }
 
