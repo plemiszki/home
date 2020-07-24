@@ -68,6 +68,8 @@ def play(album_id):
     if currently_playing_album_id == None or currently_playing_album_id.decode('utf-8') != album_id:
         stop_everything()
         album = Album.query.get(album_id)
+        filenames = os.listdir(f"{music_directory}/{album.artist_name}/{album.name}")
+        filenames.sort()
         process_id = Popen(['omxplayer', '-o', 'local', f"{music_directory}/{album.artist_name}/{album.name}/{filenames[0]}"]).pid
         redis_client.sadd('processes', process_id)
         redis_client.set('album_id', album.id)
