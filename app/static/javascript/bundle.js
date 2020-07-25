@@ -582,7 +582,7 @@ class NowPlaying extends react__WEBPACK_IMPORTED_MODULE_0___default.a.Component 
           trackPlaying: this.state.trackPlaying + 1
         });
       } else if (message === 'next album') {
-        window.location.pathname = `/music/play/${response.albumId}`;
+        window.location.pathname = `/music/play/${this.props.albumId}`;
       }
     });
   }

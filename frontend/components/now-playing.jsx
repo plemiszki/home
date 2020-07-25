@@ -44,7 +44,7 @@ class NowPlaying extends React.Component {
           trackPlaying: this.state.trackPlaying + 1
         });
       } else if (message === 'next album') {
-        window.location.pathname = `/music/play/${response.albumId}`;
+        window.location.pathname = `/music/play/${this.props.albumId}`;
       }
     });
   }
