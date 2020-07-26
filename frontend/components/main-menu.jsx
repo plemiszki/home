@@ -2,6 +2,8 @@ import React, { Component } from 'react'
 import { connect } from 'react-redux'
 import { bindActionCreators } from 'redux'
 import { sendRequest } from '../actions/index'
+import { Link, Redirect } from 'react-router-dom'
+import { Common } from 'handy-components'
 
 class MainMenu extends React.Component {
 
@@ -27,6 +29,9 @@ class MainMenu extends React.Component {
   }
 
   render() {
+    if (this.state.redirectTo) {
+      return <Redirect push to={ this.state.redirectTo } />;
+    }
     return(
       <div className="main-menu">
         <div className="inner">
@@ -39,7 +44,7 @@ class MainMenu extends React.Component {
                 <div className="menu-icon violin" onClick={ () => window.location = '/music/now_playing?category=classical' }></div>
               </div>
               <div className="col-xs-4">
-                <div className="menu-icon subway" onClick={ () => window.location = '/subway' }></div>
+                <div className="menu-icon subway" onClick={ Common.changeState.bind(this, 'redirectTo', '/subway') }></div>
               </div>
             </div>
           </div>

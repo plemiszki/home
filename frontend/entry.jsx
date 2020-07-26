@@ -1,5 +1,6 @@
 import React from 'react'
 import ReactDOM from 'react-dom'
+import { BrowserRouter as Router, Switch, Route } from 'react-router-dom'
 import { Provider } from 'react-redux'
 
 import MainMenu from './components/main-menu'
@@ -21,14 +22,21 @@ window.addEventListener('DOMContentLoaded', () => {
 
   // PUBLIC:
 
-  if (document.querySelector('#main-menu')) {
+  if (document.querySelector('#app')) {
     ReactDOM.render(
       <Provider context={ MyContext } store={ store }>
-        <MainMenu
-          context={ MyContext }
-        />
+        <Router>
+          <Switch>
+            <Route exact path="/">
+              <MainMenu context={ MyContext } />
+            </Route>
+            <Route path="/subway">
+              <Subway context={ MyContext } />
+            </Route>
+          </Switch>
+        </Router>
       </Provider>,
-      document.querySelector('#main-menu')
+      document.querySelector('#app')
     );
   }
 
@@ -64,17 +72,6 @@ window.addEventListener('DOMContentLoaded', () => {
         />
       </Provider>,
       document.querySelector('#now-playing')
-    );
-  }
-
-  if (document.querySelector('#subway')) {
-    ReactDOM.render(
-      <Provider context={ MyContext } store={ store }>
-        <Subway
-          context={ MyContext }
-        />
-      </Provider>,
-      document.querySelector('#subway')
     );
   }
 

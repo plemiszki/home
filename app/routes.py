@@ -27,14 +27,6 @@ if app.config['ENV'] == 'production':
 
 # public:
 
-@app.route('/')
-def home():
-    return render_template('public/home.html')
-
-@app.route('/subway')
-def subway():
-    return render_template('public/subway.html')
-
 @app.route('/music/modern')
 def music_modern():
     stop_everything()
@@ -217,6 +209,11 @@ def api_album_details(album_id):
     result['songs'] = list(song_titles)
 
     return result
+
+@app.route('/')
+@app.route('/<path>')
+def jarvis(path=None):
+    return render_template('public/app.html')
 
 # helper methods:
 
