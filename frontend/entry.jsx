@@ -33,6 +33,12 @@ window.addEventListener('DOMContentLoaded', () => {
             <Route path="/subway">
               <Subway context={ MyContext } />
             </Route>
+            <Route path="/music/modern">
+              <AlbumList context={ MyContext } category="modern" />
+            </Route>
+            <Route path="/music/classical">
+              <AlbumList context={ MyContext } category="classical" />
+            </Route>
           </Switch>
         </Router>
       </Provider>,

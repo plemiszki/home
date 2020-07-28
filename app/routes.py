@@ -27,18 +27,6 @@ if app.config['ENV'] == 'production':
 
 # public:
 
-@app.route('/music/modern')
-def music_modern():
-    stop_everything()
-    albums = Album.query.filter(Album.category == '1').order_by('artist_name', 'name').all()
-    return render_template('public/music/modern.html', albums=albums)
-
-@app.route('/music/classical')
-def music_classical():
-    stop_everything()
-    albums = Album.query.filter(Album.category == '2').order_by('artist_name', 'name').all()
-    return render_template('public/music/classical.html', albums=albums)
-
 @app.route('/music/now_playing')
 def now_playing():
     currently_playing_album_id = redis_client.get('album_id')
@@ -77,6 +65,7 @@ def api_indoor_temp():
 
 @app.route('/api/music/<category>')
 def api_albums(category):
+    stop_everything()
     categoryId = ['modern', 'classical'].index(category) + 1
     albums = Album.query.filter(Album.category == categoryId).order_by('artist_name', 'name').all()
     album_dicts = []
@@ -87,6 +76,11 @@ def api_albums(category):
     result = {}
     result['albums'] = to_camel_case(album_dicts)
     return result
+
+@app.route('/api/music/stop', methods=['POST'])
+def stop_music():
+    stop_everything()
+    return { 'message': 'OK' }
 
 @app.route('/api/play_song', methods=['POST'])
 def api_play_song():
@@ -212,7 +206,8 @@ def api_album_details(album_id):
 
 @app.route('/')
 @app.route('/<path>')
-def jarvis(path=None):
+@app.route('/<path>/<path2>')
+def jarvis(path=None, path2=None):
     return render_template('public/app.html')
 
 # helper methods:

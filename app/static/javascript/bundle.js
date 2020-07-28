@@ -836,6 +836,16 @@ window.addEventListener('DOMContentLoaded', () => {
       path: "/subway"
     }, react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(_components_subway__WEBPACK_IMPORTED_MODULE_7__["default"], {
       context: MyContext
+    })), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(react_router_dom__WEBPACK_IMPORTED_MODULE_2__["Route"], {
+      path: "/music/modern"
+    }, react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(_components_album_list__WEBPACK_IMPORTED_MODULE_5__["default"], {
+      context: MyContext,
+      category: "modern"
+    })), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(react_router_dom__WEBPACK_IMPORTED_MODULE_2__["Route"], {
+      path: "/music/classical"
+    }, react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(_components_album_list__WEBPACK_IMPORTED_MODULE_5__["default"], {
+      context: MyContext,
+      category: "classical"
     }))))), document.querySelector('#app'));
   }
 
