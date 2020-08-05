@@ -58,6 +58,55 @@ def play(album_id):
 
 # public apis:
 
+@app.route('/api/music/now_playing', methods=['GET'])
+def api_now_playing():
+    filenames = []
+    track = redis_client.get('track')
+    if track:
+        track = int(track.decode('utf-8'))
+    album_id = redis_client.get('album_id')
+    if album_id:
+        album_id = album_id.decode('utf-8')
+        album = Album.query.get(album_id)
+        music_directory = os.getenv('MUSIC_DIRECTORY')
+        filenames = os.listdir(f"{music_directory}/{album.artist_name}/{album.name}")
+        filenames.sort()
+        album_dict = copy.copy(album).__dict__
+        del album_dict['_sa_instance_state']
+        for keys in album_dict:
+            album_dict[keys] = str(album_dict[keys])
+        album = to_camel_case(album_dict)
+    else:
+        album = None
+    return { 'album': album, 'track': track, 'songs': filenames }
+
+@app.route('/api/status', methods=['GET'])
+def api_status():
+    process_id = list(redis_client.smembers('processes'))[0]
+    process_id = process_id.decode("utf-8")
+    child_process_id = os.popen(f"ps --ppid {process_id} -o pid=").read().split("\n")[0].strip()
+    if child_process_id:
+        return { 'message': 'still playing' }
+    else:
+        album_id = redis_client.get('album_id').decode('utf-8')
+        album = Album.query.get(album_id)
+        music_directory = os.getenv('MUSIC_DIRECTORY')
+        filenames = os.listdir(f"{music_directory}/{album.artist_name}/{album.name}")
+        filenames.sort()
+        track = int(redis_client.get('track').decode('utf-8'))
+        track += 1
+        try:
+            next_song_file = filenames[track - 1]
+            process_id = Popen(['omxplayer', '-o', 'local', f"{music_directory}/{album.artist_name}/{album.name}/{next_song_file}"]).pid
+            redis_client.delete('processes')
+            redis_client.sadd('processes', process_id)
+            redis_client.set('track', track)
+            return { 'message': 'next track' }
+        except IndexError:
+            albums = Album.query.filter(Album.id != album_id, Album.category == album.category).all()
+            random_album = random.choice(albums)
+            return { 'message': 'next album', 'albumId': random_album.id }
+
 @app.route('/api/indoor_temp', methods=['GET'])
 def api_indoor_temp():
     temp_c, temp_f = read_temp() if app.config['ENV'] == 'production' else ['TEMP_C', 'TEMP_F']
@@ -102,33 +151,6 @@ def api_play_song():
     redis_client.sadd('processes', process_id)
     redis_client.set('track', track)
     return { 'message': 'OK' }
-
-@app.route('/api/status', methods=['GET'])
-def api_status():
-    process_id = list(redis_client.smembers('processes'))[0]
-    process_id = process_id.decode("utf-8")
-    child_process_id = os.popen(f"ps --ppid {process_id} -o pid=").read().split("\n")[0].strip()
-    if child_process_id:
-        return { 'message': 'still playing' }
-    else:
-        album_id = redis_client.get('album_id').decode('utf-8')
-        album = Album.query.get(album_id)
-        music_directory = os.getenv('MUSIC_DIRECTORY')
-        filenames = os.listdir(f"{music_directory}/{album.artist_name}/{album.name}")
-        filenames.sort()
-        track = int(redis_client.get('track').decode('utf-8'))
-        track += 1
-        try:
-            next_song_file = filenames[track - 1]
-            process_id = Popen(['omxplayer', '-o', 'local', f"{music_directory}/{album.artist_name}/{album.name}/{next_song_file}"]).pid
-            redis_client.delete('processes')
-            redis_client.sadd('processes', process_id)
-            redis_client.set('track', track)
-            return { 'message': 'next track' }
-        except IndexError:
-            albums = Album.query.filter(Album.id != album_id, Album.category == album.category).all()
-            random_album = random.choice(albums)
-            return { 'message': 'next album', 'albumId': random_album.id }
 
 @app.route('/api/subway')
 def api_subway():
