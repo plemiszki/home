@@ -112,6 +112,28 @@ def api_indoor_temp():
     temp_c, temp_f = read_temp() if app.config['ENV'] == 'production' else ['TEMP_C', 'TEMP_F']
     return { 'tempC': temp_c, 'tempF': temp_f }
 
+@app.route('/api/music/stop', methods=['POST'])
+def stop_music():
+    stop_everything()
+    return { 'message': 'OK' }
+
+@app.route('/api/music/start', methods=['POST'])
+def start_music(albumId, track):
+    stop_everything()
+    request_body = json.loads(request.get_data().decode("utf-8"))
+    track = int(request_body['track'])
+    album_id = int(request_body['album_id'])
+    album = Album.query.get(album_id)
+    music_directory = os.getenv('MUSIC_DIRECTORY')
+    filenames = os.listdir(f"{music_directory}/{album.artist_name}/{album.name}")
+    filenames.sort()
+    song_titles = map(lambda song_title: song_title.split('.')[0][2:], filenames)
+    process_id = Popen(['omxplayer', '-o', 'local', f"{music_directory}/{album.artist_name}/{album.name}/{filenames[track - 1]}"]).pid
+    redis_client.sadd('processes', process_id)
+    redis_client.set('album_id', album.id)
+    redis_client.set('track', track)
+    return { 'message': 'OK' }
+
 @app.route('/api/music/<category>')
 def api_albums(category):
     stop_everything()
@@ -125,11 +147,6 @@ def api_albums(category):
     result = {}
     result['albums'] = to_camel_case(album_dicts)
     return result
-
-@app.route('/api/music/stop', methods=['POST'])
-def stop_music():
-    stop_everything()
-    return { 'message': 'OK' }
 
 @app.route('/api/play_song', methods=['POST'])
 def api_play_song():
