@@ -118,7 +118,7 @@ def stop_music():
     return { 'message': 'OK' }
 
 @app.route('/api/music/start', methods=['POST'])
-def start_music(albumId, track):
+def start_music():
     stop_everything()
     request_body = json.loads(request.get_data().decode("utf-8"))
     track = int(request_body['track'])
