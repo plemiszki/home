@@ -58,6 +58,45 @@ def play(album_id):
 
 # public apis:
 
+@app.route('/api/indoor_temp', methods=['GET'])
+def api_indoor_temp():
+    temp_c, temp_f = read_temp() if app.config['ENV'] == 'production' else ['TEMP_C', 'TEMP_F']
+    return { 'tempC': temp_c, 'tempF': temp_f }
+
+@app.route('/api/music/<category>')
+def api_albums(category):
+    categories = ['modern', 'classical']
+    if categories.count(category) == 0:
+        return { 'message': 'invalid category' }, 422
+    stop_everything()
+    categoryId = categories.index(category) + 1
+    albums = Album.query.filter(Album.category == categoryId).order_by('artist_name', 'name').all()
+    album_dicts = []
+    for album in albums:
+        dict = album.__dict__
+        del dict['_sa_instance_state']
+        album_dicts.append(dict)
+    result = {}
+    result['albums'] = to_camel_case(album_dicts)
+    return result
+
+@app.route('/api/music/start', methods=['POST'])
+def start_music():
+    stop_everything()
+    request_body = json.loads(request.get_data().decode("utf-8"))
+    track = int(request_body['track'])
+    album_id = int(request_body['album_id'])
+    album = Album.query.get(album_id)
+    music_directory = os.getenv('MUSIC_DIRECTORY')
+    filenames = os.listdir(f"{music_directory}/{album.artist_name}/{album.name}")
+    filenames.sort()
+    song_titles = map(lambda song_title: song_title.split('.')[0][2:], filenames)
+    process_id = Popen(['omxplayer', '-o', 'local', f"{music_directory}/{album.artist_name}/{album.name}/{filenames[track - 1]}"]).pid
+    redis_client.sadd('processes', process_id)
+    redis_client.set('album_id', album.id)
+    redis_client.set('track', track)
+    return { 'message': 'OK' }
+
 @app.route('/api/music/now_playing', methods=['GET'])
 def api_now_playing():
     filenames = []
@@ -79,6 +118,47 @@ def api_now_playing():
     else:
         album = None
     return { 'album': album, 'track': track, 'songs': filenames }
+
+@app.route('/api/music/stop', methods=['POST'])
+def stop_music():
+    stop_everything()
+    return { 'message': 'OK' }
+
+@app.route('/api/subway')
+def api_subway():
+    base_url = 'https://api-endpoint.mta.info/Dataservice/mtagtfsfeeds/nyct%2Fgtfs-nqrw'
+    feed = gtfs_realtime_pb2.FeedMessage()
+    mta_api_key = os.getenv('MTA_API_KEY')
+    data = []
+    q_response = requests.get(base_url, allow_redirects=True, headers={ 'x-api-key': mta_api_key })
+    data = process_mta_response(q_response, feed, 'Q', data)
+    b_response = requests.get(base_url, allow_redirects=True, headers={ 'x-api-key': mta_api_key })
+    data = process_mta_response(b_response, feed, 'B', data)
+    data.sort(key=lambda x: x['eta_minutes'])
+    return { 'subwayData': data }
+
+# deprecate these:
+
+@app.route('/api/play_song', methods=['POST'])
+def api_play_song():
+    request_body = json.loads(request.get_data().decode("utf-8"))
+    track = int(request_body['track'])
+    process_ids = list(redis_client.smembers('processes'))
+    for process_id in process_ids:
+        process_id = process_id.decode("utf-8")
+        child_process_id = os.popen(f"ps --ppid {process_id} -o pid=").read().split("\n")[0].strip()
+        os.system(f"kill -9 {child_process_id}")
+    redis_client.delete('processes')
+    album_id = redis_client.get('album_id').decode('utf-8')
+    album = Album.query.get(album_id)
+    music_directory = os.getenv('MUSIC_DIRECTORY')
+    filenames = os.listdir(f"{music_directory}/{album.artist_name}/{album.name}")
+    filenames.sort()
+    song_titles = map(lambda song_title: song_title.split('.')[0][2:], filenames)
+    process_id = Popen(['omxplayer', '-o', 'local', f"{music_directory}/{album.artist_name}/{album.name}/{filenames[track - 1]}"]).pid
+    redis_client.sadd('processes', process_id)
+    redis_client.set('track', track)
+    return { 'message': 'OK' }
 
 @app.route('/api/status', methods=['GET'])
 def api_status():
@@ -106,84 +186,6 @@ def api_status():
             albums = Album.query.filter(Album.id != album_id, Album.category == album.category).all()
             random_album = random.choice(albums)
             return { 'message': 'next album', 'albumId': random_album.id }
-
-@app.route('/api/indoor_temp', methods=['GET'])
-def api_indoor_temp():
-    temp_c, temp_f = read_temp() if app.config['ENV'] == 'production' else ['TEMP_C', 'TEMP_F']
-    return { 'tempC': temp_c, 'tempF': temp_f }
-
-@app.route('/api/music/stop', methods=['POST'])
-def stop_music():
-    stop_everything()
-    return { 'message': 'OK' }
-
-@app.route('/api/music/start', methods=['POST'])
-def start_music():
-    stop_everything()
-    request_body = json.loads(request.get_data().decode("utf-8"))
-    track = int(request_body['track'])
-    album_id = int(request_body['album_id'])
-    album = Album.query.get(album_id)
-    music_directory = os.getenv('MUSIC_DIRECTORY')
-    filenames = os.listdir(f"{music_directory}/{album.artist_name}/{album.name}")
-    filenames.sort()
-    song_titles = map(lambda song_title: song_title.split('.')[0][2:], filenames)
-    process_id = Popen(['omxplayer', '-o', 'local', f"{music_directory}/{album.artist_name}/{album.name}/{filenames[track - 1]}"]).pid
-    redis_client.sadd('processes', process_id)
-    redis_client.set('album_id', album.id)
-    redis_client.set('track', track)
-    return { 'message': 'OK' }
-
-@app.route('/api/music/<category>')
-def api_albums(category):
-    categories = ['modern', 'classical']
-    if categories.count(category) == 0:
-        return { 'message': 'invalid category' }, 422
-    stop_everything()
-    categoryId = categories.index(category) + 1
-    albums = Album.query.filter(Album.category == categoryId).order_by('artist_name', 'name').all()
-    album_dicts = []
-    for album in albums:
-        dict = album.__dict__
-        del dict['_sa_instance_state']
-        album_dicts.append(dict)
-    result = {}
-    result['albums'] = to_camel_case(album_dicts)
-    return result
-
-@app.route('/api/play_song', methods=['POST'])
-def api_play_song():
-    request_body = json.loads(request.get_data().decode("utf-8"))
-    track = int(request_body['track'])
-    process_ids = list(redis_client.smembers('processes'))
-    for process_id in process_ids:
-        process_id = process_id.decode("utf-8")
-        child_process_id = os.popen(f"ps --ppid {process_id} -o pid=").read().split("\n")[0].strip()
-        os.system(f"kill -9 {child_process_id}")
-    redis_client.delete('processes')
-    album_id = redis_client.get('album_id').decode('utf-8')
-    album = Album.query.get(album_id)
-    music_directory = os.getenv('MUSIC_DIRECTORY')
-    filenames = os.listdir(f"{music_directory}/{album.artist_name}/{album.name}")
-    filenames.sort()
-    song_titles = map(lambda song_title: song_title.split('.')[0][2:], filenames)
-    process_id = Popen(['omxplayer', '-o', 'local', f"{music_directory}/{album.artist_name}/{album.name}/{filenames[track - 1]}"]).pid
-    redis_client.sadd('processes', process_id)
-    redis_client.set('track', track)
-    return { 'message': 'OK' }
-
-@app.route('/api/subway')
-def api_subway():
-    base_url = 'https://api-endpoint.mta.info/Dataservice/mtagtfsfeeds/nyct%2Fgtfs-nqrw'
-    feed = gtfs_realtime_pb2.FeedMessage()
-    mta_api_key = os.getenv('MTA_API_KEY')
-    data = []
-    q_response = requests.get(base_url, allow_redirects=True, headers={ 'x-api-key': mta_api_key })
-    data = process_mta_response(q_response, feed, 'Q', data)
-    b_response = requests.get(base_url, allow_redirects=True, headers={ 'x-api-key': mta_api_key })
-    data = process_mta_response(b_response, feed, 'B', data)
-    data.sort(key=lambda x: x['eta_minutes'])
-    return { 'subwayData': data }
 
 # admin:
 
