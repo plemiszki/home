@@ -136,10 +136,10 @@ def start_music():
 
 @app.route('/api/music/<category>')
 def api_albums(category):
-    stop_everything()
     categories = ['modern', 'classical']
     if categories.count(category) == 0:
         return { 'message': 'invalid category' }, 422
+    stop_everything()
     categoryId = categories.index(category) + 1
     albums = Album.query.filter(Album.category == categoryId).order_by('artist_name', 'name').all()
     album_dicts = []
