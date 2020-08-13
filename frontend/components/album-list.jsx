@@ -30,11 +30,27 @@ class AlbumList extends React.Component {
   clickRandom() {
     const { albums } = this.state;
     let randomAlbum = albums[Math.floor(Math.random() * albums.length)];
-    window.location.pathname = `/music/play/${randomAlbum.id}`;
+    this.props.sendRequest({
+      url: '/api/music/start',
+      method: 'post',
+      data: {
+        albumId: randomAlbum.id,
+        track: 1
+      }
+    });
+    window.location.pathname = '/music/now_playing';
   }
 
   clickAlbum(albumId) {
-    window.location.pathname = `/music/play/${albumId}`;
+    this.props.sendRequest({
+      url: '/api/music/start',
+      method: 'post',
+      data: {
+        albumId,
+        track: 1
+      }
+    });
+    window.location.pathname = '/music/now_playing';
   }
 
   render() {

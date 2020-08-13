@@ -125,13 +125,18 @@ function sendRequest(args) {
     method,
     data
   } = args;
+  let obj = {
+    method: method.toUpperCase(),
+    url,
+    contentType: 'application/json'
+  };
+
+  if (data) {
+    obj.data = JSON.stringify(handy_tools__WEBPACK_IMPORTED_MODULE_0___default.a.convertObjectKeysToUnderscore(data));
+  }
+
   return dispatch => {
-    return $.ajax({
-      method: method.toUpperCase(),
-      url,
-      contentType: 'application/json',
-      data: JSON.stringify(data)
-    }).then(response => {
+    return $.ajax(obj).then(response => {
       let obj = Object.assign(response, {
         type: 'SEND_REQUEST'
       });
@@ -191,11 +196,27 @@ class AlbumList extends react__WEBPACK_IMPORTED_MODULE_0___default.a.Component {
       albums
     } = this.state;
     let randomAlbum = albums[Math.floor(Math.random() * albums.length)];
-    window.location.pathname = `/music/play/${randomAlbum.id}`;
+    this.props.sendRequest({
+      url: '/api/music/start',
+      method: 'post',
+      data: {
+        albumId: randomAlbum.id,
+        track: 1
+      }
+    });
+    window.location.pathname = '/music/now_playing';
   }
 
   clickAlbum(albumId) {
-    window.location.pathname = `/music/play/${albumId}`;
+    this.props.sendRequest({
+      url: '/api/music/start',
+      method: 'post',
+      data: {
+        albumId,
+        track: 1
+      }
+    });
+    window.location.pathname = '/music/now_playing';
   }
 
   render() {
@@ -359,12 +380,12 @@ class MainMenu extends react__WEBPACK_IMPORTED_MODULE_0___default.a.Component {
       className: "col-xs-4"
     }, react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
       className: "menu-icon guitar",
-      onClick: () => window.location = '/music/now_playing?category=modern'
+      onClick: () => window.location = '/music/modern'
     })), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
       className: "col-xs-4"
     }, react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
       className: "menu-icon violin",
-      onClick: () => window.location = '/music/now_playing?category=classical'
+      onClick: () => window.location = '/music/classical'
     })), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
       className: "col-xs-4"
     }, react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
@@ -563,19 +584,19 @@ class NowPlaying extends react__WEBPACK_IMPORTED_MODULE_0___default.a.Component 
     this.state = {
       album: {},
       songs: [],
-      trackPlaying: 1
+      track: null
     };
   }
 
   componentDidMount() {
-    let albumId = window.location.href.split('/')[window.location.href.split('/').length - 1];
     this.props.sendRequest({
-      url: `/api/albums/${albumId}`,
+      url: '/api/music/now_playing',
       method: 'get'
     }).then(() => {
       this.setState({
         fetching: false,
-        album: this.props.album,
+        track: this.props.track,
+        album: this.props.album || {},
         songs: this.props.songs
       });
     });
@@ -584,45 +605,84 @@ class NowPlaying extends react__WEBPACK_IMPORTED_MODULE_0___default.a.Component 
 
   checkStatus() {
     this.props.sendRequest({
-      url: '/api/status',
+      url: '/api/music/now_playing',
       method: 'get'
     }).then(() => {
-      let message = this.props.message;
-
-      if (message === 'next track') {
-        this.setState({
-          trackPlaying: this.state.trackPlaying + 1
-        });
-      } else if (message === 'next album') {
-        window.location.pathname = `/music/play/${this.props.albumId}`;
-      }
+      this.setState({
+        fetching: false,
+        track: this.props.track,
+        album: this.props.album || {},
+        songs: this.props.songs
+      });
     });
+  }
+
+  clickPlay() {
+    if (this.state.track === 0) {
+      this.props.sendRequest({
+        url: '/api/music/start',
+        method: 'post',
+        data: {
+          track: 1,
+          albumId: this.state.album.id
+        }
+      }).then(() => {
+        this.setState({
+          fetching: false,
+          track: this.props.track,
+          album: this.props.album,
+          songs: this.props.songs
+        });
+      });
+    }
+  }
+
+  clickStop() {
+    if (this.state.track !== 0) {
+      this.props.sendRequest({
+        url: '/api/music/stop',
+        method: 'post'
+      }).then(() => {
+        this.setState({
+          fetching: false,
+          track: this.props.track,
+          album: this.props.album,
+          songs: this.props.songs
+        });
+      });
+    }
   }
 
   clickSong(track) {
     this.setState({
-      trackPlaying: track
+      track
     });
     this.props.sendRequest({
-      url: '/api/play_song',
+      url: '/api/music/start',
       method: 'post',
       data: {
-        track: track
+        albumId: this.state.album.id,
+        track
       }
     });
   }
 
   render() {
+    let {
+      album,
+      track
+    } = this.state;
     return react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
       className: "now-playing"
-    }, react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(_main_menu_button__WEBPACK_IMPORTED_MODULE_7__["default"], null), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("a", {
-      className: "back-arrow"
+    }, react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(_main_menu_button__WEBPACK_IMPORTED_MODULE_7__["default"], null), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("h1", null, album.name), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("p", null, album.artistName), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
+      className: "buttons"
     }, react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("img", {
-      src: "/static/images/green-arrow.png",
-      onClick: () => {
-        window.location.href = `/music/${this.state.album.categoryName}`;
-      }
-    })), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("h2", null, "Playing"), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("h1", null, this.state.album.name), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("p", null, this.state.album.artistName), this.renderSongs());
+      src: `/static/images/play-button-${this.state.track === 0 ? 'gray' : 'white'}.svg`,
+      onClick: this.clickPlay.bind(this)
+    }), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("img", {
+      src: `/static/images/stop-button-${this.state.track === 0 ? 'white' : 'gray'}.svg`,
+      onClick: this.clickStop.bind(this)
+    })), this.renderSongs());
   }
 
   renderSongs() {
@@ -631,7 +691,7 @@ class NowPlaying extends react__WEBPACK_IMPORTED_MODULE_0___default.a.Component 
         key: index,
         onClick: this.clickSong.bind(this, index + 1)
       }, react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("td", {
-        className: index === this.state.trackPlaying - 1 ? 'playing' : '',
+        className: index === this.state.track - 1 ? 'playing' : '',
         "data-track": index
       }, song));
     })));
@@ -837,6 +897,10 @@ window.addEventListener('DOMContentLoaded', () => {
     }, react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(_components_subway__WEBPACK_IMPORTED_MODULE_7__["default"], {
       context: MyContext
     })), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(react_router_dom__WEBPACK_IMPORTED_MODULE_2__["Route"], {
+      path: "/music/now_playing"
+    }, react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(_components_now_playing__WEBPACK_IMPORTED_MODULE_6__["default"], {
+      context: MyContext
+    })), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(react_router_dom__WEBPACK_IMPORTED_MODULE_2__["Route"], {
       path: "/music/modern"
     }, react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(_components_album_list__WEBPACK_IMPORTED_MODULE_5__["default"], {
       context: MyContext,
@@ -867,15 +931,6 @@ window.addEventListener('DOMContentLoaded', () => {
       context: MyContext,
       category: 'classical'
     })), document.querySelector('#album-list-classical'));
-  }
-
-  if (document.querySelector('#now-playing')) {
-    react_dom__WEBPACK_IMPORTED_MODULE_1___default.a.render(react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(react_redux__WEBPACK_IMPORTED_MODULE_3__["Provider"], {
-      context: MyContext,
-      store: store
-    }, react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(_components_now_playing__WEBPACK_IMPORTED_MODULE_6__["default"], {
-      context: MyContext
-    })), document.querySelector('#now-playing'));
   } // ADMIN AREA:
 
 

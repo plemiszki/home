@@ -33,6 +33,9 @@ window.addEventListener('DOMContentLoaded', () => {
             <Route path="/subway">
               <Subway context={ MyContext } />
             </Route>
+            <Route path="/music/now_playing">
+              <NowPlaying context={ MyContext } />
+            </Route>
             <Route path="/music/modern">
               <AlbumList context={ MyContext } category="modern" />
             </Route>
@@ -67,17 +70,6 @@ window.addEventListener('DOMContentLoaded', () => {
         />
       </Provider>,
       document.querySelector('#album-list-classical')
-    );
-  }
-
-  if (document.querySelector('#now-playing')) {
-    ReactDOM.render(
-      <Provider context={ MyContext } store={ store }>
-        <NowPlaying
-          context={ MyContext }
-        />
-      </Provider>,
-      document.querySelector('#now-playing')
     );
   }
 

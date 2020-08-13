@@ -27,20 +27,6 @@ if app.config['ENV'] == 'production':
 
 # public:
 
-@app.route('/music/now_playing')
-def now_playing():
-    currently_playing_album_id = redis_client.get('album_id')
-    category = request.args.get('category')
-    if currently_playing_album_id == None:
-        return redirect(f"/music/{category}")
-    else:
-        currently_playing_album_id = currently_playing_album_id.decode('utf-8')
-        album = Album.query.get(currently_playing_album_id)
-        if ['modern', 'classical'][album.category - 1] == category:
-            return redirect(f"/music/play/{currently_playing_album_id}")
-        else:
-            return redirect(f"/music/{category}")
-
 @app.route('/music/play/<album_id>')
 def play(album_id):
     music_directory = os.getenv('MUSIC_DIRECTORY')
@@ -95,34 +81,16 @@ def start_music():
     redis_client.sadd('processes', process_id)
     redis_client.set('album_id', album.id)
     redis_client.set('track', track)
-    return { 'message': 'OK' }
+    return { 'album': serialize_album(album), 'track': track, 'songs': list(song_titles) }
 
 @app.route('/api/music/now_playing', methods=['GET'])
 def api_now_playing():
-    filenames = []
-    track = redis_client.get('track')
-    if track:
-        track = int(track.decode('utf-8'))
-    album_id = redis_client.get('album_id')
-    if album_id:
-        album_id = album_id.decode('utf-8')
-        album = Album.query.get(album_id)
-        music_directory = os.getenv('MUSIC_DIRECTORY')
-        filenames = os.listdir(f"{music_directory}/{album.artist_name}/{album.name}")
-        filenames.sort()
-        album_dict = copy.copy(album).__dict__
-        del album_dict['_sa_instance_state']
-        for keys in album_dict:
-            album_dict[keys] = str(album_dict[keys])
-        album = to_camel_case(album_dict)
-    else:
-        album = None
-    return { 'album': album, 'track': track, 'songs': filenames }
+    return return_song_info()
 
 @app.route('/api/music/stop', methods=['POST'])
 def stop_music():
     stop_everything()
-    return { 'message': 'OK' }
+    return return_song_info()
 
 @app.route('/api/subway')
 def api_subway():
@@ -255,6 +223,32 @@ def jarvis(path=None, path2=None):
     return render_template('public/app.html')
 
 # helper methods:
+
+def return_song_info():
+    filenames = []
+    track = redis_client.get('track')
+    if track:
+        track = int(track.decode('utf-8'))
+    album_id = redis_client.get('album_id')
+    if album_id:
+        album_id = album_id.decode('utf-8')
+        album = Album.query.get(album_id)
+        music_directory = os.getenv('MUSIC_DIRECTORY')
+        filenames = os.listdir(f"{music_directory}/{album.artist_name}/{album.name}")
+        filenames.sort()
+        song_titles = map(lambda song_title: song_title.split('.')[0][2:], filenames)
+        filenames = list(song_titles)
+        album = serialize_album(album)
+    else:
+        album = None
+    return { 'album': album, 'track': track, 'songs': filenames }
+
+def serialize_album(album):
+    album_dict = copy.copy(album).__dict__
+    del album_dict['_sa_instance_state']
+    for keys in album_dict:
+        album_dict[keys] = str(album_dict[keys])
+    return to_camel_case(album_dict)
 
 def process_mta_response(response, feed, train, output):
     try:

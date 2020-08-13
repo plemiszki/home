@@ -10,5 +10,4 @@ def stop_everything():
         child_process_id = os.popen(f"ps --ppid {process_id} -o pid=").read().split("\n")[0].strip()
         os.system(f"kill -9 {child_process_id}")
     redis_client.delete('processes')
-    redis_client.delete('album_id')
-    redis_client.delete('track')
+    redis_client.set('track', 0)

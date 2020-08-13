@@ -23,13 +23,16 @@ export function createEntity(args, arrayName) {
 
 export function sendRequest(args) {
   let { url, method, data } = args;
+  let obj = {
+    method: method.toUpperCase(),
+    url,
+    contentType: 'application/json'
+  }
+  if (data) {
+    obj.data = JSON.stringify(HandyTools.convertObjectKeysToUnderscore(data))
+  }
   return (dispatch) => {
-    return $.ajax({
-      method: method.toUpperCase(),
-      url,
-      contentType: 'application/json',
-      data: JSON.stringify(data)
-    }).then(
+    return $.ajax(obj).then(
       (response) => {
         let obj = Object.assign(response, { type: 'SEND_REQUEST' });
         dispatch(obj);

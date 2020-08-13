@@ -14,19 +14,19 @@ class NowPlaying extends React.Component {
     this.state = {
       album: {},
       songs: [],
-      trackPlaying: 1
+      track: null
     };
   }
 
   componentDidMount() {
-    let albumId = window.location.href.split('/')[window.location.href.split('/').length - 1]
     this.props.sendRequest({
-      url: `/api/albums/${albumId}`,
+      url: '/api/music/now_playing',
       method: 'get'
     }).then(() => {
       this.setState({
         fetching: false,
-        album: this.props.album,
+        track: this.props.track,
+        album: this.props.album || {},
         songs: this.props.songs
       });
     });
@@ -35,43 +35,79 @@ class NowPlaying extends React.Component {
 
   checkStatus() {
     this.props.sendRequest({
-      url: '/api/status',
+      url: '/api/music/now_playing',
       method: 'get'
     }).then(() => {
-      let message = this.props.message;
-      if (message === 'next track') {
-        this.setState({
-          trackPlaying: this.state.trackPlaying + 1
-        });
-      } else if (message === 'next album') {
-        window.location.pathname = `/music/play/${this.props.albumId}`;
-      }
+      this.setState({
+        fetching: false,
+        track: this.props.track,
+        album: this.props.album || {},
+        songs: this.props.songs
+      });
     });
+  }
+
+  clickPlay() {
+    if (this.state.track === 0) {
+      this.props.sendRequest({
+        url: '/api/music/start',
+        method: 'post',
+        data: {
+          track: 1,
+          albumId: this.state.album.id
+        }
+      }).then(() => {
+        this.setState({
+          fetching: false,
+          track: this.props.track,
+          album: this.props.album,
+          songs: this.props.songs
+        });
+      });
+    }
+  }
+
+  clickStop() {
+    if (this.state.track !== 0) {
+      this.props.sendRequest({
+        url: '/api/music/stop',
+        method: 'post'
+      }).then(() => {
+        this.setState({
+          fetching: false,
+          track: this.props.track,
+          album: this.props.album,
+          songs: this.props.songs
+        });
+      });
+    }
   }
 
   clickSong(track) {
     this.setState({
-      trackPlaying: track
+      track
     });
     this.props.sendRequest({
-      url: '/api/play_song',
+      url: '/api/music/start',
       method: 'post',
       data: {
-        track: track
+        albumId: this.state.album.id,
+        track
       }
     });
   }
 
   render() {
+    let { album, track } = this.state;
     return(
       <div className="now-playing">
         <MainMenuButton />
-        <a className="back-arrow">
-          <img src="/static/images/green-arrow.png" onClick={ () => { window.location.href = `/music/${this.state.album.categoryName}` } } />
-        </a>
-        <h2>Playing</h2>
-        <h1>{ this.state.album.name }</h1>
-        <p>{ this.state.album.artistName }</p>
+        <h1>{ album.name }</h1>
+        <p>{ album.artistName }</p>
+        <div className="buttons">
+          <img src={ `/static/images/play-button-${this.state.track === 0 ? 'gray' : 'white'}.svg` } onClick={ this.clickPlay.bind(this) } />
+          <img src={ `/static/images/stop-button-${this.state.track === 0 ? 'white' : 'gray'}.svg` } onClick={ this.clickStop.bind(this) } />
+        </div>
         { this.renderSongs() }
       </div>
     );
@@ -84,7 +120,7 @@ class NowPlaying extends React.Component {
           { this.state.songs.map((song, index) => {
             return(
               <tr key={ index } onClick={ this.clickSong.bind(this, index + 1) }>
-                <td className={ index === (this.state.trackPlaying - 1) ? 'playing' : '' } data-track={ index }>{ song }</td>
+                <td className={ index === (this.state.track - 1) ? 'playing' : '' } data-track={ index }>{ song }</td>
               </tr>
             );
           }) }
