@@ -60,7 +60,7 @@ class Subway extends React.Component {
     return this.state.subwayData.map((data, index) => {
       return(
         <tr key={ index }>
-          <td>
+          <td className="image-container">
             <div className={ `image train-${data.train}` }></div>
           </td>
           <td className="unimportant">

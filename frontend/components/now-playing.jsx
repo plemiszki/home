@@ -30,7 +30,7 @@ class NowPlaying extends React.Component {
         songs: this.props.songs
       });
     });
-    window.setInterval(this.checkStatus.bind(this), 1000);
+    // window.setInterval(this.checkStatus.bind(this), 1000);
   }
 
   checkStatus() {
@@ -101,7 +101,6 @@ class NowPlaying extends React.Component {
     let { album, track } = this.state;
     return(
       <div className="now-playing">
-        <MainMenuButton />
         <h1>{ album.name }</h1>
         <p>{ album.artistName }</p>
         <div className="buttons">

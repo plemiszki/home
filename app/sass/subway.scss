@@ -7,9 +7,20 @@
     font-size: 50px;
     color: white;
 
+    tr:first-of-type {
+
+      th:first-of-type {
+        width: 230px;
+      }
+    }
+
     th {
-      padding-top: 20px;
-      padding-bottom: 20px;
+      padding-top: 30px;
+      padding-bottom: 30px;
+    }
+
+    td.image-container {
+      text-align: center;
     }
 
     th, td {
@@ -21,11 +32,12 @@
       }
 
       div.image {
-        $image_size: 140px;
+        display: inline-block;
+        $image_size: 120px;
         width: $image_size;
         height: $image_size;
-        margin-top: 40px;
-        margin-bottom: 40px;
+        margin-top: 20px;
+        margin-bottom: 20px;
 
         &.train-Q {
           background-image: url('/static/images/subway-line-Q.svg')

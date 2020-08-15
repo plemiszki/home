@@ -37,13 +37,10 @@ class MainMenu extends React.Component {
         <div className="inner">
           <div className="container-fluid">
             <div className="row">
-              <div className="col-xs-4">
-                <div className="menu-icon guitar" onClick={ () => window.location = '/music/modern' }></div>
+              <div className="col-xs-6">
+                <div className="menu-icon music" onClick={ () => window.location = '/music' }></div>
               </div>
-              <div className="col-xs-4">
-                <div className="menu-icon violin" onClick={ () => window.location = '/music/classical' }></div>
-              </div>
-              <div className="col-xs-4">
+              <div className="col-xs-6">
                 <div className="menu-icon subway" onClick={ Common.changeState.bind(this, 'redirectTo', '/subway') }></div>
               </div>
             </div>

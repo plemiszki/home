@@ -25,23 +25,6 @@ if app.config['ENV'] == 'production':
     device_folder = glob.glob(base_dir + '28*')[0]
     device_file = device_folder + '/w1_slave'
 
-# public:
-
-@app.route('/music/play/<album_id>')
-def play(album_id):
-    music_directory = os.getenv('MUSIC_DIRECTORY')
-    currently_playing_album_id = redis_client.get('album_id')
-    if currently_playing_album_id == None or currently_playing_album_id.decode('utf-8') != album_id:
-        stop_everything()
-        album = Album.query.get(album_id)
-        filenames = os.listdir(f"{music_directory}/{album.artist_name}/{album.name}")
-        filenames.sort()
-        process_id = Popen(['omxplayer', '-o', 'local', f"{music_directory}/{album.artist_name}/{album.name}/{filenames[0]}"]).pid
-        redis_client.sadd('processes', process_id)
-        redis_client.set('album_id', album.id)
-        redis_client.set('track', 1)
-    return render_template('/public/music/now_playing.html')
-
 # public apis:
 
 @app.route('/api/indoor_temp', methods=['GET'])
@@ -49,12 +32,15 @@ def api_indoor_temp():
     temp_c, temp_f = read_temp() if app.config['ENV'] == 'production' else ['TEMP_C', 'TEMP_F']
     return { 'tempC': temp_c, 'tempF': temp_f }
 
+@app.route('/api/music/now_playing', methods=['GET'])
+def api_now_playing():
+    return return_song_info()
+
 @app.route('/api/music/<category>')
 def api_albums(category):
     categories = ['modern', 'classical']
     if categories.count(category) == 0:
         return { 'message': 'invalid category' }, 422
-    stop_everything()
     categoryId = categories.index(category) + 1
     albums = Album.query.filter(Album.category == categoryId).order_by('artist_name', 'name').all()
     album_dicts = []
@@ -83,10 +69,6 @@ def start_music():
     redis_client.set('track', track)
     return { 'album': serialize_album(album), 'track': track, 'songs': list(song_titles) }
 
-@app.route('/api/music/now_playing', methods=['GET'])
-def api_now_playing():
-    return return_song_info()
-
 @app.route('/api/music/stop', methods=['POST'])
 def stop_music():
     stop_everything()
@@ -106,27 +88,6 @@ def api_subway():
     return { 'subwayData': data }
 
 # deprecate these:
-
-@app.route('/api/play_song', methods=['POST'])
-def api_play_song():
-    request_body = json.loads(request.get_data().decode("utf-8"))
-    track = int(request_body['track'])
-    process_ids = list(redis_client.smembers('processes'))
-    for process_id in process_ids:
-        process_id = process_id.decode("utf-8")
-        child_process_id = os.popen(f"ps --ppid {process_id} -o pid=").read().split("\n")[0].strip()
-        os.system(f"kill -9 {child_process_id}")
-    redis_client.delete('processes')
-    album_id = redis_client.get('album_id').decode('utf-8')
-    album = Album.query.get(album_id)
-    music_directory = os.getenv('MUSIC_DIRECTORY')
-    filenames = os.listdir(f"{music_directory}/{album.artist_name}/{album.name}")
-    filenames.sort()
-    song_titles = map(lambda song_title: song_title.split('.')[0][2:], filenames)
-    process_id = Popen(['omxplayer', '-o', 'local', f"{music_directory}/{album.artist_name}/{album.name}/{filenames[track - 1]}"]).pid
-    redis_client.sadd('processes', process_id)
-    redis_client.set('track', track)
-    return { 'message': 'OK' }
 
 @app.route('/api/status', methods=['GET'])
 def api_status():

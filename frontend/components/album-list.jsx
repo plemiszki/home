@@ -5,6 +5,10 @@ import { sendRequest } from '../actions/index'
 import Spinner from './spinner'
 import MainMenuButton from './main-menu-button'
 
+const TABS = {
+  'NOW PLAYING': 0
+};
+
 class AlbumList extends React.Component {
 
   constructor(props) {
@@ -37,8 +41,9 @@ class AlbumList extends React.Component {
         albumId: randomAlbum.id,
         track: 1
       }
+    }).then(() => {
+      this.props.switchTab(TABS['NOW PLAYING']);
     });
-    window.location.pathname = '/music/now_playing';
   }
 
   clickAlbum(albumId) {
@@ -49,15 +54,15 @@ class AlbumList extends React.Component {
         albumId,
         track: 1
       }
+    }).then(() => {
+      this.props.switchTab(TABS['NOW PLAYING']);
     });
-    window.location.pathname = '/music/now_playing';
   }
 
   render() {
     return(
       <div className="album-list">
         <Spinner visible={ this.state.fetching } />
-        <MainMenuButton />
         <div className={ 'link-container' + (this.state.albums.length > 0 ? '' : ' hidden') }>
           <div id="random-album" onClick={ this.clickRandom.bind(this) }></div>
         </div>
@@ -79,22 +84,6 @@ class AlbumList extends React.Component {
     });
   }
 }
-
-// {% block public_content %}
-//   <body class="album-select">
-//     <div class="link-container">
-//       <div id="random-album"></div>
-//     </div>
-//     {% for album in albums %}
-//       <div class="link-container">
-//         <div class="album" data-id="{{ album.id }}">
-//           <h1>{{ album.name }}</h1>
-//           <p>{{ album.artist_name }}</p>
-//         </div>
-//       </div>
-//     {% endfor %}
-//   </body>
-// {% endblock %}
 
 const mapStateToProps = (reducers) => {
   return reducers.standardReducer;

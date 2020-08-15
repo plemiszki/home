@@ -4,6 +4,7 @@ import { BrowserRouter as Router, Switch, Route } from 'react-router-dom'
 import { Provider } from 'react-redux'
 
 import MainMenu from './components/main-menu'
+import Tabs from './components/tabs'
 import AlbumList from './components/album-list'
 import NowPlaying from './components/now-playing'
 import Subway from './components/subway'
@@ -30,17 +31,24 @@ window.addEventListener('DOMContentLoaded', () => {
             <Route exact path="/">
               <MainMenu context={ MyContext } />
             </Route>
+            <Route path="/music">
+              <Tabs
+                context={ MyContext }
+                tabs={ [
+                  { image: 'music-note', Component: NowPlaying },
+                  { image: 'guitar', Component: AlbumList, props: { key: 'modern', category: 'modern' } },
+                  { image: 'violin', Component: AlbumList, props: { key: 'classical', category: 'classical' } }
+                ] }
+              />
+            </Route>
             <Route path="/subway">
-              <Subway context={ MyContext } />
-            </Route>
-            <Route path="/music/now_playing">
-              <NowPlaying context={ MyContext } />
-            </Route>
-            <Route path="/music/modern">
-              <AlbumList context={ MyContext } category="modern" />
-            </Route>
-            <Route path="/music/classical">
-              <AlbumList context={ MyContext } category="classical" />
+              <Tabs
+                context={ MyContext }
+                hidden={ true }
+                tabs={ [
+                  { image: 'music-note', Component: Subway }
+                ] }
+              />
             </Route>
           </Switch>
         </Router>

@@ -169,6 +169,9 @@ __webpack_require__.r(__webpack_exports__);
 
 
 
+const TABS = {
+  'NOW PLAYING': 0
+};
 
 class AlbumList extends react__WEBPACK_IMPORTED_MODULE_0___default.a.Component {
   constructor(props) {
@@ -203,8 +206,9 @@ class AlbumList extends react__WEBPACK_IMPORTED_MODULE_0___default.a.Component {
         albumId: randomAlbum.id,
         track: 1
       }
+    }).then(() => {
+      this.props.switchTab(TABS['NOW PLAYING']);
     });
-    window.location.pathname = '/music/now_playing';
   }
 
   clickAlbum(albumId) {
@@ -215,8 +219,9 @@ class AlbumList extends react__WEBPACK_IMPORTED_MODULE_0___default.a.Component {
         albumId,
         track: 1
       }
+    }).then(() => {
+      this.props.switchTab(TABS['NOW PLAYING']);
     });
-    window.location.pathname = '/music/now_playing';
   }
 
   render() {
@@ -224,7 +229,7 @@ class AlbumList extends react__WEBPACK_IMPORTED_MODULE_0___default.a.Component {
       className: "album-list"
     }, react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(_spinner__WEBPACK_IMPORTED_MODULE_4__["default"], {
       visible: this.state.fetching
-    }), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(_main_menu_button__WEBPACK_IMPORTED_MODULE_5__["default"], null), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
+    }), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
       className: 'link-container' + (this.state.albums.length > 0 ? '' : ' hidden')
     }, react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
       id: "random-album",
@@ -244,22 +249,7 @@ class AlbumList extends react__WEBPACK_IMPORTED_MODULE_0___default.a.Component {
     });
   }
 
-} // {% block public_content %}
-//   <body class="album-select">
-//     <div class="link-container">
-//       <div id="random-album"></div>
-//     </div>
-//     {% for album in albums %}
-//       <div class="link-container">
-//         <div class="album" data-id="{{ album.id }}">
-//           <h1>{{ album.name }}</h1>
-//           <p>{{ album.artist_name }}</p>
-//         </div>
-//       </div>
-//     {% endfor %}
-//   </body>
-// {% endblock %}
-
+}
 
 const mapStateToProps = reducers => {
   return reducers.standardReducer;
@@ -377,17 +367,12 @@ class MainMenu extends react__WEBPACK_IMPORTED_MODULE_0___default.a.Component {
     }, react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
       className: "row"
     }, react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
-      className: "col-xs-4"
+      className: "col-xs-6"
     }, react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
-      className: "menu-icon guitar",
-      onClick: () => window.location = '/music/modern'
+      className: "menu-icon music",
+      onClick: () => window.location = '/music'
     })), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
-      className: "col-xs-4"
-    }, react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
-      className: "menu-icon violin",
-      onClick: () => window.location = '/music/classical'
-    })), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
-      className: "col-xs-4"
+      className: "col-xs-6"
     }, react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
       className: "menu-icon subway",
       onClick: handy_components__WEBPACK_IMPORTED_MODULE_5__["Common"].changeState.bind(this, 'redirectTo', '/subway')
@@ -599,8 +584,7 @@ class NowPlaying extends react__WEBPACK_IMPORTED_MODULE_0___default.a.Component 
         album: this.props.album || {},
         songs: this.props.songs
       });
-    });
-    window.setInterval(this.checkStatus.bind(this), 1000);
+    }); // window.setInterval(this.checkStatus.bind(this), 1000);
   }
 
   checkStatus() {
@@ -674,7 +658,7 @@ class NowPlaying extends react__WEBPACK_IMPORTED_MODULE_0___default.a.Component 
     } = this.state;
     return react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
       className: "now-playing"
-    }, react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(_main_menu_button__WEBPACK_IMPORTED_MODULE_7__["default"], null), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("h1", null, album.name), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("p", null, album.artistName), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
+    }, react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("h1", null, album.name), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("p", null, album.artistName), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
       className: "buttons"
     }, react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("img", {
       src: `/static/images/play-button-${this.state.track === 0 ? 'gray' : 'white'}.svg`,
@@ -815,7 +799,9 @@ class Subway extends react__WEBPACK_IMPORTED_MODULE_0___default.a.Component {
     return this.state.subwayData.map((data, index) => {
       return react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("tr", {
         key: index
-      }, react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("td", null, react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
+      }, react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("td", {
+        className: "image-container"
+      }, react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
         className: `image train-${data.train}`
       })), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("td", {
         className: "unimportant"
@@ -841,6 +827,103 @@ function mapDispatchToProps(dispatch) {
 
 /***/ }),
 
+/***/ "./frontend/components/tabs.jsx":
+/*!**************************************!*\
+  !*** ./frontend/components/tabs.jsx ***!
+  \**************************************/
+/*! exports provided: default */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony import */ var react__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! react */ "./node_modules/react/index.js");
+/* harmony import */ var react__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(react__WEBPACK_IMPORTED_MODULE_0__);
+/* harmony import */ var react_redux__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! react-redux */ "./node_modules/react-redux/es/index.js");
+/* harmony import */ var redux__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! redux */ "./node_modules/redux/es/redux.js");
+/* harmony import */ var _actions_index__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ../actions/index */ "./frontend/actions/index.js");
+/* harmony import */ var react_router_dom__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! react-router-dom */ "./node_modules/react-router-dom/esm/react-router-dom.js");
+/* harmony import */ var handy_components__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! handy-components */ "./node_modules/handy-components/build/index.js");
+/* harmony import */ var handy_components__WEBPACK_IMPORTED_MODULE_5___default = /*#__PURE__*/__webpack_require__.n(handy_components__WEBPACK_IMPORTED_MODULE_5__);
+/* harmony import */ var _main_menu_button__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! ./main-menu-button */ "./frontend/components/main-menu-button.jsx");
+function _extends() { _extends = Object.assign || function (target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i]; for (var key in source) { if (Object.prototype.hasOwnProperty.call(source, key)) { target[key] = source[key]; } } } return target; }; return _extends.apply(this, arguments); }
+
+
+
+
+
+
+
+
+
+class Tabs extends react__WEBPACK_IMPORTED_MODULE_0___default.a.Component {
+  constructor(props) {
+    super(props);
+    this.state = {
+      selectedTabIndex: 0
+    };
+  }
+
+  switchTab(index) {
+    this.setState({
+      selectedTabIndex: index
+    });
+  }
+
+  render() {
+    const tab = this.props.tabs[this.state.selectedTabIndex];
+    const {
+      Component,
+      props
+    } = tab;
+    return react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
+      className: "tabs"
+    }, react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(_main_menu_button__WEBPACK_IMPORTED_MODULE_6__["default"], null), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("nav", {
+      className: this.props.hidden ? 'no-border' : ''
+    }, react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
+      className: "nav-top"
+    }), this.renderTabs()), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("section", {
+      className: "tab-component"
+    }, react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(Component, _extends({
+      context: this.props.context,
+      switchTab: this.switchTab.bind(this)
+    }, props))));
+  }
+
+  renderTabs() {
+    if (!this.props.hidden) {
+      const {
+        selectedTabIndex
+      } = this.state;
+      return this.props.tabs.map((tab, index) => {
+        let styles = {
+          backgroundImage: `url(/static/images/${tab.image}.svg)`
+        };
+        return react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
+          key: index,
+          className: `tab ${selectedTabIndex === index ? 'selected' : ''}`,
+          style: styles,
+          onClick: this.switchTab.bind(this, index)
+        });
+      });
+    }
+  }
+
+}
+
+const mapStateToProps = reducers => {
+  return reducers.standardReducer;
+};
+
+function mapDispatchToProps(dispatch) {
+  return Object(redux__WEBPACK_IMPORTED_MODULE_2__["bindActionCreators"])({
+    sendRequest: _actions_index__WEBPACK_IMPORTED_MODULE_3__["sendRequest"]
+  }, dispatch);
+}
+
+/* harmony default export */ __webpack_exports__["default"] = (Object(react_redux__WEBPACK_IMPORTED_MODULE_1__["connect"])(mapStateToProps, mapDispatchToProps)(Tabs));
+
+/***/ }),
+
 /***/ "./frontend/entry.jsx":
 /*!****************************!*\
   !*** ./frontend/entry.jsx ***!
@@ -857,15 +940,16 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var react_router_dom__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! react-router-dom */ "./node_modules/react-router-dom/esm/react-router-dom.js");
 /* harmony import */ var react_redux__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! react-redux */ "./node_modules/react-redux/es/index.js");
 /* harmony import */ var _components_main_menu__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ./components/main-menu */ "./frontend/components/main-menu.jsx");
-/* harmony import */ var _components_album_list__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! ./components/album-list */ "./frontend/components/album-list.jsx");
-/* harmony import */ var _components_now_playing__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! ./components/now-playing */ "./frontend/components/now-playing.jsx");
-/* harmony import */ var _components_subway__WEBPACK_IMPORTED_MODULE_7__ = __webpack_require__(/*! ./components/subway */ "./frontend/components/subway.jsx");
-/* harmony import */ var react_modal__WEBPACK_IMPORTED_MODULE_8__ = __webpack_require__(/*! react-modal */ "./node_modules/react-modal/lib/index.js");
-/* harmony import */ var react_modal__WEBPACK_IMPORTED_MODULE_8___default = /*#__PURE__*/__webpack_require__.n(react_modal__WEBPACK_IMPORTED_MODULE_8__);
-/* harmony import */ var handy_components__WEBPACK_IMPORTED_MODULE_9__ = __webpack_require__(/*! handy-components */ "./node_modules/handy-components/build/index.js");
-/* harmony import */ var handy_components__WEBPACK_IMPORTED_MODULE_9___default = /*#__PURE__*/__webpack_require__.n(handy_components__WEBPACK_IMPORTED_MODULE_9__);
-/* harmony import */ var _components_new_entity__WEBPACK_IMPORTED_MODULE_10__ = __webpack_require__(/*! ./components/new-entity */ "./frontend/components/new-entity.jsx");
-/* harmony import */ var _store_store__WEBPACK_IMPORTED_MODULE_11__ = __webpack_require__(/*! ./store/store */ "./frontend/store/store.js");
+/* harmony import */ var _components_tabs__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! ./components/tabs */ "./frontend/components/tabs.jsx");
+/* harmony import */ var _components_album_list__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! ./components/album-list */ "./frontend/components/album-list.jsx");
+/* harmony import */ var _components_now_playing__WEBPACK_IMPORTED_MODULE_7__ = __webpack_require__(/*! ./components/now-playing */ "./frontend/components/now-playing.jsx");
+/* harmony import */ var _components_subway__WEBPACK_IMPORTED_MODULE_8__ = __webpack_require__(/*! ./components/subway */ "./frontend/components/subway.jsx");
+/* harmony import */ var react_modal__WEBPACK_IMPORTED_MODULE_9__ = __webpack_require__(/*! react-modal */ "./node_modules/react-modal/lib/index.js");
+/* harmony import */ var react_modal__WEBPACK_IMPORTED_MODULE_9___default = /*#__PURE__*/__webpack_require__.n(react_modal__WEBPACK_IMPORTED_MODULE_9__);
+/* harmony import */ var handy_components__WEBPACK_IMPORTED_MODULE_10__ = __webpack_require__(/*! handy-components */ "./node_modules/handy-components/build/index.js");
+/* harmony import */ var handy_components__WEBPACK_IMPORTED_MODULE_10___default = /*#__PURE__*/__webpack_require__.n(handy_components__WEBPACK_IMPORTED_MODULE_10__);
+/* harmony import */ var _components_new_entity__WEBPACK_IMPORTED_MODULE_11__ = __webpack_require__(/*! ./components/new-entity */ "./frontend/components/new-entity.jsx");
+/* harmony import */ var _store_store__WEBPACK_IMPORTED_MODULE_12__ = __webpack_require__(/*! ./store/store */ "./frontend/store/store.js");
 
 
 
@@ -878,9 +962,10 @@ __webpack_require__.r(__webpack_exports__);
 
 
 
-let store = Object(_store_store__WEBPACK_IMPORTED_MODULE_11__["default"])();
+
+let store = Object(_store_store__WEBPACK_IMPORTED_MODULE_12__["default"])();
 window.addEventListener('DOMContentLoaded', () => {
-  react_modal__WEBPACK_IMPORTED_MODULE_8___default.a.setAppElement(document.body);
+  react_modal__WEBPACK_IMPORTED_MODULE_9___default.a.setAppElement(document.body);
   const MyContext = react__WEBPACK_IMPORTED_MODULE_0___default.a.createContext(); // PUBLIC:
 
   if (document.querySelector('#app')) {
@@ -893,23 +978,36 @@ window.addEventListener('DOMContentLoaded', () => {
     }, react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(_components_main_menu__WEBPACK_IMPORTED_MODULE_4__["default"], {
       context: MyContext
     })), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(react_router_dom__WEBPACK_IMPORTED_MODULE_2__["Route"], {
+      path: "/music"
+    }, react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(_components_tabs__WEBPACK_IMPORTED_MODULE_5__["default"], {
+      context: MyContext,
+      tabs: [{
+        image: 'music-note',
+        Component: _components_now_playing__WEBPACK_IMPORTED_MODULE_7__["default"]
+      }, {
+        image: 'guitar',
+        Component: _components_album_list__WEBPACK_IMPORTED_MODULE_6__["default"],
+        props: {
+          key: 'modern',
+          category: 'modern'
+        }
+      }, {
+        image: 'violin',
+        Component: _components_album_list__WEBPACK_IMPORTED_MODULE_6__["default"],
+        props: {
+          key: 'classical',
+          category: 'classical'
+        }
+      }]
+    })), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(react_router_dom__WEBPACK_IMPORTED_MODULE_2__["Route"], {
       path: "/subway"
-    }, react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(_components_subway__WEBPACK_IMPORTED_MODULE_7__["default"], {
-      context: MyContext
-    })), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(react_router_dom__WEBPACK_IMPORTED_MODULE_2__["Route"], {
-      path: "/music/now_playing"
-    }, react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(_components_now_playing__WEBPACK_IMPORTED_MODULE_6__["default"], {
-      context: MyContext
-    })), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(react_router_dom__WEBPACK_IMPORTED_MODULE_2__["Route"], {
-      path: "/music/modern"
-    }, react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(_components_album_list__WEBPACK_IMPORTED_MODULE_5__["default"], {
+    }, react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(_components_tabs__WEBPACK_IMPORTED_MODULE_5__["default"], {
       context: MyContext,
-      category: "modern"
-    })), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(react_router_dom__WEBPACK_IMPORTED_MODULE_2__["Route"], {
-      path: "/music/classical"
-    }, react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(_components_album_list__WEBPACK_IMPORTED_MODULE_5__["default"], {
-      context: MyContext,
-      category: "classical"
+      hidden: true,
+      tabs: [{
+        image: 'music-note',
+        Component: _components_subway__WEBPACK_IMPORTED_MODULE_8__["default"]
+      }]
     }))))), document.querySelector('#app'));
   }
 
@@ -917,7 +1015,7 @@ window.addEventListener('DOMContentLoaded', () => {
     react_dom__WEBPACK_IMPORTED_MODULE_1___default.a.render(react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(react_redux__WEBPACK_IMPORTED_MODULE_3__["Provider"], {
       context: MyContext,
       store: store
-    }, react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(_components_album_list__WEBPACK_IMPORTED_MODULE_5__["default"], {
+    }, react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(_components_album_list__WEBPACK_IMPORTED_MODULE_6__["default"], {
       context: MyContext,
       category: 'modern'
     })), document.querySelector('#album-list-modern'));
@@ -927,7 +1025,7 @@ window.addEventListener('DOMContentLoaded', () => {
     react_dom__WEBPACK_IMPORTED_MODULE_1___default.a.render(react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(react_redux__WEBPACK_IMPORTED_MODULE_3__["Provider"], {
       context: MyContext,
       store: store
-    }, react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(_components_album_list__WEBPACK_IMPORTED_MODULE_5__["default"], {
+    }, react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(_components_album_list__WEBPACK_IMPORTED_MODULE_6__["default"], {
       context: MyContext,
       category: 'classical'
     })), document.querySelector('#album-list-classical'));
@@ -947,7 +1045,7 @@ window.addEventListener('DOMContentLoaded', () => {
     react_dom__WEBPACK_IMPORTED_MODULE_1___default.a.render(react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(react_redux__WEBPACK_IMPORTED_MODULE_3__["Provider"], {
       context: MyContext,
       store: store
-    }, react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(handy_components__WEBPACK_IMPORTED_MODULE_9__["StandardIndex"], {
+    }, react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(handy_components__WEBPACK_IMPORTED_MODULE_10__["StandardIndex"], {
       context: MyContext,
       entityName: "album",
       columns: ['artistName', 'name', 'category'],
@@ -955,7 +1053,7 @@ window.addEventListener('DOMContentLoaded', () => {
       modalDimensions: {
         width: 900
       }
-    }, react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(_components_new_entity__WEBPACK_IMPORTED_MODULE_10__["default"], {
+    }, react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(_components_new_entity__WEBPACK_IMPORTED_MODULE_11__["default"], {
       context: MyContext,
       initialEntity: {
         artistName: '',
@@ -968,7 +1066,7 @@ window.addEventListener('DOMContentLoaded', () => {
     react_dom__WEBPACK_IMPORTED_MODULE_1___default.a.render(react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(react_redux__WEBPACK_IMPORTED_MODULE_3__["Provider"], {
       context: MyContext,
       store: store
-    }, react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(handy_components__WEBPACK_IMPORTED_MODULE_9__["SimpleDetails"], {
+    }, react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(handy_components__WEBPACK_IMPORTED_MODULE_10__["SimpleDetails"], {
       context: MyContext,
       entityName: "album",
       initialEntity: {
