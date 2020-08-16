@@ -786,7 +786,7 @@ class Subway extends react__WEBPACK_IMPORTED_MODULE_0___default.a.Component {
       className: "row"
     }, react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(_spinner__WEBPACK_IMPORTED_MODULE_4__["default"], {
       visible: this.state.fetching
-    }), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(_main_menu_button__WEBPACK_IMPORTED_MODULE_5__["default"], null), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
+    }), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
       className: "col-xs-12"
     }, react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("table", null, react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("thead", {
       className: this.state.fetching ? ' hidden' : ''
@@ -877,11 +877,9 @@ class Tabs extends react__WEBPACK_IMPORTED_MODULE_0___default.a.Component {
     } = tab;
     return react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
       className: "tabs"
-    }, react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(_main_menu_button__WEBPACK_IMPORTED_MODULE_6__["default"], null), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("nav", {
+    }, react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("nav", {
       className: this.props.hidden ? 'no-border' : ''
-    }, react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
-      className: "nav-top"
-    }), this.renderTabs()), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("section", {
+    }, react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(_main_menu_button__WEBPACK_IMPORTED_MODULE_6__["default"], null), this.renderTabs()), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("section", {
       className: "tab-component"
     }, react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(Component, _extends({
       context: this.props.context,

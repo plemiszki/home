@@ -26,9 +26,8 @@ class Tabs extends React.Component {
     const { Component, props } = tab;
     return(
       <div className="tabs">
-        <MainMenuButton />
         <nav className={ this.props.hidden ? 'no-border' : '' }>
-          <div className="nav-top"></div>
+          <MainMenuButton />
           { this.renderTabs() }
         </nav>
         <section className="tab-component">

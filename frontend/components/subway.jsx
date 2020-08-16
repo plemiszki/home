@@ -33,7 +33,6 @@ class Subway extends React.Component {
         <div className="container-fluid">
           <div className="row">
             <Spinner visible={ this.state.fetching } />
-            <MainMenuButton />
             <div className="col-xs-12">
               <table>
                 <thead className={ this.state.fetching ? ' hidden' : '' }>

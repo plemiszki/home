@@ -1,4 +1,4 @@
-$nav_width: 260px;
+$nav_width: 263px;
 $border: solid 3px white;
 $radius: 5px;
 $image_size: 120px;
@@ -10,15 +10,10 @@ $tab_size: $image_size + $tab_padding + $tab_padding;
   nav {
     display: inline-block;
     vertical-align: top;
-    padding-left: 15px;
     width: $nav_width;
     text-align: right;
 
-    .nav-top {
-      padding-top: 260px;
-    }
-
-    &:not(.no-border) .nav-top {
+    &:not(.no-border) .main-menu-button-container {
       border-right: $border;
     }
 
