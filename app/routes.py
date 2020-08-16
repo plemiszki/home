@@ -173,18 +173,21 @@ def check_music_status():
             album = Album.query.get(album_id)
             music_directory = os.getenv('MUSIC_DIRECTORY')
             filenames = os.listdir(f"{music_directory}/{album.artist_name}/{album.name}")
-            filenames.sort()
             track = int(redis_client.get('track').decode('utf-8'))
             track += 1
-            try:
-                next_song_file = filenames[track - 1]
-                process_id = Popen(['omxplayer', '-o', 'local', f"{music_directory}/{album.artist_name}/{album.name}/{next_song_file}"]).pid
-                redis_client.delete('processes')
-                redis_client.sadd('processes', process_id)
-                redis_client.set('track', track)
-            except IndexError:
+            end_of_album = track > len(filenames)
+            if end_of_album:
                 albums = Album.query.filter(Album.id != album_id, Album.category == album.category).all()
-                random_album = random.choice(albums)
+                album = random.choice(albums)
+                filenames = os.listdir(f"{music_directory}/{album.artist_name}/{album.name}")
+                track = 1
+            filenames.sort()
+            next_song_file = filenames[track - 1]
+            process_id = Popen(['omxplayer', '-o', 'local', f"{music_directory}/{album.artist_name}/{album.name}/{next_song_file}"]).pid
+            redis_client.delete('processes')
+            redis_client.sadd('processes', process_id)
+            redis_client.set('album_id', album.id)
+            redis_client.set('track', track)
         time.sleep(1)
 
 def return_song_info():

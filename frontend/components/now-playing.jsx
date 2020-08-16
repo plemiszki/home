@@ -30,7 +30,7 @@ class NowPlaying extends React.Component {
         songs: this.props.songs
       });
     });
-    // window.setInterval(this.checkStatus.bind(this), 1000);
+    window.setInterval(this.checkStatus.bind(this), 1000);
   }
 
   checkStatus() {
