@@ -893,12 +893,13 @@ class Tabs extends react__WEBPACK_IMPORTED_MODULE_0___default.a.Component {
         selectedTabIndex
       } = this.state;
       return this.props.tabs.map((tab, index) => {
+        const finalTab = index === this.props.tabs.length - 1;
         let styles = {
           backgroundImage: `url(/static/images/${tab.image}.svg)`
         };
         return react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
           key: index,
-          className: `tab ${selectedTabIndex === index ? 'selected' : ''}`,
+          className: `tab ${selectedTabIndex === index ? 'selected' : ''} ${finalTab && index >= 2 ? 'no-bottom-border' : ''}`,
           style: styles,
           onClick: this.switchTab.bind(this, index)
         });

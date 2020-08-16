@@ -38,6 +38,10 @@ $tab_size: 176px;
         border-top-left-radius: $radius;
         border-bottom-left-radius: $radius;
         background-position-x: calc(50% - 3px);
+
+        &.no-bottom-border {
+          border-bottom-color: black;
+        }
       }
 
       &:not(.selected) {

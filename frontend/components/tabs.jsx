@@ -45,11 +45,17 @@ class Tabs extends React.Component {
     if (!this.props.hidden) {
       const { selectedTabIndex } = this.state;
       return this.props.tabs.map((tab, index) => {
+        const finalTab = (index === (this.props.tabs.length - 1));
         let styles = {
           backgroundImage: `url(/static/images/${tab.image}.svg)`
         };
         return(
-          <div key={ index } className={ `tab ${selectedTabIndex === index ? 'selected' : ''}` } style={ styles } onClick={ this.switchTab.bind(this, index) }></div>
+          <div
+            key={ index }
+            className={ `tab ${selectedTabIndex === index ? 'selected' : ''} ${(finalTab && index >= 2) ? 'no-bottom-border' : ''}` }
+            style={ styles }
+            onClick={ this.switchTab.bind(this, index) }
+          ></div>
         );
       });
     }
