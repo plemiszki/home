@@ -12,6 +12,8 @@ $tab_size: $image_size + $tab_padding + $tab_padding;
     vertical-align: top;
     width: $nav_width;
     text-align: right;
+    height: 100%;
+    overflow: scroll;
 
     &:not(.no-border) .main-menu-button-container {
       border-right: $border;
@@ -46,5 +48,6 @@ $tab_size: $image_size + $tab_padding + $tab_padding;
     position: relative;
     width: calc(100% - #{$nav_width});
     height: 100%;
+    overflow: scroll;
   }
 }
