@@ -6,6 +6,8 @@ import { Link, Redirect } from 'react-router-dom'
 import { Common } from 'handy-components'
 import MainMenuButton from './main-menu-button'
 
+const TAB_HEIGHT = 176;
+
 class Tabs extends React.Component {
 
   constructor(props) {
@@ -22,13 +24,17 @@ class Tabs extends React.Component {
   }
 
   render() {
-    const tab = this.props.tabs[this.state.selectedTabIndex];
+    const { tabs } = this.props;
+    const tab = tabs[this.state.selectedTabIndex];
+    const emptyTabSpaces = Math.max(3 - tabs.length, 0);
+    const beneathTabsHeight = TAB_HEIGHT * emptyTabSpaces;
     const { Component, props } = tab;
     return(
       <div className="tabs">
         <nav className={ this.props.hidden ? 'no-border' : '' }>
           <MainMenuButton />
           { this.renderTabs() }
+          <div className="beneath-tabs" style={ { height: beneathTabsHeight } }></div>
         </nav>
         <section className="tab-component">
           <Component

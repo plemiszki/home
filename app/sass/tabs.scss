@@ -48,6 +48,10 @@ $tab_size: 176px;
         border-right: $border;
       }
     }
+
+    .beneath-tabs {
+      border-right: $border;
+    }
   }
 
   section.tab-component {

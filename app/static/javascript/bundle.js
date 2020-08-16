@@ -854,6 +854,7 @@ function _extends() { _extends = Object.assign || function (target) { for (var i
 
 
 
+const TAB_HEIGHT = 176;
 
 class Tabs extends react__WEBPACK_IMPORTED_MODULE_0___default.a.Component {
   constructor(props) {
@@ -870,7 +871,12 @@ class Tabs extends react__WEBPACK_IMPORTED_MODULE_0___default.a.Component {
   }
 
   render() {
-    const tab = this.props.tabs[this.state.selectedTabIndex];
+    const {
+      tabs
+    } = this.props;
+    const tab = tabs[this.state.selectedTabIndex];
+    const emptyTabSpaces = Math.max(3 - tabs.length, 0);
+    const beneathTabsHeight = TAB_HEIGHT * emptyTabSpaces;
     const {
       Component,
       props
@@ -879,7 +885,12 @@ class Tabs extends react__WEBPACK_IMPORTED_MODULE_0___default.a.Component {
       className: "tabs"
     }, react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("nav", {
       className: this.props.hidden ? 'no-border' : ''
-    }, react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(_main_menu_button__WEBPACK_IMPORTED_MODULE_6__["default"], null), this.renderTabs()), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("section", {
+    }, react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(_main_menu_button__WEBPACK_IMPORTED_MODULE_6__["default"], null), this.renderTabs(), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
+      className: "beneath-tabs",
+      style: {
+        height: beneathTabsHeight
+      }
+    })), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("section", {
       className: "tab-component"
     }, react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(Component, _extends({
       context: this.props.context,
