@@ -597,12 +597,15 @@ class NowPlaying extends react__WEBPACK_IMPORTED_MODULE_0___default.a.Component 
       url: '/api/music/now_playing',
       method: 'get'
     }).then(() => {
+      console.log('state album id: ', this.state.album.id);
+      console.log('props album id: ', this.props.album.id);
+
       if (this.props.album.id !== this.state.album.id) {
+        console.log('new album!');
         document.getElementById('tab-component').scrollTop = 0;
       }
 
       this.setState({
-        fetching: false,
         track: this.props.track,
         album: this.props.album || {},
         songs: this.props.songs
