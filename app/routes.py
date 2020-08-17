@@ -172,7 +172,7 @@ def check_music_status():
             continue
         processes = list(redis_client.smembers('processes'))
         if len(processes) == 0:
-            time.sleep(1)
+            time.sleep(5)
             continue
         process_id = processes[0].decode("utf-8")
         child_process_id = os.popen(f"ps --ppid {process_id} -o pid=").read().split("\n")[0].strip()
