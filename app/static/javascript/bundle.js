@@ -582,10 +582,14 @@ class NowPlaying extends react__WEBPACK_IMPORTED_MODULE_0___default.a.Component 
         fetching: false,
         track: this.props.track,
         album: this.props.album || {},
-        songs: this.props.songs
+        songs: this.props.songs,
+        interval: window.setInterval(this.checkStatus.bind(this), 1000)
       });
     });
-    window.setInterval(this.checkStatus.bind(this), 1000);
+  }
+
+  componentWillUnmount() {
+    clearInterval(this.state.interval);
   }
 
   checkStatus() {
