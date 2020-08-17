@@ -64,7 +64,6 @@ class NowPlaying extends React.Component {
         }
       }).then(() => {
         this.setState({
-          fetching: false,
           track: this.props.track,
           album: this.props.album,
           songs: this.props.songs
@@ -80,7 +79,6 @@ class NowPlaying extends React.Component {
         method: 'post'
       }).then(() => {
         this.setState({
-          fetching: false,
           track: this.props.track,
           album: this.props.album,
           songs: this.props.songs
@@ -100,6 +98,12 @@ class NowPlaying extends React.Component {
         albumId: this.state.album.id,
         track
       }
+    }).then(() => {
+      this.setState({
+        track: this.props.track,
+        album: this.props.album,
+        songs: this.props.songs
+      });
     });
   }
 

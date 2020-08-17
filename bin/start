@@ -2,7 +2,6 @@
 cd "$( dirname "${BASH_SOURCE[0]}" )"
 nohup ./server >/dev/null 2>&1 & nohup ./display >/dev/null 2>&1 &
 
-response = ""
 while [ "$response" != "200" ]
 do
   echo "attempting to start status check loop..."

@@ -620,7 +620,6 @@ class NowPlaying extends react__WEBPACK_IMPORTED_MODULE_0___default.a.Component 
         }
       }).then(() => {
         this.setState({
-          fetching: false,
           track: this.props.track,
           album: this.props.album,
           songs: this.props.songs
@@ -636,7 +635,6 @@ class NowPlaying extends react__WEBPACK_IMPORTED_MODULE_0___default.a.Component 
         method: 'post'
       }).then(() => {
         this.setState({
-          fetching: false,
           track: this.props.track,
           album: this.props.album,
           songs: this.props.songs
@@ -656,6 +654,12 @@ class NowPlaying extends react__WEBPACK_IMPORTED_MODULE_0___default.a.Component 
         albumId: this.state.album.id,
         track
       }
+    }).then(() => {
+      this.setState({
+        track: this.props.track,
+        album: this.props.album,
+        songs: this.props.songs
+      });
     });
   }
 
