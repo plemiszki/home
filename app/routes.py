@@ -74,6 +74,7 @@ def start_music():
     redis_client.sadd('processes', process_id)
     redis_client.set('album_id', album.id)
     redis_client.set('track', track)
+    redis_client.set('song_starting', 1)
     return { 'album': serialize_album(album), 'track': track, 'songs': list(song_titles) }
 
 @app.route('/api/music/stop', methods=['POST'])
@@ -169,11 +170,15 @@ def check_music_status():
         track = int(redis_client.get('track').decode('utf-8'))
         if track == 0:
             continue
+        song_starting = int(redis_client.get('song_starting').decode('utf-8'))
+        if song_starting == 1:
+            sleep(5)
+            redis_client.set('song_starting', 0)
+            continue
         processes = list(redis_client.smembers('processes'))
         if len(processes) == 0:
             continue
         process_id = processes[0].decode("utf-8")
-        time.sleep(1)
         child_process_id = os.popen(f"ps --ppid {process_id} -o pid=").read().split("\n")[0].strip()
         if not child_process_id:
             album_id = redis_client.get('album_id').decode('utf-8')
@@ -190,6 +195,7 @@ def check_music_status():
                 track = 1
             filenames.sort()
             next_song_file = filenames[track - 1]
+            redis_client.set('song_starting', 1)
             process_id = Popen(['omxplayer', '-o', 'local', f"{music_directory}/{album.artist_name}/{album.name}/{next_song_file}"]).pid
             redis_client.delete('processes')
             redis_client.sadd('processes', process_id)
