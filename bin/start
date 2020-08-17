@@ -1,3 +1,11 @@
 #!/bin/bash
 cd "$( dirname "${BASH_SOURCE[0]}" )"
 nohup ./server >/dev/null 2>&1 & nohup ./display >/dev/null 2>&1 &
+
+response = ""
+while [ "$response" != "200" ]
+do
+  echo "attempting to start status check loop..."
+  response=$(curl --write-out '%{http_code}' --silent --output /dev/null http://127.0.0.1:5000/api/music/start_loop)
+  sleep 5
+done
