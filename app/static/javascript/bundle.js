@@ -597,6 +597,10 @@ class NowPlaying extends react__WEBPACK_IMPORTED_MODULE_0___default.a.Component 
       url: '/api/music/now_playing',
       method: 'get'
     }).then(() => {
+      if (this.props.album.id !== this.state.album.id) {
+        document.getElementById('tab-component').scrollTop = 0;
+      }
+
       this.setState({
         fetching: false,
         track: this.props.track,
@@ -896,7 +900,7 @@ class Tabs extends react__WEBPACK_IMPORTED_MODULE_0___default.a.Component {
         height: beneathTabsHeight
       }
     })), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("section", {
-      className: "tab-component"
+      id: "tab-component"
     }, react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(Component, _extends({
       context: this.props.context,
       switchTab: this.switchTab.bind(this)

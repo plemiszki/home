@@ -42,6 +42,9 @@ class NowPlaying extends React.Component {
       url: '/api/music/now_playing',
       method: 'get'
     }).then(() => {
+      if (this.props.album.id !== this.state.album.id) {
+        document.getElementById('tab-component').scrollTop = 0;
+      }
       this.setState({
         fetching: false,
         track: this.props.track,

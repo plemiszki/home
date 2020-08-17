@@ -54,11 +54,15 @@ $tab_size: 176px;
     }
   }
 
-  section.tab-component {
+  section#tab-component {
     display: inline-block;
     position: relative;
     width: calc(100% - #{$nav_width});
     height: 100%;
     overflow: scroll;
+
+    &::-webkit-scrollbar {
+      display: none;
+    }
   }
 }

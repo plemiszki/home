@@ -36,7 +36,7 @@ class Tabs extends React.Component {
           { this.renderTabs() }
           <div className="beneath-tabs" style={ { height: beneathTabsHeight } }></div>
         </nav>
-        <section className="tab-component">
+        <section id="tab-component">
           <Component
             context={ this.props.context }
             switchTab={ this.switchTab.bind(this) }
