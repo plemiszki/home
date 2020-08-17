@@ -173,9 +173,9 @@ def check_music_status():
         if len(processes) == 0:
             continue
         process_id = processes[0].decode("utf-8")
+        sleep(1)
         child_process_id = os.popen(f"ps --ppid {process_id} -o pid=").read().split("\n")[0].strip()
         if not child_process_id:
-            print('song has finished')
             album_id = redis_client.get('album_id').decode('utf-8')
             album = Album.query.get(album_id)
             music_directory = os.getenv('MUSIC_DIRECTORY')
@@ -183,7 +183,6 @@ def check_music_status():
             track = int(redis_client.get('track').decode('utf-8'))
             track += 1
             end_of_album = track > len(filenames)
-            print(end_of_album)
             if end_of_album:
                 albums = Album.query.filter(Album.id != album_id, Album.category == album.category).all()
                 album = random.choice(albums)
