@@ -168,6 +168,7 @@ def check_music_status():
     while True:
         print('check status...')
         track = int(redis_client.get('track').decode('utf-8'))
+        print(f"track: {track}")
         if track == 0:
             continue
         song_starting = int(redis_client.get('song_starting').decode('utf-8'))
@@ -181,6 +182,7 @@ def check_music_status():
         process_id = processes[0].decode("utf-8")
         child_process_id = os.popen(f"ps --ppid {process_id} -o pid=").read().split("\n")[0].strip()
         if not child_process_id:
+            print("playing next song...")
             album_id = redis_client.get('album_id').decode('utf-8')
             album = Album.query.get(album_id)
             music_directory = os.getenv('MUSIC_DIRECTORY')
