@@ -172,7 +172,7 @@ def check_music_status():
             continue
         song_starting = int(redis_client.get('song_starting').decode('utf-8'))
         if song_starting == 1:
-            sleep(5)
+            time.sleep(5)
             redis_client.set('song_starting', 0)
             continue
         processes = list(redis_client.smembers('processes'))
