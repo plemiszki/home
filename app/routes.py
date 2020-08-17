@@ -166,12 +166,15 @@ def jarvis(path=None, path2=None):
 def check_music_status():
     while True:
         print('check status...')
+        track = int(redis_client.get('track').decode('utf-8'))
+        if track == 0:
+            continue
         processes = list(redis_client.smembers('processes'))
-        if len(processes) > 0:
-            process_id = processes[0]
-            process_id = process_id.decode("utf-8")
-            child_process_id = os.popen(f"ps --ppid {process_id} -o pid=").read().split("\n")[0].strip()
-        if len(processes) == 0 or not child_process_id:
+        if len(processes) == 0:
+            continue
+        process_id = processes[0].decode("utf-8")
+        child_process_id = os.popen(f"ps --ppid {process_id} -o pid=").read().split("\n")[0].strip()
+        if not child_process_id:
             print('song has finished')
             album_id = redis_client.get('album_id').decode('utf-8')
             album = Album.query.get(album_id)
