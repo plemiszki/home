@@ -18,8 +18,15 @@ $tab_size: 176px;
       display: none;
     }
 
-    &:not(.no-border) .main-menu-button-container {
-      border-right: $border;
+    &:not(.no-border) {
+
+      .main-menu-button-container {
+        border-right: $border;
+      }
+
+      .beneath-tabs {
+        border-right: $border;
+      }
     }
 
     .tab {
@@ -47,10 +54,6 @@ $tab_size: 176px;
       &:not(.selected) {
         border-right: $border;
       }
-    }
-
-    .beneath-tabs {
-      border-right: $border;
     }
   }
 
