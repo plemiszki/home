@@ -173,7 +173,7 @@ def check_music_status():
         if len(processes) == 0:
             continue
         process_id = processes[0].decode("utf-8")
-        sleep(1)
+        time.sleep(1)
         child_process_id = os.popen(f"ps --ppid {process_id} -o pid=").read().split("\n")[0].strip()
         if not child_process_id:
             album_id = redis_client.get('album_id').decode('utf-8')
