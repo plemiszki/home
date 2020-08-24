@@ -1,4 +1,6 @@
 import React, { Component } from 'react'
+import { Redirect } from 'react-router-dom'
+import { Common } from 'handy-components'
 
 class MainMenuButton extends React.Component {
 
@@ -8,8 +10,11 @@ class MainMenuButton extends React.Component {
   }
 
   render() {
+    if (this.state.redirectTo) {
+      return <Redirect push to={ this.state.redirectTo } />;
+    }
     return(
-      <div className="main-menu-button-container" onClick={ () => { window.location.href = '/' } }>
+      <div className="main-menu-button-container" onClick={ Common.changeState.bind(this, 'redirectTo', '/') }>
         <div className="menu-button"></div>
       </div>
     );

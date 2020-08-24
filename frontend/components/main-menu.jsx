@@ -2,7 +2,7 @@ import React, { Component } from 'react'
 import { connect } from 'react-redux'
 import { bindActionCreators } from 'redux'
 import { sendRequest } from '../actions/index'
-import { Link, Redirect } from 'react-router-dom'
+import { Redirect } from 'react-router-dom'
 import { Common } from 'handy-components'
 
 class MainMenu extends React.Component {
@@ -38,7 +38,7 @@ class MainMenu extends React.Component {
           <div className="container-fluid">
             <div className="row">
               <div className="col-xs-6">
-                <div className="menu-icon music" onClick={ () => window.location = '/music' }></div>
+                <div className="menu-icon music" onClick={ Common.changeState.bind(this, 'redirectTo', '/music') }></div>
               </div>
               <div className="col-xs-6">
                 <div className="menu-icon subway" onClick={ Common.changeState.bind(this, 'redirectTo', '/subway') }></div>

@@ -276,6 +276,11 @@ function mapDispatchToProps(dispatch) {
 __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var react__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! react */ "./node_modules/react/index.js");
 /* harmony import */ var react__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(react__WEBPACK_IMPORTED_MODULE_0__);
+/* harmony import */ var react_router_dom__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! react-router-dom */ "./node_modules/react-router-dom/esm/react-router-dom.js");
+/* harmony import */ var handy_components__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! handy-components */ "./node_modules/handy-components/build/index.js");
+/* harmony import */ var handy_components__WEBPACK_IMPORTED_MODULE_2___default = /*#__PURE__*/__webpack_require__.n(handy_components__WEBPACK_IMPORTED_MODULE_2__);
+
+
 
 
 class MainMenuButton extends react__WEBPACK_IMPORTED_MODULE_0___default.a.Component {
@@ -285,11 +290,16 @@ class MainMenuButton extends react__WEBPACK_IMPORTED_MODULE_0___default.a.Compon
   }
 
   render() {
+    if (this.state.redirectTo) {
+      return react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(react_router_dom__WEBPACK_IMPORTED_MODULE_1__["Redirect"], {
+        push: true,
+        to: this.state.redirectTo
+      });
+    }
+
     return react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
       className: "main-menu-button-container",
-      onClick: () => {
-        window.location.href = '/';
-      }
+      onClick: handy_components__WEBPACK_IMPORTED_MODULE_2__["Common"].changeState.bind(this, 'redirectTo', '/')
     }, react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
       className: "menu-button"
     }));
@@ -370,7 +380,7 @@ class MainMenu extends react__WEBPACK_IMPORTED_MODULE_0___default.a.Component {
       className: "col-xs-6"
     }, react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
       className: "menu-icon music",
-      onClick: () => window.location = '/music'
+      onClick: handy_components__WEBPACK_IMPORTED_MODULE_5__["Common"].changeState.bind(this, 'redirectTo', '/music')
     })), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
       className: "col-xs-6"
     }, react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
