@@ -1,3 +1,3 @@
 #!/bin/bash
 cd "$( dirname "${BASH_SOURCE[0]}" )"
-nohup ./client-start >/dev/null 2>&1 &
+nohup ./client-display >/dev/null 2>&1 &
