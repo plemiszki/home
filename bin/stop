@@ -1,0 +1,18 @@
+#!/bin/bash
+server_processes=$(ps -ef | grep "flask run" | grep -v "grep")
+while IFS= read -r line; do
+    myarray=($line)
+    pid="${myarray[1]}"
+    if [ "$pid" != "" ]; then
+      kill -9 $pid
+    fi
+done <<< "$server_processes"
+
+chrome_processes=$(ps -ef | grep "http://127.0.0.1:5000" | grep -v "grep")
+while IFS= read -r line; do
+    myarray=($line)
+    pid="${myarray[1]}"
+    if [ "$pid" != "" ]; then
+      kill -9 $pid
+    fi
+done <<< "$chrome_processes"
