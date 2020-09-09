@@ -1,6 +1,6 @@
 import React, { Component } from 'react'
 
-const SLEEP_TIME = 1000 * 60 * 60;
+const SLEEP_TIME = 1000 * 60 * 10;
 
 class WakeButton extends React.Component {
 
