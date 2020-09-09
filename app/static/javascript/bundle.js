@@ -328,6 +328,8 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var react_router_dom__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! react-router-dom */ "./node_modules/react-router-dom/esm/react-router-dom.js");
 /* harmony import */ var handy_components__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! handy-components */ "./node_modules/handy-components/build/index.js");
 /* harmony import */ var handy_components__WEBPACK_IMPORTED_MODULE_5___default = /*#__PURE__*/__webpack_require__.n(handy_components__WEBPACK_IMPORTED_MODULE_5__);
+/* harmony import */ var _wake_button__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! ./wake-button */ "./frontend/components/wake-button.jsx");
+
 
 
 
@@ -956,6 +958,60 @@ function mapDispatchToProps(dispatch) {
 
 /***/ }),
 
+/***/ "./frontend/components/wake-button.jsx":
+/*!*********************************************!*\
+  !*** ./frontend/components/wake-button.jsx ***!
+  \*********************************************/
+/*! exports provided: default */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony import */ var react__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! react */ "./node_modules/react/index.js");
+/* harmony import */ var react__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(react__WEBPACK_IMPORTED_MODULE_0__);
+
+const SLEEP_TIME = 1000 * 60 * 60;
+
+class WakeButton extends react__WEBPACK_IMPORTED_MODULE_0___default.a.Component {
+  constructor(props) {
+    super(props);
+    this.state = {
+      sleeping: false
+    };
+  }
+
+  clickButton() {
+    this.setState({
+      sleeping: false
+    });
+    this.resetSleepTimer();
+  }
+
+  resetSleepTimer() {
+    setTimeout(() => {
+      this.setState({
+        sleeping: true
+      });
+    }, SLEEP_TIME);
+  }
+
+  render() {
+    if (this.state.sleeping) {
+      return react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
+        className: "wake-button",
+        onClick: this.clickButton.bind(this)
+      });
+    } else {
+      return react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", null);
+    }
+  }
+
+}
+
+/* harmony default export */ __webpack_exports__["default"] = (WakeButton);
+
+/***/ }),
+
 /***/ "./frontend/entry.jsx":
 /*!****************************!*\
   !*** ./frontend/entry.jsx ***!
@@ -976,12 +1032,13 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _components_album_list__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! ./components/album-list */ "./frontend/components/album-list.jsx");
 /* harmony import */ var _components_now_playing__WEBPACK_IMPORTED_MODULE_7__ = __webpack_require__(/*! ./components/now-playing */ "./frontend/components/now-playing.jsx");
 /* harmony import */ var _components_subway__WEBPACK_IMPORTED_MODULE_8__ = __webpack_require__(/*! ./components/subway */ "./frontend/components/subway.jsx");
-/* harmony import */ var react_modal__WEBPACK_IMPORTED_MODULE_9__ = __webpack_require__(/*! react-modal */ "./node_modules/react-modal/lib/index.js");
-/* harmony import */ var react_modal__WEBPACK_IMPORTED_MODULE_9___default = /*#__PURE__*/__webpack_require__.n(react_modal__WEBPACK_IMPORTED_MODULE_9__);
-/* harmony import */ var handy_components__WEBPACK_IMPORTED_MODULE_10__ = __webpack_require__(/*! handy-components */ "./node_modules/handy-components/build/index.js");
-/* harmony import */ var handy_components__WEBPACK_IMPORTED_MODULE_10___default = /*#__PURE__*/__webpack_require__.n(handy_components__WEBPACK_IMPORTED_MODULE_10__);
-/* harmony import */ var _components_new_entity__WEBPACK_IMPORTED_MODULE_11__ = __webpack_require__(/*! ./components/new-entity */ "./frontend/components/new-entity.jsx");
-/* harmony import */ var _store_store__WEBPACK_IMPORTED_MODULE_12__ = __webpack_require__(/*! ./store/store */ "./frontend/store/store.js");
+/* harmony import */ var _components_wake_button__WEBPACK_IMPORTED_MODULE_9__ = __webpack_require__(/*! ./components/wake-button */ "./frontend/components/wake-button.jsx");
+/* harmony import */ var react_modal__WEBPACK_IMPORTED_MODULE_10__ = __webpack_require__(/*! react-modal */ "./node_modules/react-modal/lib/index.js");
+/* harmony import */ var react_modal__WEBPACK_IMPORTED_MODULE_10___default = /*#__PURE__*/__webpack_require__.n(react_modal__WEBPACK_IMPORTED_MODULE_10__);
+/* harmony import */ var handy_components__WEBPACK_IMPORTED_MODULE_11__ = __webpack_require__(/*! handy-components */ "./node_modules/handy-components/build/index.js");
+/* harmony import */ var handy_components__WEBPACK_IMPORTED_MODULE_11___default = /*#__PURE__*/__webpack_require__.n(handy_components__WEBPACK_IMPORTED_MODULE_11__);
+/* harmony import */ var _components_new_entity__WEBPACK_IMPORTED_MODULE_12__ = __webpack_require__(/*! ./components/new-entity */ "./frontend/components/new-entity.jsx");
+/* harmony import */ var _store_store__WEBPACK_IMPORTED_MODULE_13__ = __webpack_require__(/*! ./store/store */ "./frontend/store/store.js");
 
 
 
@@ -995,12 +1052,14 @@ __webpack_require__.r(__webpack_exports__);
 
 
 
-let store = Object(_store_store__WEBPACK_IMPORTED_MODULE_12__["default"])();
+
+let store = Object(_store_store__WEBPACK_IMPORTED_MODULE_13__["default"])();
 window.addEventListener('DOMContentLoaded', () => {
-  react_modal__WEBPACK_IMPORTED_MODULE_9___default.a.setAppElement(document.body);
+  react_modal__WEBPACK_IMPORTED_MODULE_10___default.a.setAppElement(document.body);
   const MyContext = react__WEBPACK_IMPORTED_MODULE_0___default.a.createContext(); // PUBLIC:
 
   if (document.querySelector('#app')) {
+    react_dom__WEBPACK_IMPORTED_MODULE_1___default.a.render(react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(_components_wake_button__WEBPACK_IMPORTED_MODULE_9__["default"], null), document.querySelector('#wake-button'));
     react_dom__WEBPACK_IMPORTED_MODULE_1___default.a.render(react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(react_redux__WEBPACK_IMPORTED_MODULE_3__["Provider"], {
       context: MyContext,
       store: store
@@ -1077,7 +1136,7 @@ window.addEventListener('DOMContentLoaded', () => {
     react_dom__WEBPACK_IMPORTED_MODULE_1___default.a.render(react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(react_redux__WEBPACK_IMPORTED_MODULE_3__["Provider"], {
       context: MyContext,
       store: store
-    }, react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(handy_components__WEBPACK_IMPORTED_MODULE_10__["StandardIndex"], {
+    }, react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(handy_components__WEBPACK_IMPORTED_MODULE_11__["StandardIndex"], {
       context: MyContext,
       entityName: "album",
       columns: ['artistName', 'name', 'category'],
@@ -1085,7 +1144,7 @@ window.addEventListener('DOMContentLoaded', () => {
       modalDimensions: {
         width: 900
       }
-    }, react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(_components_new_entity__WEBPACK_IMPORTED_MODULE_11__["default"], {
+    }, react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(_components_new_entity__WEBPACK_IMPORTED_MODULE_12__["default"], {
       context: MyContext,
       initialEntity: {
         artistName: '',
@@ -1098,7 +1157,7 @@ window.addEventListener('DOMContentLoaded', () => {
     react_dom__WEBPACK_IMPORTED_MODULE_1___default.a.render(react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(react_redux__WEBPACK_IMPORTED_MODULE_3__["Provider"], {
       context: MyContext,
       store: store
-    }, react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(handy_components__WEBPACK_IMPORTED_MODULE_10__["SimpleDetails"], {
+    }, react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(handy_components__WEBPACK_IMPORTED_MODULE_11__["SimpleDetails"], {
       context: MyContext,
       entityName: "album",
       initialEntity: {

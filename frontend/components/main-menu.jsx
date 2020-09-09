@@ -4,6 +4,7 @@ import { bindActionCreators } from 'redux'
 import { sendRequest } from '../actions/index'
 import { Redirect } from 'react-router-dom'
 import { Common } from 'handy-components'
+import WakeButton from './wake-button'
 
 class MainMenu extends React.Component {
 
