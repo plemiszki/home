@@ -978,6 +978,7 @@ class WakeButton extends react__WEBPACK_IMPORTED_MODULE_0___default.a.Component 
     this.state = {
       sleeping: false
     };
+    this.resetSleepTimer();
   }
 
   clickButton() {

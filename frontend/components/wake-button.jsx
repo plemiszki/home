@@ -9,6 +9,7 @@ class WakeButton extends React.Component {
     this.state = {
       sleeping: false
     };
+    this.resetSleepTimer();
   }
 
   clickButton() {
