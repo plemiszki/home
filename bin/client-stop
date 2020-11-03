@@ -1,0 +1,8 @@
+chrome_processes=$(ps -ef | grep "http://192.168.1.123:5000" | grep -v "grep")
+while IFS= read -r line; do
+    myarray=($line)
+    pid="${myarray[1]}"
+    if [ "$pid" != "" ]; then
+      kill -9 $pid
+    fi
+done <<< "$chrome_processes"
