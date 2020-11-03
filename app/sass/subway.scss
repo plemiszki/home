@@ -2,33 +2,62 @@
   width: 100%;
   height: 100%;
 
+  $image_column_width: 200px;
+  $time_column_width: 200px;
+  $countdown_column_width: 200px;
+  $spacer_width: calc(100% - #{$image_column_width} - (#{$time_column_width} * 2) - (#{$countdown_column_width} * 2));
+  $arrival_header_width: calc(#{$time_column_width} + #{$countdown_column_width} + #{$spacer_width});
+  $leave_header_width: calc(#{$time_column_width} + #{$countdown_column_width});
+
   table {
     width: 100%;
     font-size: 50px;
     color: white;
 
-    tr:first-of-type {
-
-      th:first-of-type {
-        width: 230px;
-      }
+    .unimportant {
+      color: gray;
     }
+  }
+
+  table.headers-table {
 
     th {
       padding-top: 30px;
       padding-bottom: 30px;
     }
 
-    td.image-container {
-      text-align: center;
+    th:first-of-type {
+      width: $image_column_width;
     }
 
-    th, td {
-      padding-left: 20px;
-      padding-right: 20px;
+    th.arrival-header {
+      width: $arrival_header_width;
+    }
 
-      &.unimportant {
-        color: gray;
+    th.leave-header {
+      width: $leave_header_width;
+    }
+  }
+
+  table.data-table {
+
+    th, td {
+
+      &.image-column {
+        text-align: left;
+        width: $image_column_width;
+      }
+
+      &.time-column {
+        width: $time_column_width;
+      }
+
+      &.countdown-column {
+        width: $countdown_column_width;
+      }
+
+      &.spacer {
+        width: $spacer_width;
       }
 
       div.image {

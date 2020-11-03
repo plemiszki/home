@@ -812,11 +812,15 @@ class Subway extends react__WEBPACK_IMPORTED_MODULE_0___default.a.Component {
       visible: this.state.fetching
     }), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
       className: "col-xs-12"
-    }, react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("table", null, react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("thead", {
-      className: this.state.fetching ? ' hidden' : ''
-    }, react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("tr", null, react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("th", null), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("th", {
-      className: "unimportant"
-    }, "Arrival"), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("th", null), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("th", null, "Leave By"), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("th", null))), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("tbody", null, this.renderSubwayData()))))));
+    }, react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("table", {
+      className: this.state.fetching ? ' hidden' : 'headers-table'
+    }, react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("thead", null, react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("tr", null, react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("th", null), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("th", {
+      className: "arrival-header unimportant"
+    }, "Arrival"), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("th", {
+      className: "leave-header"
+    }, "Leave By")))), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("table", {
+      className: "data-table"
+    }, react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("tbody", null, this.renderSubwayData()))))));
   }
 
   renderSubwayData() {
@@ -824,14 +828,20 @@ class Subway extends react__WEBPACK_IMPORTED_MODULE_0___default.a.Component {
       return react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("tr", {
         key: index
       }, react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("td", {
-        className: "image-container"
+        className: "image-column"
       }, react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
         className: `image train-${data.train}`
       })), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("td", {
-        className: "unimportant"
+        className: "unimportant time-column"
       }, data.time), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("td", {
-        className: "unimportant"
-      }, data.eta_minutes, " min"), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("td", null, data.leave_at), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("td", null, data.leave_in, " min"));
+        className: "unimportant countdown-column"
+      }, data.eta_minutes, " min"), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("td", {
+        className: "spacer"
+      }), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("td", {
+        className: "time-column"
+      }, data.leave_at), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("td", {
+        className: "countdown-column"
+      }, data.leave_in, " min"));
     });
   }
 

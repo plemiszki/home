@@ -34,16 +34,16 @@ class Subway extends React.Component {
           <div className="row">
             <Spinner visible={ this.state.fetching } />
             <div className="col-xs-12">
-              <table>
-                <thead className={ this.state.fetching ? ' hidden' : '' }>
+              <table className={ this.state.fetching ? ' hidden' : 'headers-table' }>
+                <thead>
                   <tr>
                     <th></th>
-                    <th className="unimportant">Arrival</th>
-                    <th></th>
-                    <th>Leave By</th>
-                    <th></th>
+                    <th className="arrival-header unimportant">Arrival</th>
+                    <th className="leave-header">Leave By</th>
                   </tr>
                 </thead>
+              </table>
+              <table className="data-table">
                 <tbody>
                   { this.renderSubwayData() }
                 </tbody>
@@ -59,19 +59,20 @@ class Subway extends React.Component {
     return this.state.subwayData.map((data, index) => {
       return(
         <tr key={ index }>
-          <td className="image-container">
+          <td className="image-column">
             <div className={ `image train-${data.train}` }></div>
           </td>
-          <td className="unimportant">
+          <td className="unimportant time-column">
             { data.time }
           </td>
-          <td className="unimportant">
+          <td className="unimportant countdown-column">
             { data.eta_minutes } min
           </td>
-          <td>
+          <td className="spacer"></td>
+          <td className="time-column">
             { data.leave_at }
           </td>
-          <td>
+          <td className="countdown-column">
             { data.leave_in } min
           </td>
         </tr>
