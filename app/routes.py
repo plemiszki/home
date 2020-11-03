@@ -83,13 +83,13 @@ def stop_music():
 
 @app.route('/api/subway')
 def api_subway():
-    base_url = 'https://api-endpoint.mta.info/Dataservice/mtagtfsfeeds/nyct%2Fgtfs-nqrw'
+    base_url = 'https://api-endpoint.mta.info/Dataservice/mtagtfsfeeds/nyct%2Fgtfs'
     feed = gtfs_realtime_pb2.FeedMessage()
     mta_api_key = os.getenv('MTA_API_KEY')
     data = []
-    q_response = requests.get(base_url, allow_redirects=True, headers={ 'x-api-key': mta_api_key })
+    q_response = requests.get(f'{base_url}-nqrw', allow_redirects=True, headers={ 'x-api-key': mta_api_key })
     data = process_mta_response(q_response, feed, 'Q', data)
-    b_response = requests.get(base_url, allow_redirects=True, headers={ 'x-api-key': mta_api_key })
+    b_response = requests.get(f'{base_url}-bdfm', allow_redirects=True, headers={ 'x-api-key': mta_api_key })
     data = process_mta_response(b_response, feed, 'B', data)
     data.sort(key=lambda x: x['eta_minutes'])
     return { 'subwayData': data }
