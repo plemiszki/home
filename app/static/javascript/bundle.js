@@ -796,6 +796,22 @@ class Subway extends react__WEBPACK_IMPORTED_MODULE_0___default.a.Component {
     }).then(() => {
       this.setState({
         fetching: false,
+        subwayData: this.props.subwayData,
+        interval: window.setInterval(this.refresh.bind(this), 15000)
+      });
+    });
+  }
+
+  componentWillUnmount() {
+    clearInterval(this.state.interval);
+  }
+
+  refresh() {
+    this.props.sendRequest({
+      url: '/api/subway',
+      method: 'get'
+    }).then(() => {
+      this.setState({
         subwayData: this.props.subwayData
       });
     });
