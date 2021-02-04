@@ -87,10 +87,8 @@ def api_subway():
     feed = gtfs_realtime_pb2.FeedMessage()
     mta_api_key = os.getenv('MTA_API_KEY')
     data = []
-    q_response = requests.get(f'{base_url}-nqrw', allow_redirects=True, headers={ 'x-api-key': mta_api_key })
-    data = process_mta_response(q_response, feed, 'Q', data)
-    b_response = requests.get(f'{base_url}-bdfm', allow_redirects=True, headers={ 'x-api-key': mta_api_key })
-    data = process_mta_response(b_response, feed, 'B', data)
+    f_response = requests.get(f'{base_url}-bdfm', allow_redirects=True, headers={ 'x-api-key': mta_api_key })
+    data = process_mta_response(f_response, feed, 'F', data)
     data.sort(key=lambda x: x['eta_minutes'])
     return { 'subwayData': data }
 
@@ -234,7 +232,7 @@ def process_mta_response(response, feed, train, output):
             obj = json.loads(json_format.MessageToJson(entity.trip_update))
             if 'stopTimeUpdate' in obj:
                 for stop_time in obj['stopTimeUpdate']:
-                    if stop_time['stopId'] == 'D26N':
+                    if stop_time['stopId'] == 'F25N':
                         departure_utc_naive = datetime.utcfromtimestamp(int(stop_time['departure']['time']))
                         departure_utc_aware = departure_utc_naive.replace(tzinfo=timezone.utc)
                         depature_local = departure_utc_aware.astimezone(tz.gettz('America/New_York'))

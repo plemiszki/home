@@ -68,12 +68,18 @@
         margin-top: 20px;
         margin-bottom: 20px;
 
+        // http://subspotting.nyc/assets/img/line-icons/F.svg
+
         &.train-Q {
           background-image: url('/static/images/subway-line-Q.svg')
         }
 
         &.train-B {
           background-image: url('/static/images/subway-line-B.svg')
+        }
+
+        &.train-F {
+          background-image: url('/static/images/subway-line-F.svg')
         }
       }
     }
