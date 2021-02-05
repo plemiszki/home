@@ -24,6 +24,24 @@ class MainMenu extends React.Component {
       let { tempF, tempC } = this.props;
       this.setState({
         tempF,
+        tempC,
+        interval: window.setInterval(this.refresh.bind(this), 15000)
+      });
+    });
+  }
+
+  componentWillUnmount() {
+    clearInterval(this.state.interval);
+  }
+
+  refresh() {
+    this.props.sendRequest({
+      url: '/api/indoor_temp',
+      method: 'get'
+    }).then(() => {
+      let { tempF, tempC } = this.props;
+      this.setState({
+        tempF,
         tempC
       });
     });

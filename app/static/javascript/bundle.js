@@ -357,6 +357,27 @@ class MainMenu extends react__WEBPACK_IMPORTED_MODULE_0___default.a.Component {
       } = this.props;
       this.setState({
         tempF,
+        tempC,
+        interval: window.setInterval(this.refresh.bind(this), 15000)
+      });
+    });
+  }
+
+  componentWillUnmount() {
+    clearInterval(this.state.interval);
+  }
+
+  refresh() {
+    this.props.sendRequest({
+      url: '/api/indoor_temp',
+      method: 'get'
+    }).then(() => {
+      let {
+        tempF,
+        tempC
+      } = this.props;
+      this.setState({
+        tempF,
         tempC
       });
     });
