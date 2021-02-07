@@ -32,7 +32,7 @@ class Tabs extends React.Component {
     return(
       <div className="tabs">
         <nav className={ this.props.hidden ? 'no-border' : '' }>
-          <MainMenuButton />
+          <MainMenuButton showBorder={ !this.props.hidden } />
           { this.renderTabs() }
           <div className="beneath-tabs" style={ { height: beneathTabsHeight } }></div>
         </nav>
@@ -45,10 +45,10 @@ class Tabs extends React.Component {
         </section>
         <style jsx>{`
           --nav_width: 263px;
-          --border: solid 3px white;
           --radius: 5px;
           --image_size: 110px;
           --tab_size: 176px;
+          --border: solid 3px white;
           nav {
             display: inline-block;
             vertical-align: top;
@@ -60,33 +60,7 @@ class Tabs extends React.Component {
           nav::-webkit-scrollbar {
             display: none;
           }
-          nav:not(.no-border) .main-menu-button-container {
-            border-right: var(--border);
-          }
           nav:not(.no-border) .beneath-tabs {
-            border-right: var(--border);
-          }
-          .tab {
-            display: inline-block;
-            box-sizing: border-box;
-            text-align: right;
-            width: var(--tab_size);
-            height: var(--tab_size);
-            background-position: center;
-            background-size: var(--image_size);
-          }
-          tab.selected {
-            border-top: var(--border);
-            border-left: var(--border);
-            border-bottom: var(--border);
-            border-top-left-radius: var(--radius);
-            border-bottom-left-radius: var(--radius);
-            background-position-x: calc(50% - 3px);
-          }
-          tab.no-bottom-border {
-            border-bottom-color: black;
-          }
-          tab:not(.selected) {
             border-right: var(--border);
           }
           #tab-component {
@@ -113,12 +87,39 @@ class Tabs extends React.Component {
           backgroundImage: `url(/static/images/${tab.image}.svg)`
         };
         return(
-          <div
-            key={ index }
-            className={ `tab ${selectedTabIndex === index ? 'selected' : ''} ${(finalTab && index >= 2) ? 'no-bottom-border' : ''}` }
-            style={ styles }
-            onClick={ this.switchTab.bind(this, index) }
-          ></div>
+          <>
+            <div
+              key={ index }
+              className={ `tab ${selectedTabIndex === index ? 'selected' : ''} ${(finalTab && index >= 2) ? 'no-bottom-border' : ''}` }
+              style={ styles }
+              onClick={ this.switchTab.bind(this, index) }
+            ></div>
+            <style jsx>{`
+              .tab {
+                display: inline-block;
+                box-sizing: border-box;
+                text-align: right;
+                width: var(--tab_size);
+                height: var(--tab_size);
+                background-position: center;
+                background-size: var(--image_size);
+              }
+              .tab.selected {
+                border-top: var(--border);
+                border-left: var(--border);
+                border-bottom: var(--border);
+                border-top-left-radius: var(--radius);
+                border-bottom-left-radius: var(--radius);
+                background-position-x: calc(50% - 3px);
+              }
+              .tab.no-bottom-border {
+                border-bottom-color: black;
+              }
+              .tab:not(.selected) {
+                border-right: var(--border);
+              }
+            `}</style>
+          </>
         );
       });
     }

@@ -24,6 +24,7 @@ class MainMenuButton extends React.Component {
               width: 260px;
               height: 160px;
               text-align: center;
+              border-right: ${this.props.showBorder ? 'solid 3px white' : ''};
             }
             .menu-button {
               display: inline-block;
