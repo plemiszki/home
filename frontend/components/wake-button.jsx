@@ -30,7 +30,17 @@ class WakeButton extends React.Component {
   render() {
     if (this.state.sleeping) {
       return(
-        <div className="wake-button" onClick={ this.clickButton.bind(this) }></div>
+        <>
+          <div className="wake-button" onClick={ this.clickButton.bind(this) }></div>
+          <style jsx>{`
+            .wake-button {
+              position: absolute;
+              width: 100%;
+              height: 100%;
+              z-index: 10;
+            }
+          `}</style>
+        </>
       );
     } else {
       return(

@@ -43,6 +43,63 @@ class Tabs extends React.Component {
             { ...props }
           />
         </section>
+        <style jsx>{`
+          --nav_width: 263px;
+          --border: solid 3px white;
+          --radius: 5px;
+          --image_size: 110px;
+          --tab_size: 176px;
+          nav {
+            display: inline-block;
+            vertical-align: top;
+            width: var(--nav_width);
+            text-align: right;
+            height: 100%;
+            overflow: scroll;
+          }
+          nav::-webkit-scrollbar {
+            display: none;
+          }
+          nav:not(.no-border) .main-menu-button-container {
+            border-right: var(--border);
+          }
+          nav:not(.no-border) .beneath-tabs {
+            border-right: var(--border);
+          }
+          .tab {
+            display: inline-block;
+            box-sizing: border-box;
+            text-align: right;
+            width: var(--tab_size);
+            height: var(--tab_size);
+            background-position: center;
+            background-size: var(--image_size);
+          }
+          tab.selected {
+            border-top: var(--border);
+            border-left: var(--border);
+            border-bottom: var(--border);
+            border-top-left-radius: var(--radius);
+            border-bottom-left-radius: var(--radius);
+            background-position-x: calc(50% - 3px);
+          }
+          tab.no-bottom-border {
+            border-bottom-color: black;
+          }
+          tab:not(.selected) {
+            border-right: var(--border);
+          }
+          #tab-component {
+            display: inline-block;
+            position: relative;
+            width: calc(100% - var(--nav_width));
+            height: 100%;
+            overflow: scroll;
+          }
+          #tab-component::-webkit-scrollbar {
+            display: none;
+          }
+        `}</style>
       </div>
     );
   }

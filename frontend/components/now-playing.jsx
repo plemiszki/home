@@ -118,6 +118,41 @@ class NowPlaying extends React.Component {
           <img src={ `/static/images/stop-button-${this.state.track === 0 ? 'white' : 'gray'}.svg` } onClick={ this.clickStop.bind(this) } />
         </div>
         { this.renderSongs() }
+        <style jsx>{`
+          .now-playing {
+            background-color: black;
+          }
+          h1 {
+            width: 90%;
+            margin: auto;
+            margin-top: 50px;
+            text-align: center;
+            font-family: 'TeachableSans-Regular';
+            font-size: 50px;
+            color: white;
+            line-height: 80px;
+            padding-bottom: 25px;
+          }
+          p {
+            text-align: center;
+            font-family: 'TeachableSans-Bold';
+            color: green;
+            font-size: 40px;
+            margin-bottom: 30px;
+          }
+          .buttons {
+            width: 410px;
+            margin: auto;
+            margin-bottom: 30px;
+          }
+          img {
+            width: 160px;
+            height: 160px;
+          }
+          img:first-of-type {
+            margin-right: 80px;
+          }
+        `}</style>
       </div>
     );
   }
@@ -134,6 +169,31 @@ class NowPlaying extends React.Component {
             );
           }) }
         </tbody>
+        <style jsx>{`
+          table {
+            margin: auto;
+            font-family: 'TeachableSans-Regular';
+            font-size: 40px;
+            color: gray;
+            border: solid 1px gray;
+            border-radius: 10px;
+            width: 90%;
+            margin-bottom: 30px;
+          }
+          td {
+            padding: 30px 0;
+            text-align: center;
+          }
+          td.playing {
+            color: white;
+          }
+          tr:first-of-type td {
+            padding-top: 60px;
+          }
+          tr:last-of-type td {
+            padding-bottom: 60px;
+          }
+        `}</style>
       </table>
     );
   }

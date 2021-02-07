@@ -8,16 +8,6 @@ $imgpath: '/static/images';
 @import '../../node_modules/handy-components/styles/admin-layout';
 @import '../../node_modules/handy-components/styles/admin-table';
 
-@import './main-menu-button';
-@import './spinner';
-@import './wake-button';
-
-@import './main-menu';
-@import './tabs';
-@import './album-list';
-@import './now-playing';
-@import './subway';
-
 body.public {
   background-color: black;
   color: white;

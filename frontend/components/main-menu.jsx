@@ -68,6 +68,38 @@ class MainMenu extends React.Component {
         <div className={ 'temperature-container' + (this.state.tempF ? '' : ' hidden') }>
           <p>Indoor Temp: <span id="temp-f">{ this.state.tempF }</span> &#176;F (<span id="temp-c">{ this.state.tempC }</span> &#176;C)</p>
         </div>
+        <style jsx>{`
+          .main-menu {
+            width: 100%;
+            height: 100%;
+          }
+          .inner {
+            position: absolute;
+            top: calc(50% - 200px);
+            width: 100%;
+          }
+          .temperature-container {
+            position: absolute;
+            bottom: 20px;
+            width: 100%;
+            text-align: center;
+            font-family: 'TeachableSans-Bold';
+            font-size: 40px;
+          }
+          .menu-icon {
+            display: block;
+            width: 350px;
+            height: 350px;
+            margin: auto;
+          }
+          .music {
+            background-image: url('/static/images/music-note.svg');
+            background-size: 100%;
+          }
+          .subway {
+            background-image: url('/static/images/subway.svg');
+          }
+        `}</style>
       </div>
     );
   }

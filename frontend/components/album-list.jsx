@@ -67,6 +67,26 @@ class AlbumList extends React.Component {
           <div id="random-album" onClick={ this.clickRandom.bind(this) }></div>
         </div>
         { this.renderAlbums() }
+        <style jsx>{`
+          .album-list {
+            background-color: black;
+            padding-bottom: 40px;
+          }
+          .link-container {
+            display: inline-block;
+            width: 33%;
+            text-align: center;
+            user-select: none;
+            vertical-align: middle;
+          }
+          #random-album {
+            background-image: url('/static/images/random.svg');
+            width: 200px;
+            height: 200px;
+            margin: auto;
+            margin-top: 40px;
+          }
+        `}</style>
       </div>
     );
   }
@@ -79,6 +99,45 @@ class AlbumList extends React.Component {
             <h1>{ album.name }</h1>
             <p>{ album.artistName }</p>
           </div>
+          <style jsx>{`
+            .link-container {
+              display: inline-block;
+              width: 33%;
+              text-align: center;
+              user-select: none;
+              vertical-align: middle;
+            }
+            .album {
+              margin-top: 40px;
+              display: inline-block;
+              background-color: black;
+              padding: 40px;
+              text-align: center;
+              border: solid 1px gray;
+              width: 85%;
+              vertical-align: middle;
+            }
+            h1 {
+              font-family: 'TeachableSans-Regular';
+              font-size: 40px;
+              color: white;
+              line-height: 50px;
+              padding-bottom: 10px;
+              word-wrap: break-word;
+            }
+            p {
+              font-family: 'TeachableSans-SemiBold';
+              color: green;
+              font-size: 30px;
+            }
+            album:active {
+              background-color: green;
+              border: solid 1px black;
+            }
+            album:active h1, album:active p {
+              color: black;
+            }
+          `}</style>
         </div>
       );
     });
