@@ -126,7 +126,7 @@ class AlbumList extends React.Component {
               overflow: hidden;
               text-overflow: ellipsis;
               font-family: 'TeachableSans-Regular';
-              font-size: 40px;
+              font-size: 36px;
               color: white;
               line-height: 50px;
               padding-right: var(--album-padding);
