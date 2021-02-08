@@ -61,80 +61,90 @@ class AlbumList extends React.Component {
 
   render() {
     return(
-      <div className="album-list">
+      <>
         <Spinner visible={ this.state.fetching } />
-        <div className={ 'link-container' + (this.state.albums.length > 0 ? '' : ' hidden') }>
-          <div id="random-album" onClick={ this.clickRandom.bind(this) }></div>
-        </div>
-        { this.renderAlbums() }
-        <style jsx>{`
-          .album-list {
-            background-color: black;
-            padding-bottom: 40px;
-          }
-          .link-container {
-            display: inline-block;
-            width: 33%;
-            text-align: center;
-            user-select: none;
-            vertical-align: middle;
-          }
-          #random-album {
-            background-image: url('/static/images/random.svg');
-            width: 200px;
-            height: 200px;
-            margin: auto;
-            margin-top: 40px;
-          }
-        `}</style>
-      </div>
+        <div className="album-list">
+          <div
+            id="random-album"
+            className={ this.state.albums.length > 0 ? '' : ' hidden' }
+            onClick={ this.clickRandom.bind(this) }>
+          </div>
+          { this.renderAlbums() }
+          <style jsx>{`
+              --gap-size: 40px;
+              .album-list {
+                display: grid;
+                grid-template-columns: repeat(3, 1fr);
+                grid-auto-rows: 1fr;
+                grid-gap: var(--gap-size);
+                padding: var(--gap-size);
+                background-color: black;
+              }
+              #random-album {
+                background-image: url('/static/images/random.svg');
+                background-size: 200px;
+                background-position: center;
+                user-select: none;
+              }
+              `}</style>
+          </div>
+      </>
     );
   }
 
   renderAlbums() {
     return this.state.albums.map((album) => {
       return(
-        <div key={ album.id } className="link-container" onClick={ this.clickAlbum.bind(this, album.id) }>
-          <div className="album">
+        <div key={ album.id } className="album" onClick={ this.clickAlbum.bind(this, album.id) }>
+          <div className="text-container">
             <h1>{ album.name }</h1>
             <p>{ album.artistName }</p>
           </div>
           <style jsx>{`
-            .link-container {
-              display: inline-block;
-              width: 33%;
-              text-align: center;
+            --album-padding: 40px;
+            .album {
               user-select: none;
               vertical-align: middle;
-            }
-            .album {
-              margin-top: 40px;
-              display: inline-block;
+              display: flex;
+              align-items: center;
               background-color: black;
-              padding: 40px;
+              padding-top: var(--album-padding);
+              padding-bottom: var(--album-padding);
               text-align: center;
               border: solid 1px gray;
-              width: 85%;
               vertical-align: middle;
+              overflow: hidden;
+            }
+            .text-container {
+              width: 100%;
+              word-wrap: break-word;
             }
             h1 {
+              display: -webkit-box;
+              -webkit-line-clamp: 3;
+              -webkit-box-orient: vertical;
+              overflow: hidden;
+              text-overflow: ellipsis;
               font-family: 'TeachableSans-Regular';
               font-size: 40px;
               color: white;
               line-height: 50px;
-              padding-bottom: 10px;
-              word-wrap: break-word;
+              padding-right: var(--album-padding);
+              padding-left: var(--album-padding);
+              margin-bottom: 10px;
             }
             p {
               font-family: 'TeachableSans-SemiBold';
               color: green;
               font-size: 30px;
+              padding-right: var(--album-padding);
+              padding-left: var(--album-padding);
             }
-            album:active {
+            .album:active {
               background-color: green;
               border: solid 1px black;
             }
-            album:active h1, album:active p {
+            .album:active h1, .album:active p {
               color: black;
             }
           `}</style>

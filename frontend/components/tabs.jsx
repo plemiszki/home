@@ -87,9 +87,8 @@ class Tabs extends React.Component {
           backgroundImage: `url(/static/images/${tab.image}.svg)`
         };
         return(
-          <>
+          <div key={index}>
             <div
-              key={ index }
               className={ `tab ${selectedTabIndex === index ? 'selected' : ''} ${(finalTab && index >= 2) ? 'no-bottom-border' : ''}` }
               style={ styles }
               onClick={ this.switchTab.bind(this, index) }
@@ -119,7 +118,7 @@ class Tabs extends React.Component {
                 border-right: var(--border);
               }
             `}</style>
-          </>
+          </div>
         );
       });
     }
