@@ -1,3 +1,5 @@
 #!/bin/bash
 cd "$( dirname "${BASH_SOURCE[0]}" )"
-nohup ./display-stop >/dev/null 2>&1 & nohup ./display-start >/dev/null 2>&1 &
+nohup ./display-stop >/dev/null 2>&1 &
+sleep 3
+nohup ./display-start >/dev/null 2>&1 &
