@@ -1,5 +1,5 @@
 #!/bin/bash
-chrome_processes=$(ps -ef | grep "http://127.0.0.100:5000" | grep -v "grep")
+chrome_processes=$(ps -ef | grep "http://127.0.0.1:5000" | grep -v "grep")
 while IFS= read -r line; do
     myarray=($line)
     pid="${myarray[1]}"
