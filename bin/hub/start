@@ -1,6 +1,6 @@
 #!/bin/bash
 cd "$( dirname "${BASH_SOURCE[0]}" )"
-nohup ./server >/dev/null 2>&1 & nohup ./display >/dev/null 2>&1 &
+nohup ./server >/dev/null 2>&1 & nohup ./display-start >/dev/null 2>&1 &
 
 while [ "$response" != "200" ]
 do

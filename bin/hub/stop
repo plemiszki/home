@@ -1,0 +1,11 @@
+#!/bin/bash
+server_processes=$(ps -ef | grep "flask run" | grep -v "grep")
+while IFS= read -r line; do
+    myarray=($line)
+    pid="${myarray[1]}"
+    if [ "$pid" != "" ]; then
+      kill -9 $pid
+    fi
+done <<< "$server_processes"
+
+nohup ./display-stop >/dev/null 2>&1
