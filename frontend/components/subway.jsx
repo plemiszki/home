@@ -151,6 +151,9 @@ class Subway extends React.Component {
             .train-F {
               background-image: url('/static/images/subway-line-F.svg')
             }
+            .train-G {
+              background-image: url('/static/images/subway-line-G.svg')
+            }
           `}</style>
         </tr>
       )

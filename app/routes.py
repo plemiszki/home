@@ -88,7 +88,9 @@ def api_subway():
     mta_api_key = os.getenv('MTA_API_KEY')
     data = []
     f_response = requests.get(f'{base_url}-bdfm', allow_redirects=True, headers={ 'x-api-key': mta_api_key })
+    g_response = requests.get(f'{base_url}-g', allow_redirects=True, headers={ 'x-api-key': mta_api_key })
     data = process_mta_response(f_response, feed, 'F', data)
+    data = process_mta_response(g_response, feed, 'G', data)
     data.sort(key=lambda x: x['eta_minutes'])
     return { 'subwayData': data }
 
