@@ -67,6 +67,7 @@ def start_music():
     track = int(request_body['track'])
     album_id = int(request_body['album_id'])
     album = Album.query.get(album_id)
+    # TODO: utilize return_song_info
     music_directory = os.getenv('MUSIC_DIRECTORY')
     filenames = os.listdir(f"{music_directory}/{album.artist_name}/{album.name}")
     filenames.sort()
