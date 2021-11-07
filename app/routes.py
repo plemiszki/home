@@ -70,7 +70,7 @@ def start_music():
     music_directory = os.getenv('MUSIC_DIRECTORY')
     filenames = os.listdir(f"{music_directory}/{album.artist_name}/{album.name}")
     filenames.sort()
-    song_titles = map(lambda song_title: song_title.split('.')[0][2:], filenames)
+    song_titles = map(lambda song_title: '.'.join(song_title.split('.')[:-1])[3:], filenames)
     if os.getenv('FLASK_ENV') == 'production':
         process_id = Popen(['omxplayer', '-o', 'local', f"{music_directory}/{album.artist_name}/{album.name}/{filenames[track - 1]}"]).pid
         redis_client.sadd('processes', process_id)
