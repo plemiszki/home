@@ -54,9 +54,10 @@ def api_albums(category):
     for album in albums:
         dict = album.__dict__
         del dict['_sa_instance_state']
+        dict['artistName'] = album.artist_name
         album_dicts.append(dict)
     result = {}
-    result['albums'] = CamelCase().hump(album_dicts)
+    result['albums'] = album_dicts
     return result
 
 @app.route('/api/music/start', methods=['POST'])
@@ -70,8 +71,9 @@ def start_music():
     filenames = os.listdir(f"{music_directory}/{album.artist_name}/{album.name}")
     filenames.sort()
     song_titles = map(lambda song_title: song_title.split('.')[0][2:], filenames)
-    process_id = Popen(['omxplayer', '-o', 'local', f"{music_directory}/{album.artist_name}/{album.name}/{filenames[track - 1]}"]).pid
-    redis_client.sadd('processes', process_id)
+    if os.getenv('FLASK_ENV') == 'production':
+        process_id = Popen(['omxplayer', '-o', 'local', f"{music_directory}/{album.artist_name}/{album.name}/{filenames[track - 1]}"]).pid
+        redis_client.sadd('processes', process_id)
     redis_client.set('album_id', album.id)
     redis_client.set('track', track)
     return { 'album': serialize_album(album), 'track': track, 'songs': list(song_titles) }
@@ -121,9 +123,10 @@ def api_albums_index():
         dict = album.__dict__
         dict['category'] = ['Modern', 'Classical'][album.category - 1]
         del dict['_sa_instance_state']
+        dict['artistName'] = album.artist_name
         album_dicts.append(dict)
     result = {}
-    result['albums'] = CamelCase().hump(album_dicts)
+    result['albums'] = album_dicts
     return result
 
 @app.route('/api/albums/<album_id>', methods=['GET', 'PATCH', 'DELETE'])
@@ -144,8 +147,9 @@ def api_album_details(album_id):
     for keys in album_dict:
         album_dict[keys] = str(album_dict[keys])
     album_dict['category_name'] = ['modern', 'classical'][album.category - 1]
+    album_dict['artistName'] = album_dict['artist_name']
     result = {}
-    result['album'] = CamelCase().hump(album_dict)
+    result['album'] = album_dict
 
     music_directory = os.getenv('MUSIC_DIRECTORY')
     filenames = os.listdir(f"{music_directory}/{album.artist_name}/{album.name}")
@@ -220,9 +224,10 @@ def return_song_info():
 def serialize_album(album):
     album_dict = copy.copy(album).__dict__
     del album_dict['_sa_instance_state']
+    album_dict['artistName'] = album.artist_name
     for keys in album_dict:
         album_dict[keys] = str(album_dict[keys])
-    return CamelCase().hump(album_dict)
+    return album_dict
 
 def process_mta_response(response, feed, train, output):
     try:
