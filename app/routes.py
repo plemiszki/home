@@ -13,7 +13,7 @@ from app import app, db
 from flask import render_template, jsonify, request, redirect
 from app.utils import stop_everything
 from app.models import Album
-from to_camel_case import to_camel_case
+from camelcase import CamelCase
 from subprocess import Popen
 from flask_redis import FlaskRedis
 redis_client = FlaskRedis(app)
@@ -56,7 +56,7 @@ def api_albums(category):
         del dict['_sa_instance_state']
         album_dicts.append(dict)
     result = {}
-    result['albums'] = to_camel_case(album_dicts)
+    result['albums'] = CamelCase().hump(album_dicts)
     return result
 
 @app.route('/api/music/start', methods=['POST'])
@@ -121,7 +121,7 @@ def api_albums_index():
         del dict['_sa_instance_state']
         album_dicts.append(dict)
     result = {}
-    result['albums'] = to_camel_case(album_dicts)
+    result['albums'] = CamelCase().hump(album_dicts)
     return result
 
 @app.route('/api/albums/<album_id>', methods=['GET', 'PATCH', 'DELETE'])
@@ -143,7 +143,7 @@ def api_album_details(album_id):
         album_dict[keys] = str(album_dict[keys])
     album_dict['category_name'] = ['modern', 'classical'][album.category - 1]
     result = {}
-    result['album'] = to_camel_case(album_dict)
+    result['album'] = CamelCase().hump(album_dict)
 
     music_directory = os.getenv('MUSIC_DIRECTORY')
     filenames = os.listdir(f"{music_directory}/{album.artist_name}/{album.name}")
@@ -220,7 +220,7 @@ def serialize_album(album):
     del album_dict['_sa_instance_state']
     for keys in album_dict:
         album_dict[keys] = str(album_dict[keys])
-    return to_camel_case(album_dict)
+    return CamelCase().hump(album_dict)
 
 def process_mta_response(response, feed, train, output):
     try:
