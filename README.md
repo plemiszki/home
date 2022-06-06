@@ -1,4 +1,4 @@
-# Jarvis
+# Home
 
 If you're like me, you enjoy listening to music when you're cooking or cleaning.
 
@@ -10,24 +10,28 @@ But this isn't as easy as it sounds. There are many steps that must be taken in 
 4. Open your music app
 5. Find the album you want and play it
 
-Ugh. Performing the above steps must add up to several days per year of lost time. Think of the opportunity cost. I needed a better way.
-
-Well now I have one. Behold Jarvis:
+Ugh. Think of the opportunity cost. I needed a better way.
 
 ![photo](./doc/photo.jpg)
 
-Jarvis is a Flask app running on a Raspberry Pi, which is attached to the wall of my kitchen. The Pi is connected to a touch screen, and also to an external drive containing all of my music files. The app is always running, so it's always ready to play music at the touch of a button.
+"Home" is a Flask app running on a Raspberry Pi attached to the wall. The Pi is connected to a touch screen. The app is always running, so it's always ready to play music at the touch of a button.
 
 The app uses [OMXPlayer](https://www.raspberrypi.org/documentation/raspbian/applications/omxplayer.md) to play the music files. The process ID is stored in Redis, so it can be killed later if a different song is selected.
 
 ### Album Select Screen
 
-Just click the album you want. Want to be surprised? Touch the question box icon for a random choice.
+Touch the album you want, or the question box for a random choice.
 
-![album_select](./doc/album_select.jpg)
+![album_select](./doc/albums_tab.png)
 
 ### Play Screen
 
-You can skip around the album if desired by touching songs. Touch the green arrow to go back.
+Use this screen to see what song is playing. Touch a different song to change the track, or the stop button to stop playing.
 
-![play_screen](./doc/play_screen.jpg)
+![play_screen](./doc/play_tab.png)
+
+### NYC Subway
+
+The app is also wired up to the New York City subway API, so I can see when trains are arriving at the stations close to my home.
+
+![play_screen](./doc/subway.png)
