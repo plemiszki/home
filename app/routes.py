@@ -45,7 +45,7 @@ def api_now_playing():
 
 @app.route('/api/music/<category>')
 def api_albums(category):
-    categories = ['modern', 'classical']
+    categories = ['modern', 'classical', 'christmas']
     if categories.count(category) == 0:
         return { 'message': 'invalid category' }, 422
     categoryId = categories.index(category) + 1
@@ -122,7 +122,7 @@ def api_albums_index():
     album_dicts = []
     for album in albums:
         dict = album.__dict__
-        dict['category'] = ['Modern', 'Classical'][album.category - 1]
+        dict['category'] = ['Modern', 'Classical', 'Christmas'][album.category - 1]
         del dict['_sa_instance_state']
         dict['artistName'] = album.artist_name
         album_dicts.append(dict)
@@ -147,7 +147,7 @@ def api_album_details(album_id):
     del album_dict['_sa_instance_state']
     for keys in album_dict:
         album_dict[keys] = str(album_dict[keys])
-    album_dict['category_name'] = ['modern', 'classical'][album.category - 1]
+    album_dict['category_name'] = ['modern', 'classical', 'christmas'][album.category - 1]
     album_dict['artistName'] = album_dict['artist_name']
     result = {}
     result['album'] = album_dict

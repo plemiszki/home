@@ -42,7 +42,8 @@ window.addEventListener('DOMContentLoaded', () => {
                 tabs={ [
                   { image: 'music-note', Component: NowPlaying },
                   { image: 'guitar', Component: AlbumList, props: { key: 'modern', category: 'modern' } },
-                  { image: 'violin', Component: AlbumList, props: { key: 'classical', category: 'classical' } }
+                  { image: 'violin', Component: AlbumList, props: { key: 'classical', category: 'classical' } },
+                  { image: 'ornament', Component: AlbumList, props: { key: 'christmas', category: 'christmas' } }
                 ] }
               />
             </Route>
@@ -83,6 +84,18 @@ window.addEventListener('DOMContentLoaded', () => {
         />
       </Provider>,
       document.querySelector('#album-list-classical')
+    );
+  }
+
+  if (document.querySelector('#album-list-christmas')) {
+    ReactDOM.render(
+      <Provider context={ MyContext } store={ store }>
+        <AlbumList
+          context={ MyContext }
+          category={ 'christmas' }
+        />
+      </Provider>,
+      document.querySelector('#album-list-christmas')
     );
   }
 
@@ -130,7 +143,11 @@ window.addEventListener('DOMContentLoaded', () => {
               entity: 'album',
               property: 'category',
               type: 'dropdown',
-              options: [{ id: '1', text: 'Modern' }, { id: '2', text: 'Classical' }],
+              options: [
+                { id: '1', text: 'Modern' },
+                { id: '2', text: 'Classical' },
+                { id: '3', text: 'Christmas' },
+              ],
               optionDisplayProperty: 'text',
               maxOptions: 3
             }
