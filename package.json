@@ -20,11 +20,11 @@
     "react-router-dom": "^5.2.0",
     "redux": "4.0.1",
     "redux-thunk": "2.3.0",
-    "styled-jsx": "^3.4.2",
+    "styled-jsx": "^5.1.0",
     "webpack": "4.29.6"
   },
   "devDependencies": {
-    "webpack-cli": "^3.3.9"
+    "webpack-cli": "^3.3.12"
   },
   "engines": {
     "node": "12.17.0"
