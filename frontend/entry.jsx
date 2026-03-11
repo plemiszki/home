@@ -43,8 +43,8 @@ window.addEventListener('DOMContentLoaded', () => {
                   { image: 'music-note', Component: NowPlaying },
                   { image: 'guitar', Component: AlbumList, props: { key: 'modern', category: 'modern' } },
                   { image: 'violin', Component: AlbumList, props: { key: 'classical', category: 'classical' } },
-                  { image: 'music-note', Component: AlbumList, props: { key: 'jazz', category: 'jazz' } },
-                  { image: 'music-note', Component: AlbumList, props: { key: 'soundtrack', category: 'soundtrack' } },
+                  { image: 'saxophone', Component: AlbumList, props: { key: 'jazz', category: 'jazz' } },
+                  { image: 'theatre', Component: AlbumList, props: { key: 'soundtrack', category: 'soundtrack' } },
                   { image: 'ornament', Component: AlbumList, props: { key: 'christmas', category: 'christmas' } }
                 ] }
               />
