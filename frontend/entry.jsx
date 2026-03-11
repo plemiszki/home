@@ -43,6 +43,8 @@ window.addEventListener('DOMContentLoaded', () => {
                   { image: 'music-note', Component: NowPlaying },
                   { image: 'guitar', Component: AlbumList, props: { key: 'modern', category: 'modern' } },
                   { image: 'violin', Component: AlbumList, props: { key: 'classical', category: 'classical' } },
+                  { image: 'music-note', Component: AlbumList, props: { key: 'jazz', category: 'jazz' } },
+                  { image: 'music-note', Component: AlbumList, props: { key: 'soundtrack', category: 'soundtrack' } },
                   { image: 'ornament', Component: AlbumList, props: { key: 'christmas', category: 'christmas' } }
                 ] }
               />
@@ -84,6 +86,30 @@ window.addEventListener('DOMContentLoaded', () => {
         />
       </Provider>,
       document.querySelector('#album-list-classical')
+    );
+  }
+
+  if (document.querySelector('#album-list-jazz')) {
+    ReactDOM.render(
+      <Provider context={ MyContext } store={ store }>
+        <AlbumList
+          context={ MyContext }
+          category={ 'jazz' }
+        />
+      </Provider>,
+      document.querySelector('#album-list-jazz')
+    );
+  }
+
+  if (document.querySelector('#album-list-soundtrack')) {
+    ReactDOM.render(
+      <Provider context={ MyContext } store={ store }>
+        <AlbumList
+          context={ MyContext }
+          category={ 'soundtrack' }
+        />
+      </Provider>,
+      document.querySelector('#album-list-soundtrack')
     );
   }
 
@@ -147,9 +173,11 @@ window.addEventListener('DOMContentLoaded', () => {
                 { id: '1', text: 'Modern' },
                 { id: '2', text: 'Classical' },
                 { id: '3', text: 'Christmas' },
+                { id: '4', text: 'Jazz' },
+                { id: '5', text: 'Soundtrack' },
               ],
               optionDisplayProperty: 'text',
-              maxOptions: 3
+              maxOptions: 5
             }
           ]] }
         />
