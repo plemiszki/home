@@ -1,7 +1,5 @@
 import React from "react";
-import { connect } from "react-redux";
-import { bindActionCreators } from "redux";
-import { sendRequest } from "../actions/index";
+import { sendRequest } from "handy-components";
 
 class NowPlaying extends React.Component {
   constructor(props) {
@@ -14,20 +12,14 @@ class NowPlaying extends React.Component {
   }
 
   componentDidMount() {
-    this.props
-      .sendRequest({
-        url: "/api/music/now_playing",
-        method: "get",
-      })
-      .then(() => {
-        this.setState({
-          fetching: false,
-          track: this.props.track,
-          album: this.props.album || {},
-          songs: this.props.songs || [],
-          interval: window.setInterval(this.checkStatus.bind(this), 1000),
-        });
+    sendRequest("/api/music/now_playing").then((response) => {
+      this.setState({
+        track: response.track,
+        album: response.album || {},
+        songs: response.songs || [],
+        interval: window.setInterval(this.checkStatus.bind(this), 1000),
       });
+    });
   }
 
   componentWillUnmount() {
@@ -35,81 +27,57 @@ class NowPlaying extends React.Component {
   }
 
   checkStatus() {
-    this.props
-      .sendRequest({
-        url: "/api/music/now_playing",
-        method: "get",
-      })
-      .then(() => {
-        if ((this.props.album || {}).id !== this.state.album.id) {
-          document.getElementById("tab-component").scrollTop = 0;
-        }
-        this.setState({
-          track: this.props.track,
-          album: this.props.album || {},
-          songs: this.props.songs || [],
-        });
+    sendRequest("/api/music/now_playing").then((response) => {
+      if ((response.album || {}).id !== this.state.album.id) {
+        document.getElementById("tab-component").scrollTop = 0;
+      }
+      this.setState({
+        track: response.track,
+        album: response.album || {},
+        songs: response.songs || [],
       });
+    });
   }
 
   clickPlay() {
     if (this.state.track === 0) {
-      this.props
-        .sendRequest({
-          url: "/api/music/start",
-          method: "post",
-          data: {
-            track: 1,
-            albumId: this.state.album.id,
-          },
-        })
-        .then(() => {
-          this.setState({
-            track: this.props.track,
-            album: this.props.album,
-            songs: this.props.songs,
-          });
+      sendRequest("/api/music/start", {
+        method: "POST",
+        data: { track: 1, albumId: this.state.album.id },
+      }).then((response) => {
+        this.setState({
+          track: response.track,
+          album: response.album,
+          songs: response.songs,
         });
+      });
     }
   }
 
   clickStop() {
     if (this.state.track !== 0) {
-      this.props
-        .sendRequest({
-          url: "/api/music/stop",
-          method: "post",
-        })
-        .then(() => {
-          this.setState({
-            track: this.props.track,
-            album: this.props.album,
-            songs: this.props.songs,
-          });
+      sendRequest("/api/music/stop", { method: "POST" }).then((response) => {
+        this.setState({
+          track: response.track,
+          album: response.album,
+          songs: response.songs,
         });
+      });
     }
   }
 
   clickSong(track) {
-    this.setState({
-      track,
-    });
-    this.props
-      .sendRequest({
-        url: "/api/music/start",
-        method: "post",
-        data: {
-          albumId: this.state.album.id,
-          track,
-        },
-      })
-      .then(() => {
-        this.setState({
-          track: this.props.track,
-          album: this.props.album,
-          songs: this.props.songs || [],
-        });
+    this.setState({ track });
+    sendRequest("/api/music/start", {
+      method: "POST",
+      data: { albumId: this.state.album.id, track },
+    }).then((response) => {
+      this.setState({
+        track: response.track,
+        album: response.album,
+        songs: response.songs || [],
       });
+    });
   }
 
   render() {
@@ -215,12 +183,4 @@ class NowPlaying extends React.Component {
   }
 }
 
-const mapStateToProps = (reducers) => {
-  return reducers.standardReducer;
-};
-
-function mapDispatchToProps(dispatch) {
-  return bindActionCreators({ sendRequest }, dispatch);
-}
-
-export default connect(mapStateToProps, mapDispatchToProps)(NowPlaying);
+export default NowPlaying;
