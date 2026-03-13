@@ -10,8 +10,9 @@ import Subway from './components/subway'
 import WakeButton from './components/wake-button'
 
 import ReactModal from 'react-modal'
-import { SimpleDetails, FullIndex } from 'handy-components'
+import { FullIndex } from 'handy-components'
 import NewEntity from './components/new-entity'
+import AlbumDetails from './components/album-details'
 
 window.addEventListener('DOMContentLoaded', () => {
 
@@ -113,29 +114,32 @@ window.addEventListener('DOMContentLoaded', () => {
 
   if (document.querySelector('#album-details')) {
     createRoot(document.querySelector('#album-details')).render(
-      <SimpleDetails
+      <AlbumDetails
         context={ MyContext }
-        entityName='album'
-        initialEntity={ { artistName: '', name: '', category: '1' } }
-        customDeletePath='/admin/albums'
-        fields={ [[
-          { columnWidth: 5, entity: 'album', property: 'artistName' },
-          { columnWidth: 5, entity: 'album', property: 'name' },
-          { columnWidth: 2,
-            entity: 'album',
-            property: 'category',
-            type: 'dropdown',
-            options: [
-              { id: '1', text: 'Modern' },
-              { id: '2', text: 'Classical' },
-              { id: '3', text: 'Christmas' },
-              { id: '4', text: 'Jazz' },
-              { id: '5', text: 'Soundtracks' },
-            ],
-            optionDisplayProperty: 'text',
-            maxOptions: 5
-          }
-        ]] }
+        simpleDetailsProps={ {
+          context: MyContext,
+          entityName: 'album',
+          initialEntity: { artistName: '', name: '', category: '1' },
+          customDeletePath: '/admin/albums',
+          fields: [[
+            { columnWidth: 5, entity: 'album', property: 'artistName' },
+            { columnWidth: 5, entity: 'album', property: 'name' },
+            { columnWidth: 2,
+              entity: 'album',
+              property: 'category',
+              type: 'dropdown',
+              options: [
+                { id: '1', text: 'Modern' },
+                { id: '2', text: 'Classical' },
+                { id: '3', text: 'Christmas' },
+                { id: '4', text: 'Jazz' },
+                { id: '5', text: 'Soundtracks' },
+              ],
+              optionDisplayProperty: 'text',
+              maxOptions: 5
+            }
+          ]]
+        } }
       />
     );
   }

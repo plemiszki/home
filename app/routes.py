@@ -10,7 +10,7 @@ import threading
 from google.transit import gtfs_realtime_pb2
 from google.protobuf import json_format
 from app import app, db
-from flask import render_template, jsonify, request, redirect
+from flask import render_template, jsonify, request, redirect, abort
 from app.utils import stop_everything
 from app.models import Album
 from camelcase import CamelCase
@@ -159,7 +159,10 @@ def api_album_details(album_id):
     result['album'] = album_dict
 
     music_directory = os.getenv('MUSIC_DIRECTORY')
-    filenames = os.listdir(f"{music_directory}/{album.artist_name}/{album.name}")
+    album_path = f"{music_directory}/{album.artist_name}/{album.name}"
+    if not os.path.isdir(album_path):
+        return jsonify({"error": f"No directory found for {album.artist_name}/{album.name}"}), 404
+    filenames = os.listdir(album_path)
     filenames.sort()
     song_titles = map(lambda song_title: ' '.join('.'.join(song_title.split('.')[:-1]).split(' ')[1:]), filenames)
     result['songs'] = list(song_titles)
