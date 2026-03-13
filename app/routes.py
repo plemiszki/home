@@ -116,8 +116,9 @@ def album_details_redirect(album_id):
 @app.route('/api/albums', methods=['GET', 'POST'])
 def api_albums_index():
     if request.method == 'POST':
-        artist_name = request.form['album[artist_name]']
-        name = request.form['album[name]']
+        body = request.get_json()['album']
+        artist_name = body['artist_name']
+        name = body['name']
         order = 0
         new_album = Album(artist_name=artist_name, name=name, order=order)
         db.session.add(new_album)
