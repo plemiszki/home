@@ -1,31 +1,23 @@
-import React, { Component } from 'react'
-import { connect } from 'react-redux'
-import { bindActionCreators } from 'redux'
-import { sendRequest } from '../actions/index'
-import { Navigate } from 'react-router-dom'
-import { Common } from 'handy-components'
-import WakeButton from './wake-button'
+import React from "react";
+import { sendRequest } from "handy-components";
+import { Navigate } from "react-router-dom";
+import { Common } from "handy-components";
 
 class MainMenu extends React.Component {
-
   constructor(props) {
     super(props);
     this.state = {
       tempF: null,
-      tempC: null
+      tempC: null,
     };
   }
 
   componentDidMount() {
-    this.props.sendRequest({
-      url: '/api/indoor_temp',
-      method: 'get'
-    }).then(() => {
-      let { tempF, tempC } = this.props;
+    sendRequest("/api/indoor_temp").then((response) => {
       this.setState({
-        tempF,
-        tempC,
-        interval: window.setInterval(this.refresh.bind(this), 15000)
+        tempF: response.tempF,
+        tempC: response.tempC,
+        interval: window.setInterval(this.refresh.bind(this), 15000),
       });
     });
   }
@@ -35,38 +27,55 @@ class MainMenu extends React.Component {
   }
 
   refresh() {
-    this.props.sendRequest({
-      url: '/api/indoor_temp',
-      method: 'get'
-    }).then(() => {
-      let { tempF, tempC } = this.props;
+    sendRequest("/api/indoor_temp").then((response) => {
       this.setState({
-        tempF,
-        tempC
+        tempF: response.tempF,
+        tempC: response.tempC,
       });
     });
   }
 
   render() {
     if (this.state.redirectTo) {
-      return <Navigate to={ this.state.redirectTo } />;
+      return <Navigate to={this.state.redirectTo} />;
     }
-    return(
+    return (
       <div className="main-menu">
         <div className="inner">
           <div className="container-fluid">
             <div className="row">
               <div className="col-xs-6">
-                <div className="menu-icon music" onClick={ Common.changeState.bind(this, 'redirectTo', '/music') }></div>
+                <div
+                  className="menu-icon music"
+                  onClick={Common.changeState.bind(
+                    this,
+                    "redirectTo",
+                    "/music",
+                  )}
+                ></div>
               </div>
               <div className="col-xs-6">
-                <div className="menu-icon subway" onClick={ Common.changeState.bind(this, 'redirectTo', '/subway') }></div>
+                <div
+                  className="menu-icon subway"
+                  onClick={Common.changeState.bind(
+                    this,
+                    "redirectTo",
+                    "/subway",
+                  )}
+                ></div>
               </div>
             </div>
           </div>
         </div>
-        <div className={ 'temperature-container' + (this.state.tempF ? '' : ' hidden') }>
-          <p>Indoor Temp: <span id="temp-f">{ this.state.tempF }</span> &#176;F (<span id="temp-c">{ this.state.tempC }</span> &#176;C)</p>
+        <div
+          className={
+            "temperature-container" + (this.state.tempF ? "" : " hidden")
+          }
+        >
+          <p>
+            Indoor Temp: <span id="temp-f">{this.state.tempF}</span> &#176;F (
+            <span id="temp-c">{this.state.tempC}</span> &#176;C)
+          </p>
         </div>
         <style jsx>{`
           .main-menu {
@@ -83,7 +92,7 @@ class MainMenu extends React.Component {
             bottom: 20px;
             width: 100%;
             text-align: center;
-            font-family: 'TeachableSans-Bold';
+            font-family: "TeachableSans-Bold";
             font-size: 40px;
           }
           .menu-icon {
@@ -93,11 +102,11 @@ class MainMenu extends React.Component {
             margin: auto;
           }
           .music {
-            background-image: url('/static/images/music-note.svg');
+            background-image: url("/static/images/music-note.svg");
             background-size: 100%;
           }
           .subway {
-            background-image: url('/static/images/subway.svg');
+            background-image: url("/static/images/subway.svg");
           }
         `}</style>
       </div>
@@ -105,12 +114,4 @@ class MainMenu extends React.Component {
   }
 }
 
-const mapStateToProps = (reducers) => {
-  return reducers.standardReducer;
-};
-
-function mapDispatchToProps(dispatch) {
-  return bindActionCreators({ sendRequest }, dispatch);
-}
-
-export default connect(mapStateToProps, mapDispatchToProps)(MainMenu);
+export default MainMenu;
