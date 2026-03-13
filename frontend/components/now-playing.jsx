@@ -1,36 +1,33 @@
-import React, { Component } from 'react'
-import { connect } from 'react-redux'
-import { bindActionCreators } from 'redux'
-import ChangeCase from 'change-case'
-import { Common, Details } from 'handy-components'
-import HandyTools from 'handy-tools'
-import { sendRequest } from '../actions/index'
-import MainMenuButton from './main-menu-button'
+import React from "react";
+import { connect } from "react-redux";
+import { bindActionCreators } from "redux";
+import { sendRequest } from "../actions/index";
 
 class NowPlaying extends React.Component {
-
   constructor(props) {
     super(props);
     this.state = {
       album: {},
       songs: [],
-      track: null
+      track: null,
     };
   }
 
   componentDidMount() {
-    this.props.sendRequest({
-      url: '/api/music/now_playing',
-      method: 'get'
-    }).then(() => {
-      this.setState({
-        fetching: false,
-        track: this.props.track,
-        album: this.props.album || {},
-        songs: this.props.songs,
-        interval: window.setInterval(this.checkStatus.bind(this), 1000)
+    this.props
+      .sendRequest({
+        url: "/api/music/now_playing",
+        method: "get",
+      })
+      .then(() => {
+        this.setState({
+          fetching: false,
+          track: this.props.track,
+          album: this.props.album || {},
+          songs: this.props.songs || [],
+          interval: window.setInterval(this.checkStatus.bind(this), 1000),
+        });
       });
-    });
   }
 
   componentWillUnmount() {
@@ -38,86 +35,100 @@ class NowPlaying extends React.Component {
   }
 
   checkStatus() {
-    this.props.sendRequest({
-      url: '/api/music/now_playing',
-      method: 'get'
-    }).then(() => {
-      if (this.props.album.id !== this.state.album.id) {
-        document.getElementById('tab-component').scrollTop = 0;
-      }
-      this.setState({
-        track: this.props.track,
-        album: this.props.album || {},
-        songs: this.props.songs
+    this.props
+      .sendRequest({
+        url: "/api/music/now_playing",
+        method: "get",
+      })
+      .then(() => {
+        if ((this.props.album || {}).id !== this.state.album.id) {
+          document.getElementById("tab-component").scrollTop = 0;
+        }
+        this.setState({
+          track: this.props.track,
+          album: this.props.album || {},
+          songs: this.props.songs || [],
+        });
       });
-    });
   }
 
   clickPlay() {
     if (this.state.track === 0) {
-      this.props.sendRequest({
-        url: '/api/music/start',
-        method: 'post',
-        data: {
-          track: 1,
-          albumId: this.state.album.id
-        }
-      }).then(() => {
-        this.setState({
-          track: this.props.track,
-          album: this.props.album,
-          songs: this.props.songs
+      this.props
+        .sendRequest({
+          url: "/api/music/start",
+          method: "post",
+          data: {
+            track: 1,
+            albumId: this.state.album.id,
+          },
+        })
+        .then(() => {
+          this.setState({
+            track: this.props.track,
+            album: this.props.album,
+            songs: this.props.songs,
+          });
         });
-      });
     }
   }
 
   clickStop() {
     if (this.state.track !== 0) {
-      this.props.sendRequest({
-        url: '/api/music/stop',
-        method: 'post'
-      }).then(() => {
-        this.setState({
-          track: this.props.track,
-          album: this.props.album,
-          songs: this.props.songs
+      this.props
+        .sendRequest({
+          url: "/api/music/stop",
+          method: "post",
+        })
+        .then(() => {
+          this.setState({
+            track: this.props.track,
+            album: this.props.album,
+            songs: this.props.songs,
+          });
         });
-      });
     }
   }
 
   clickSong(track) {
     this.setState({
-      track
+      track,
     });
-    this.props.sendRequest({
-      url: '/api/music/start',
-      method: 'post',
-      data: {
-        albumId: this.state.album.id,
-        track
-      }
-    }).then(() => {
-      this.setState({
-        track: this.props.track,
-        album: this.props.album,
-        songs: this.props.songs
+    this.props
+      .sendRequest({
+        url: "/api/music/start",
+        method: "post",
+        data: {
+          albumId: this.state.album.id,
+          track,
+        },
+      })
+      .then(() => {
+        this.setState({
+          track: this.props.track,
+          album: this.props.album,
+          songs: this.props.songs || [],
+        });
       });
-    });
   }
 
   render() {
     let { album, track } = this.state;
-    return(
+    return (
       <div className="now-playing">
-        <h1>{ album.name }</h1>
-        <p>{ album.artistName }</p>
+        <h1>{album.name}</h1>
+        <p>{album.artistName}</p>
         <div className="buttons">
-          <img src={ `/static/images/play-button-${this.state.track === 0 ? 'gray' : 'white'}.svg` } onClick={ this.clickPlay.bind(this) } />
-          <img src={ `/static/images/stop-button-${this.state.track === 0 ? 'white' : 'gray'}.svg` } onClick={ this.clickStop.bind(this) } />
+          <img
+            src={`/static/images/play-button-${this.state.track === 0 ? "gray" : "white"}.svg`}
+            onClick={this.clickPlay.bind(this)}
+          />
+          <img
+            src={`/static/images/stop-button-${this.state.track === 0 ? "white" : "gray"}.svg`}
+            onClick={this.clickStop.bind(this)}
+          />
         </div>
-        { this.renderSongs() }
+        {this.renderSongs()}
         <style jsx>{`
           .now-playing {
             background-color: black;
@@ -127,7 +138,7 @@ class NowPlaying extends React.Component {
             margin: auto;
             margin-top: 50px;
             text-align: center;
-            font-family: 'TeachableSans-Regular';
+            font-family: "TeachableSans-Regular";
             font-size: 50px;
             color: white;
             line-height: 80px;
@@ -135,7 +146,7 @@ class NowPlaying extends React.Component {
           }
           p {
             text-align: center;
-            font-family: 'TeachableSans-Bold';
+            font-family: "TeachableSans-Bold";
             color: green;
             font-size: 40px;
             margin-bottom: 30px;
@@ -158,21 +169,26 @@ class NowPlaying extends React.Component {
   }
 
   renderSongs() {
-    return(
+    return (
       <table>
         <tbody>
-          { this.state.songs.map((song, index) => {
-            return(
-              <tr key={ index } onClick={ this.clickSong.bind(this, index + 1) }>
-                <td className={ index === (this.state.track - 1) ? 'playing' : '' } data-track={ index }>{ song }</td>
+          {this.state.songs.map((song, index) => {
+            return (
+              <tr key={index} onClick={this.clickSong.bind(this, index + 1)}>
+                <td
+                  className={index === this.state.track - 1 ? "playing" : ""}
+                  data-track={index}
+                >
+                  {song}
+                </td>
               </tr>
             );
-          }) }
+          })}
         </tbody>
         <style jsx>{`
           table {
             margin: auto;
-            font-family: 'TeachableSans-Regular';
+            font-family: "TeachableSans-Regular";
             font-size: 40px;
             color: gray;
             border: solid 1px gray;

@@ -1,25 +1,22 @@
-import React, { Component } from 'react'
-import { connect } from 'react-redux'
-import { bindActionCreators } from 'redux'
-import { sendRequest } from '../actions/index'
-import { Link, Redirect } from 'react-router-dom'
-import { Common } from 'handy-components'
-import MainMenuButton from './main-menu-button'
+import React from "react";
+import { connect } from "react-redux";
+import { bindActionCreators } from "redux";
+import { sendRequest } from "../actions/index";
+import MainMenuButton from "./main-menu-button";
 
 const TAB_HEIGHT = 176;
 
 class Tabs extends React.Component {
-
   constructor(props) {
     super(props);
     this.state = {
-      selectedTabIndex: 0
+      selectedTabIndex: 0,
     };
   }
 
   switchTab(index) {
     this.setState({
-      selectedTabIndex: index
+      selectedTabIndex: index,
     });
   }
 
@@ -29,18 +26,21 @@ class Tabs extends React.Component {
     const emptyTabSpaces = Math.max(3 - tabs.length, 0);
     const beneathTabsHeight = TAB_HEIGHT * emptyTabSpaces;
     const { Component, props } = tab;
-    return(
+    return (
       <div className="tabs">
-        <nav className={ this.props.hidden ? 'no-border' : '' }>
-          <MainMenuButton showBorder={ !this.props.hidden } />
-          { this.renderTabs() }
-          <div className="beneath-tabs" style={ { height: beneathTabsHeight } }></div>
+        <nav className={this.props.hidden ? "no-border" : ""}>
+          <MainMenuButton showBorder={!this.props.hidden} />
+          {this.renderTabs()}
+          <div
+            className="beneath-tabs"
+            style={{ height: beneathTabsHeight }}
+          ></div>
         </nav>
         <section id="tab-component">
           <Component
-            context={ this.props.context }
-            switchTab={ this.switchTab.bind(this) }
-            { ...props }
+            context={this.props.context}
+            switchTab={this.switchTab.bind(this)}
+            {...props}
           />
         </section>
         <style jsx>{`
@@ -82,16 +82,16 @@ class Tabs extends React.Component {
     if (!this.props.hidden) {
       const { selectedTabIndex } = this.state;
       return this.props.tabs.map((tab, index) => {
-        const finalTab = (index === (this.props.tabs.length - 1));
+        const finalTab = index === this.props.tabs.length - 1;
         let styles = {
-          backgroundImage: `url(/static/images/${tab.image}.svg)`
+          backgroundImage: `url(/static/images/${tab.image}.svg)`,
         };
-        return(
+        return (
           <div key={index}>
             <div
-              className={ `tab ${selectedTabIndex === index ? 'selected' : ''} ${(finalTab && index >= 2) ? 'no-bottom-border' : ''}` }
-              style={ styles }
-              onClick={ this.switchTab.bind(this, index) }
+              className={`tab ${selectedTabIndex === index ? "selected" : ""} ${finalTab && index >= 2 ? "no-bottom-border" : ""}`}
+              style={styles}
+              onClick={this.switchTab.bind(this, index)}
             ></div>
             <style jsx>{`
               .tab {

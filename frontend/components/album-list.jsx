@@ -1,12 +1,6 @@
 import React from "react";
-import { connect } from "react-redux";
-import { bindActionCreators } from "redux";
-import { sendRequest } from "../actions/index";
+import { sendRequest } from "handy-components";
 import Spinner from "./spinner";
-
-const TABS = {
-  "NOW PLAYING": 0,
-};
 
 class AlbumList extends React.Component {
   constructor(props) {
@@ -17,50 +11,44 @@ class AlbumList extends React.Component {
     };
   }
 
-  componentDidMount() {
-    this.props
-      .sendRequest({
-        url: `/api/music/${this.props.category}`,
-        method: "get",
-      })
-      .then(() => {
-        this.setState({
-          fetching: false,
-          albums: this.props.albums,
-        });
+  fetchAlbums() {
+    this.setState({ fetching: true, albums: [] });
+    sendRequest(`/api/music/${this.props.category}`).then((response) => {
+      this.setState({
+        fetching: false,
+        albums: response.albums || [],
       });
+    });
+  }
+
+  componentDidMount() {
+    this.fetchAlbums();
+  }
+
+  componentDidUpdate(prevProps) {
+    if (prevProps.category !== this.props.category) {
+      this.fetchAlbums();
+    }
   }
 
   clickRandom() {
     const { albums } = this.state;
-    let randomAlbum = albums[Math.floor(Math.random() * albums.length)];
-    this.props
-      .sendRequest({
-        url: "/api/music/start",
-        method: "post",
-        data: {
-          albumId: randomAlbum.id,
-          track: 1,
-        },
-      })
-      .then(() => {
-        this.props.switchTab(TABS["NOW PLAYING"]);
-      });
+    const randomAlbum = albums[Math.floor(Math.random() * albums.length)];
+    sendRequest("/api/music/start", {
+      method: "POST",
+      data: { albumId: randomAlbum.id, track: 1 },
+    }).then(() => {
+      this.props.switchTab(0);
+    });
   }
 
   clickAlbum(albumId) {
-    this.props
-      .sendRequest({
-        url: "/api/music/start",
-        method: "post",
-        data: {
-          albumId,
-          track: 1,
-        },
-      })
-      .then(() => {
-        this.props.switchTab(TABS["NOW PLAYING"]);
-      });
+    sendRequest("/api/music/start", {
+      method: "POST",
+      data: { albumId, track: 1 },
+    }).then(() => {
+      this.props.switchTab(0);
+    });
   }
 
   render() {
@@ -163,12 +151,4 @@ class AlbumList extends React.Component {
   }
 }
 
-const mapStateToProps = (reducers) => {
-  return reducers.standardReducer;
-};
-
-function mapDispatchToProps(dispatch) {
-  return bindActionCreators({ sendRequest }, dispatch);
-}
-
-export default connect(mapStateToProps, mapDispatchToProps)(AlbumList);
+export default AlbumList;
