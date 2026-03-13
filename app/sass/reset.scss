@@ -33,7 +33,7 @@ hr {
   margin: 0;
 }
 
-input {
+input:not([type="submit"]) {
   border: none;
   letter-spacing: inherit;
 }

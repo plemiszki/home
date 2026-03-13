@@ -3,6 +3,10 @@ $imgpath: '/static/images';
 @import 'reset';
 @import '../../node_modules/handy-components/styles/styles';
 
+* {
+  background-repeat: no-repeat;
+}
+
 :root {
   --button-color: green;
   --highlight-color: green;
@@ -22,6 +26,30 @@ body.admin {
 .handy-component .search-button {
   background-image: url('/static/images/magnifying-glass.svg') !important;
   background-repeat: no-repeat;
+}
+
+.handy-component input.btn {
+  display: inline-block;
+  font-family: 'TeachableSans-Medium';
+  padding: 15px 40px;
+  text-align: center;
+  font-size: 12px;
+  line-height: 17px;
+  border-radius: 100px;
+  background-color: var(--button-color);
+  color: white;
+  letter-spacing: inherit;
+  border: none;
+  cursor: pointer;
+
+  &:hover {
+    background-color: var(--highlight-color);
+  }
+
+  &.disabled {
+    pointer-events: none;
+    opacity: 0.65;
+  }
 }
 
 #admin-framework {
