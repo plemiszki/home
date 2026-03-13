@@ -130,7 +130,7 @@ window.addEventListener('DOMContentLoaded', () => {
               { id: '2', text: 'Classical' },
               { id: '3', text: 'Christmas' },
               { id: '4', text: 'Jazz' },
-              { id: '5', text: 'Soundtrack' },
+              { id: '5', text: 'Soundtracks' },
             ],
             optionDisplayProperty: 'text',
             maxOptions: 5

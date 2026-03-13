@@ -127,7 +127,7 @@ def api_albums_index():
     album_dicts = []
     for album in albums:
         dict = album.__dict__
-        dict['category'] = ['Modern', 'Classical', 'Christmas', 'Jazz', 'Soundtrack'][album.category - 1]
+        dict['category'] = ['Modern', 'Classical', 'Christmas', 'Jazz', 'Soundtracks'][album.category - 1]
         del dict['_sa_instance_state']
         dict['artistName'] = album.artist_name
         album_dicts.append(dict)
@@ -143,9 +143,10 @@ def api_album_details(album_id):
         db.session.commit()
         return 'ok'
     elif request.method == 'PATCH':
-        album.artist_name = request.form['album[artist_name]']
-        album.name = request.form['album[name]']
-        album.category = request.form['album[category]']
+        body = request.get_json()['album']
+        album.artist_name = body['artist_name']
+        album.name = body['name']
+        album.category = body['category']
         db.session.commit()
         album = Album.query.get(album_id)
     album_dict = copy.copy(album).__dict__
