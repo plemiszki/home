@@ -59,7 +59,7 @@ class NewEntity extends React.Component {
 
   render() {
     return(
-      <div className="component admin-modal">
+      <div className="handy-component admin-modal">
         <form className="white-box">
           { Common.renderSpinner(this.state.fetching) }
           { Common.renderGrayedOut(this.state.fetching, -36, -32, 5) }

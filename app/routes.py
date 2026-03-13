@@ -31,7 +31,7 @@ if os.environ.get('FLASK_ENV') == 'production':
 
 @app.route('/api/indoor_temp', methods=['GET'])
 def api_indoor_temp():
-    temp_c, temp_f = read_temp() if app.config['ENV'] == 'production' else ['TEMP_C', 'TEMP_F']
+    temp_c, temp_f = read_temp() if os.environ.get('FLASK_ENV') == 'production' else ['TEMP_C', 'TEMP_F']
     return { 'tempC': temp_c, 'tempF': temp_f }
 
 @app.route('/api/music/start_loop', methods=['GET'])
@@ -106,6 +106,10 @@ def albums_index():
 @app.route('/admin/albums/<album_id>')
 def album_details(album_id):
     return render_template('admin/album_details.html')
+
+@app.route('/albums/<album_id>')
+def album_details_redirect(album_id):
+    return redirect(f'/admin/albums/{album_id}')
 
 # admin apis:
 

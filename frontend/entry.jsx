@@ -1,6 +1,6 @@
 import React from 'react'
-import ReactDOM from 'react-dom'
-import { BrowserRouter as Router, Switch, Route } from 'react-router-dom'
+import { createRoot } from 'react-dom/client'
+import { BrowserRouter as Router, Routes, Route } from 'react-router-dom'
 import { Provider } from 'react-redux'
 
 import MainMenu from './components/main-menu'
@@ -11,7 +11,7 @@ import Subway from './components/subway'
 import WakeButton from './components/wake-button'
 
 import ReactModal from 'react-modal'
-import { SimpleDetails, StandardIndex } from 'handy-components'
+import { SimpleDetails, FullIndex } from 'handy-components'
 import NewEntity from './components/new-entity'
 
 import configureStore from './store/store'
@@ -25,18 +25,15 @@ window.addEventListener('DOMContentLoaded', () => {
   // PUBLIC:
 
   if (document.querySelector('#app')) {
-    ReactDOM.render(
-      <WakeButton />,
-      document.querySelector('#wake-button')
+    createRoot(document.querySelector('#wake-button')).render(
+      <WakeButton />
     );
-    ReactDOM.render(
+    createRoot(document.querySelector('#app')).render(
       <Provider context={ MyContext } store={ store }>
         <Router>
-          <Switch>
-            <Route exact path="/">
-              <MainMenu context={ MyContext } />
-            </Route>
-            <Route path="/music">
+          <Routes>
+            <Route path="/" element={ <MainMenu context={ MyContext } /> } />
+            <Route path="/music" element={
               <Tabs
                 context={ MyContext }
                 tabs={ [
@@ -48,8 +45,8 @@ window.addEventListener('DOMContentLoaded', () => {
                   { image: 'ornament', Component: AlbumList, props: { key: 'christmas', category: 'christmas' } }
                 ] }
               />
-            </Route>
-            <Route path="/subway">
+            } />
+            <Route path="/subway" element={
               <Tabs
                 context={ MyContext }
                 hidden={ true }
@@ -57,71 +54,65 @@ window.addEventListener('DOMContentLoaded', () => {
                   { image: 'music-note', Component: Subway }
                 ] }
               />
-            </Route>
-          </Switch>
+            } />
+          </Routes>
         </Router>
-      </Provider>,
-      document.querySelector('#app')
+      </Provider>
     );
   }
 
   if (document.querySelector('#album-list-modern')) {
-    ReactDOM.render(
+    createRoot(document.querySelector('#album-list-modern')).render(
       <Provider context={ MyContext } store={ store }>
         <AlbumList
           context={ MyContext }
           category={ 'modern' }
         />
-      </Provider>,
-      document.querySelector('#album-list-modern')
+      </Provider>
     );
   }
 
   if (document.querySelector('#album-list-classical')) {
-    ReactDOM.render(
+    createRoot(document.querySelector('#album-list-classical')).render(
       <Provider context={ MyContext } store={ store }>
         <AlbumList
           context={ MyContext }
           category={ 'classical' }
         />
-      </Provider>,
-      document.querySelector('#album-list-classical')
+      </Provider>
     );
   }
 
   if (document.querySelector('#album-list-jazz')) {
-    ReactDOM.render(
+    createRoot(document.querySelector('#album-list-jazz')).render(
       <Provider context={ MyContext } store={ store }>
         <AlbumList
           context={ MyContext }
           category={ 'jazz' }
         />
-      </Provider>,
-      document.querySelector('#album-list-jazz')
+      </Provider>
     );
   }
 
   if (document.querySelector('#album-list-soundtrack')) {
-    ReactDOM.render(
+    createRoot(document.querySelector('#album-list-soundtrack')).render(
       <Provider context={ MyContext } store={ store }>
         <AlbumList
           context={ MyContext }
           category={ 'soundtrack' }
         />
-      </Provider>,
-      document.querySelector('#album-list-soundtrack')
+      </Provider>
     );
   }
 
   if (document.querySelector('#album-list-christmas')) {
-    ReactDOM.render(
+    createRoot(document.querySelector('#album-list-christmas')).render(
       <Provider context={ MyContext } store={ store }>
         <AlbumList
           context={ MyContext }
           category={ 'christmas' }
         />
-      </Provider>,
-      document.querySelector('#album-list-christmas')
+      </Provider>
     );
   }
 
@@ -136,32 +127,33 @@ window.addEventListener('DOMContentLoaded', () => {
   window.Errors = {}
 
   if (document.querySelector('#albums-index')) {
-    ReactDOM.render(
+    createRoot(document.querySelector('#albums-index')).render(
       <Provider context={ MyContext } store={ store }>
-        <StandardIndex
+        <FullIndex
           context={ MyContext }
           entityName='album'
           columns={ ['artistName', 'name', 'category'] }
           columnHeaders={ ['Artist', 'Album', 'Category'] }
           modalDimensions={ { width: 900 } }
+          includeNewButton={ true }
         >
           <NewEntity
             context={ MyContext }
             initialEntity={ { artistName: '', name: '' } }
           />
-        </StandardIndex>
-      </Provider>,
-      document.querySelector('#albums-index')
+        </FullIndex>
+      </Provider>
     );
   }
 
   if (document.querySelector('#album-details')) {
-    ReactDOM.render(
+    createRoot(document.querySelector('#album-details')).render(
       <Provider context={ MyContext } store={ store }>
         <SimpleDetails
           context={ MyContext }
           entityName='album'
           initialEntity={ { artistName: '', name: '', category: '1' } }
+          customDeletePath='/admin/albums'
           fields={ [[
             { columnWidth: 5, entity: 'album', property: 'artistName' },
             { columnWidth: 5, entity: 'album', property: 'name' },
@@ -181,8 +173,7 @@ window.addEventListener('DOMContentLoaded', () => {
             }
           ]] }
         />
-      </Provider>,
-      document.querySelector('#album-details')
+      </Provider>
     );
   }
 

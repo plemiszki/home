@@ -7,3 +7,7 @@ __pycache__/
 /music
 app.db
 /.sass-cache
+/app/static/javascript/bundle.js
+/app/static/javascript/bundle.js.map
+/app/static/styles.css
+/app/static/styles.css.map

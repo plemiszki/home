@@ -2,7 +2,7 @@ import React, { Component } from 'react'
 import { connect } from 'react-redux'
 import { bindActionCreators } from 'redux'
 import { sendRequest } from '../actions/index'
-import { Redirect } from 'react-router-dom'
+import { Navigate } from 'react-router-dom'
 import { Common } from 'handy-components'
 import WakeButton from './wake-button'
 
@@ -49,7 +49,7 @@ class MainMenu extends React.Component {
 
   render() {
     if (this.state.redirectTo) {
-      return <Redirect push to={ this.state.redirectTo } />;
+      return <Navigate to={ this.state.redirectTo } />;
     }
     return(
       <div className="main-menu">

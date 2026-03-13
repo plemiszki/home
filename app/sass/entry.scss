@@ -7,7 +7,66 @@ $imgpath: '/static/images';
 @import '../../node_modules/handy-tools/styles/buttons';
 @import '../../node_modules/handy-components/styles/styles';
 
+:root {
+  --button-color: green;
+  --highlight-color: green;
+}
+
 body.public {
   background-color: black;
   color: white;
+}
+
+body.admin {
+  background-color: #F4F5F7;
+}
+
+.handy-component input.search-box,
+.handy-component .search-button {
+  background-image: url('/static/images/magnifying-glass.svg') !important;
+  background-repeat: no-repeat;
+}
+
+#admin-framework {
+  height: 100%;
+
+  #admin-row {
+    margin: 0;
+    height: 100%;
+
+    #admin-sidebar-background {
+      position: fixed;
+      height: 100%;
+      background-color: white;
+    }
+
+    #admin-sidebar {
+      background-color: white;
+      padding: 36px 32px;
+
+      li {
+        font-family: 'TeachableSans-SemiBold';
+        font-size: 13px;
+        color: #B0B0B0;
+
+        &:not(:last-of-type) { margin-bottom: 30px; }
+
+        a { display: block; }
+
+        .highlight {
+          color: $highlight-color;
+          cursor: default;
+          font-family: 'TeachableSans-ExtraBold';
+        }
+      }
+    }
+
+    #admin-right-column {
+      padding: 0;
+
+      #admin-right-column-content {
+        padding: 30px 40px;
+      }
+    }
+  }
 }
