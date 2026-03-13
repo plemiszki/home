@@ -1,14 +1,13 @@
 import React from "react";
-import ChangeCase from "change-case";
-import { Common, Details, createEntity } from "handy-components";
-import HandyTools from "handy-tools";
+import { snakeCase, titleCase } from "change-case";
+import { Common, Details, createEntity, deepCopy, setUpNiceSelect } from "handy-components";
 
 class NewEntity extends React.Component {
   constructor(props) {
     super(props);
     let obj = {
       fetching: false,
-      [this.props.entityName]: HandyTools.deepCopy(this.props.initialEntity),
+      [this.props.entityName]: deepCopy(this.props.initialEntity),
       errors: [],
     };
     if (this.props.staticData) {
@@ -18,7 +17,7 @@ class NewEntity extends React.Component {
   }
 
   componentDidMount() {
-    HandyTools.setUpNiceSelect({
+    setUpNiceSelect({
       selector: ".admin-modal select",
       func: Details.changeField.bind(this, this.changeFieldArgs()),
     });
@@ -27,7 +26,7 @@ class NewEntity extends React.Component {
   clickAdd(e) {
     let entityNamePlural =
       this.props.entityNamePlural || `${this.props.entityName}s`;
-    let directory = HandyTools.convertToUnderscore(entityNamePlural);
+    let directory = snakeCase(entityNamePlural);
     e.preventDefault();
     this.setState({ fetching: true });
     createEntity({
@@ -72,7 +71,7 @@ class NewEntity extends React.Component {
             }
             value={
               this.props.buttonText ||
-              `Add ${ChangeCase.titleCase(this.props.entityName)}`
+              `Add ${titleCase(this.props.entityName)}`
             }
             onClick={this.clickAdd.bind(this)}
           />
