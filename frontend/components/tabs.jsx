@@ -1,7 +1,4 @@
 import React from "react";
-import { connect } from "react-redux";
-import { bindActionCreators } from "redux";
-import { sendRequest } from "../actions/index";
 import MainMenuButton from "./main-menu-button";
 
 const TAB_HEIGHT = 176;
@@ -125,12 +122,4 @@ class Tabs extends React.Component {
   }
 }
 
-const mapStateToProps = (reducers) => {
-  return reducers.standardReducer;
-};
-
-function mapDispatchToProps(dispatch) {
-  return bindActionCreators({ sendRequest }, dispatch);
-}
-
-export default connect(mapStateToProps, mapDispatchToProps)(Tabs);
+export default Tabs;
