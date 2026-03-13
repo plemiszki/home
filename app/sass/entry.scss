@@ -1,5 +1,6 @@
 $highlight-color: green;
 $imgpath: '/static/images';
+@import 'reset';
 @import '../../node_modules/handy-components/styles/styles';
 
 :root {
@@ -14,6 +15,7 @@ body.public {
 
 body.admin {
   background-color: #F4F5F7;
+  letter-spacing: 1.08px;
 }
 
 .handy-component input.search-box,
@@ -42,7 +44,6 @@ body.admin {
       li {
         font-family: 'TeachableSans-SemiBold';
         font-size: 13px;
-        letter-spacing: 1.08px;
         color: #B0B0B0;
 
         &:not(:last-of-type) { margin-bottom: 30px; }
