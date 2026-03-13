@@ -17,8 +17,35 @@ function AlbumDetails({ context, simpleDetailsProps }) {
       })
   }, [])
 
+  function deleteAlbum() {
+    const id = window.location.pathname.split('/').pop()
+    fetch(`/api/albums/${id}`, { method: 'DELETE' }).then(() => {
+      window.location.href = '/admin/albums'
+    })
+  }
+
   if (error) {
-    return <p style={{ color: 'red', padding: '20px' }}>{error}</p>
+    return (
+      <div style={{ padding: '20px' }}>
+        <p style={{ color: 'red', marginBottom: '20px' }}>{error}</p>
+        <button
+          onClick={deleteAlbum}
+          style={{
+            backgroundColor: 'red',
+            color: 'white',
+            borderRadius: '100px',
+            padding: '15px 40px',
+            fontFamily: '"TeachableSans-Medium"',
+            border: 'none',
+            cursor: 'pointer',
+            letterSpacing: '1.08px',
+            fontSize: '12px',
+          }}
+        >
+          Delete Album
+        </button>
+      </div>
+    )
   }
 
   if (!ready) {
