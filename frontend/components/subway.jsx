@@ -1,29 +1,22 @@
-import React, { Component } from 'react'
-import { connect } from 'react-redux'
-import { bindActionCreators } from 'redux'
-import { sendRequest } from '../actions/index'
-import Spinner from './spinner'
-import MainMenuButton from './main-menu-button'
+import React from "react";
+import { sendRequest } from "handy-components";
+import Spinner from "./spinner";
 
 class Subway extends React.Component {
-
   constructor(props) {
     super(props);
     this.state = {
       fetching: true,
-      subwayData: []
+      subwayData: [],
     };
   }
 
   componentDidMount() {
-    this.props.sendRequest({
-      url: '/api/subway',
-      method: 'get'
-    }).then(() => {
+    sendRequest("/api/subway").then((response) => {
       this.setState({
         fetching: false,
-        subwayData: this.props.subwayData,
-        interval: window.setInterval(this.refresh.bind(this), 15000)
+        subwayData: response.subwayData,
+        interval: window.setInterval(this.refresh.bind(this), 15000),
       });
     });
   }
@@ -33,24 +26,23 @@ class Subway extends React.Component {
   }
 
   refresh() {
-    this.props.sendRequest({
-      url: '/api/subway',
-      method: 'get'
-    }).then(() => {
+    sendRequest("/api/subway").then((response) => {
       this.setState({
-        subwayData: this.props.subwayData
+        subwayData: response.subwayData,
       });
     });
   }
 
   render() {
-    return(
+    return (
       <div className="subway">
         <div className="container-fluid">
           <div className="row">
-            <Spinner visible={ this.state.fetching } />
+            <Spinner visible={this.state.fetching} />
             <div className="col-xs-12">
-              <table className={ this.state.fetching ? ' hidden' : 'headers-table' }>
+              <table
+                className={this.state.fetching ? " hidden" : "headers-table"}
+              >
                 <thead>
                   <tr>
                     <th></th>
@@ -60,9 +52,7 @@ class Subway extends React.Component {
                 </thead>
               </table>
               <table className="data-table">
-                <tbody>
-                  { this.renderSubwayData() }
-                </tbody>
+                <tbody>{this.renderSubwayData()}</tbody>
               </table>
             </div>
           </div>
@@ -75,7 +65,9 @@ class Subway extends React.Component {
           --image_column_width: 200px;
           --time_column_width: 200px;
           --countdown_column_width: 200px;
-          --leave_header_width: calc(var(--time_column_width) + var(--countdown_column_width));
+          --leave_header_width: calc(
+            var(--time_column_width) + var(--countdown_column_width)
+          );
           table {
             width: 100%;
             font-size: 50px;
@@ -101,24 +93,18 @@ class Subway extends React.Component {
 
   renderSubwayData() {
     return this.state.subwayData.map((data, index) => {
-      return(
-        <tr key={ index }>
+      return (
+        <tr key={index}>
           <td className="image-column">
-            <div className={ `image train-${data.train}` }></div>
+            <div className={`image train-${data.train}`}></div>
           </td>
-          <td className="unimportant time-column">
-            { data.time }
-          </td>
+          <td className="unimportant time-column">{data.time}</td>
           <td className="unimportant countdown-column">
-            { data.eta_minutes } min
+            {data.eta_minutes} min
           </td>
           <td className="spacer"></td>
-          <td className="time-column">
-            { data.leave_at }
-          </td>
-          <td className="countdown-column">
-            { data.leave_in } min
-          </td>
+          <td className="time-column">{data.leave_at}</td>
+          <td className="countdown-column">{data.leave_in} min</td>
           <style jsx>{`
             .unimportant {
               color: gray;
@@ -143,30 +129,22 @@ class Subway extends React.Component {
             }
             // http://subspotting.nyc/assets/img/line-icons/F.svg
             .train-Q {
-              background-image: url('/static/images/subway-line-Q.svg')
+              background-image: url("/static/images/subway-line-Q.svg");
             }
             .train-B {
-              background-image: url('/static/images/subway-line-B.svg')
+              background-image: url("/static/images/subway-line-B.svg");
             }
             .train-F {
-              background-image: url('/static/images/subway-line-F.svg')
+              background-image: url("/static/images/subway-line-F.svg");
             }
             .train-G {
-              background-image: url('/static/images/subway-line-G.svg')
+              background-image: url("/static/images/subway-line-G.svg");
             }
           `}</style>
         </tr>
-      )
-    })
+      );
+    });
   }
 }
 
-const mapStateToProps = (reducers) => {
-  return reducers.standardReducer;
-};
-
-function mapDispatchToProps(dispatch) {
-  return bindActionCreators({ sendRequest }, dispatch);
-}
-
-export default connect(mapStateToProps, mapDispatchToProps)(Subway);
+export default Subway;

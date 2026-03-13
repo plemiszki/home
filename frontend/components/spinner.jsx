@@ -1,7 +1,6 @@
-import React, { Component } from 'react'
+import React from "react";
 
 class Spinner extends React.Component {
-
   constructor(props) {
     super(props);
     this.state = {};
@@ -9,9 +8,12 @@ class Spinner extends React.Component {
 
   render() {
     if (this.props.visible) {
-      return(
+      return (
         <>
-          <img className="white-spinner" src="/static/images/white-spinner.gif" />
+          <img
+            className="white-spinner"
+            src="/static/images/white-spinner.gif"
+          />
           <style jsx>{`
             img {
               position: absolute;
@@ -24,9 +26,7 @@ class Spinner extends React.Component {
         </>
       );
     } else {
-      return(
-        <div></div>
-      );
+      return <div></div>;
     }
   }
 }
