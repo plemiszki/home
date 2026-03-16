@@ -9,7 +9,7 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 - **Redis** for music playback state and process tracking
 - **React 16** + **Redux** + **Webpack 4** (Node 12.17.0)
 - **handy-components** library for admin CRUD UI
-- **OMXPlayer** (Raspberry Pi) for audio playback
+- **mpv** (Raspberry Pi) for audio playback
 
 ## Commands
 
@@ -35,6 +35,88 @@ flask db migrate
 flask db upgrade
 ```
 
+## Raspberry Pi Setup (after flashing SD card)
+
+Flash with **Raspberry Pi OS 64-bit (Bookworm/Trixie)**. After booting:
+
+### Switch to X11 (required for touch scrolling)
+
+```bash
+sudo raspi-config  # Advanced Options → Wayland → X11
+# Reboot
+```
+
+### Install system dependencies
+
+```bash
+sudo apt install -y \
+  libbz2-dev libncurses-dev libffi-dev libreadline-dev libsqlite3-dev liblzma-dev libssl-dev \
+  redis \
+  mpv \
+  chromium \
+  unclutter-xfixes \
+  fuser
+```
+
+### Install pyenv + Python
+
+```bash
+curl https://pyenv.run | bash
+# Add to ~/.bashrc:
+export PYENV_ROOT="$HOME/.pyenv"
+export PATH="$PYENV_ROOT/bin:$PATH"
+eval "$(pyenv init -)"
+
+source ~/.bashrc
+TMPDIR=~/tmp pyenv install 3.14.3
+```
+
+### Install nvm + Node
+
+```bash
+curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.40.3/install.sh | bash
+source ~/.bashrc
+nvm install 24
+```
+
+### Enable Redis on boot
+
+```bash
+sudo systemctl enable redis-server
+sudo systemctl start redis-server
+```
+
+### Enable 1-Wire for temperature sensor
+
+```bash
+sudo raspi-config  # Interface Options → 1-Wire → Enable
+# Then set TEMP_SENSOR_ENABLED=true in .env
+```
+
+### Create .env
+
+```
+FLASK_ENV=production
+FLASK_APP=app
+MUSIC_DIRECTORY=/home/admin/music
+TEMP_SENSOR_ENABLED=true   # only after enabling 1-Wire
+```
+
+### Install Python dependencies
+
+```bash
+python3 -m venv venv
+source venv/bin/activate
+pip install -r requirements.txt
+```
+
+### Install Node dependencies + build frontend
+
+```bash
+npm install
+npm run build
+```
+
 ## Architecture Overview
 
 This is a **touchscreen jukebox + transit app** built for a Raspberry Pi. Flask serves both the public UI and an admin panel. React mounts into Jinja2-rendered pages.
@@ -50,6 +132,7 @@ This is a **touchscreen jukebox + transit app** built for a Raspberry Pi. Flask 
 ### Route Structure
 
 All routes are defined in `app/routes.py`. There are two tiers:
+
 - **Public UI routes** (e.g., `/`, `/albums/*`, `/subway`) — render Jinja2 templates
 - **API routes** (`/api/*`) — return JSON, consumed by React components
 
@@ -57,7 +140,7 @@ Admin routes (`/admin/albums`, `/admin/albums/<id>`) render templates that mount
 
 ### Music Playback
 
-1. `POST /api/music/start` stops any running OMXPlayer, launches a new subprocess, stores the PID in Redis
+1. `POST /api/music/start` stops any running mpv process, launches a new subprocess via `Popen`, stores the PID in Redis
 2. A background thread (`check_music_status()` in `app/__init__.py`) polls for process completion and auto-advances tracks
 3. Frontend polls `GET /api/music/now_playing` every second to sync UI state
 4. Redis keys track `album_id` and `track` (current position); PIDs stored in a Redis set
