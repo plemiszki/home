@@ -62,8 +62,9 @@ def api_albums(category):
     return result
 
 def play_song(filepath):
-    process_id = Popen(['mpv', '--no-audio-display', '--audio-device=alsa/hw:1,0', filepath], stdin=subprocess.DEVNULL).pid
-    redis_client.sadd('processes', process_id)
+    proc = Popen(['mpv', '--no-audio-display', '--audio-device=alsa/hw:1,0', filepath], stdin=subprocess.DEVNULL)
+    redis_client.sadd('processes', proc.pid)
+    threading.Thread(target=proc.wait, daemon=True).start()
 
 @app.route('/api/music/start', methods=['POST'])
 def start_music():
