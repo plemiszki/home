@@ -81,7 +81,7 @@ class NowPlaying extends React.Component {
   }
 
   render() {
-    let { album, track } = this.state;
+    let { album } = this.state;
     return (
       <div className="now-playing">
         <h1>{album.name}</h1>
@@ -100,6 +100,7 @@ class NowPlaying extends React.Component {
         <style jsx>{`
           .now-playing {
             background-color: black;
+            touch-action: pan-y;
           }
           h1 {
             width: 90%;
@@ -163,6 +164,9 @@ class NowPlaying extends React.Component {
             border-radius: 10px;
             width: 90%;
             margin-bottom: 30px;
+          }
+          tr {
+            touch-action: pan-y;
           }
           td {
             padding: 30px 0;

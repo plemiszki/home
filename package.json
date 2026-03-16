@@ -2,8 +2,7 @@
   "name": "jarvis",
   "scripts": {
     "start": "NODE_ENV=development webpack --config webpack.config.development.js --watch & sass --watch ./app/sass/entry.scss:./app/static/styles.css --style compressed --silence-deprecation=import",
-    "build:dev": "NODE_ENV=development webpack --config webpack.config.development.js; sass ./app/sass/entry.scss:./app/static/styles.css --style compressed",
-    "build:prod": "NODE_ENV=production webpack --config webpack.config.production.js; sass ./app/sass/entry.scss:./app/static/styles.css --style compressed"
+    "build:dev": "NODE_ENV=development webpack --config webpack.config.development.js; sass ./app/sass/entry.scss:./app/static/styles.css --style compressed --silence-deprecation=import"
   },
   "dependencies": {
     "@babel/core": "7.4.0",

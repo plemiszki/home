@@ -101,6 +101,7 @@ class Tabs extends React.Component {
                 height: var(--tab_size);
                 background-position: center;
                 background-size: var(--image_size);
+                touch-action: pan-y;
               }
               .tab.selected {
                 border-top: var(--border);
