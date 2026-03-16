@@ -20,7 +20,7 @@ redis_client = FlaskRedis(app)
 from datetime import datetime, timezone, timedelta
 from dateutil import tz
 
-if os.environ.get('FLASK_ENV') == 'production':
+if os.environ.get('FLASK_ENV') == 'production' and os.environ.get('TEMP_SENSOR_ENABLED') == 'true':
     os.system('modprobe w1-gpio')
     os.system('modprobe w1-therm')
     base_dir = '/sys/bus/w1/devices/'
