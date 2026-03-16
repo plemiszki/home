@@ -191,8 +191,7 @@ def check_music_status():
         if len(processes) == 0:
             time.sleep(5)
             continue
-        process_id = processes[0].decode("utf-8")
-        process_running = os.popen(f"ps -p {process_id} -o pid=").read().strip()
+        process_running = os.popen("pgrep mpv").read().strip()
         if not process_running:
             album_id = redis_client.get('album_id').decode('utf-8')
             album = Album.query.get(album_id)
