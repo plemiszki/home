@@ -53,6 +53,7 @@ class Tabs extends React.Component {
             text-align: right;
             height: 100%;
             overflow: scroll;
+            touch-action: pan-y;
           }
           nav::-webkit-scrollbar {
             display: none;
@@ -66,6 +67,7 @@ class Tabs extends React.Component {
             width: calc(100% - var(--nav_width));
             height: 100%;
             overflow: scroll;
+            touch-action: pan-y;
           }
           #tab-component::-webkit-scrollbar {
             display: none;
