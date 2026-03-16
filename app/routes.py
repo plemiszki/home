@@ -60,6 +60,10 @@ def api_albums(category):
     result['albums'] = album_dicts
     return result
 
+def play_song(filepath):
+    process_id = Popen(['mpv', '--no-audio-display', '--audio-device=alsa/hw:1,0', filepath]).pid
+    redis_client.sadd('processes', process_id)
+
 @app.route('/api/music/start', methods=['POST'])
 def start_music():
     stop_everything()
@@ -73,8 +77,7 @@ def start_music():
     filenames.sort()
     song_titles = map(lambda song_title: '.'.join(song_title.split('.')[:-1])[3:], filenames)
     if os.getenv('FLASK_ENV') == 'production':
-        process_id = Popen(['mpv', '--no-audio-display', '--audio-device=alsa/hw:1,0', f"{music_directory}/{album.artist_name}/{album.name}/{filenames[track - 1]}"]).pid
-        redis_client.sadd('processes', process_id)
+        play_song(f"{music_directory}/{album.artist_name}/{album.name}/{filenames[track - 1]}")
     redis_client.set('album_id', album.id)
     redis_client.set('track', track)
     return { 'album': serialize_album(album), 'track': track, 'songs': list(song_titles) }
@@ -189,8 +192,8 @@ def check_music_status():
             time.sleep(5)
             continue
         process_id = processes[0].decode("utf-8")
-        child_process_id = os.popen(f"ps --ppid {process_id} -o pid=").read().split("\n")[0].strip()
-        if not child_process_id:
+        process_running = os.popen(f"ps -p {process_id} -o pid=").read().strip()
+        if not process_running:
             album_id = redis_client.get('album_id').decode('utf-8')
             album = Album.query.get(album_id)
             music_directory = os.getenv('MUSIC_DIRECTORY')
@@ -205,9 +208,8 @@ def check_music_status():
                 track = 1
             filenames.sort()
             next_song_file = filenames[track - 1]
-            process_id = Popen(['omxplayer', '-o', 'local', f"{music_directory}/{album.artist_name}/{album.name}/{next_song_file}"]).pid
             redis_client.delete('processes')
-            redis_client.sadd('processes', process_id)
+            play_song(f"{music_directory}/{album.artist_name}/{album.name}/{next_song_file}")
             redis_client.set('album_id', album.id)
             redis_client.set('track', track)
         time.sleep(1)
