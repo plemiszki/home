@@ -183,7 +183,8 @@ def jarvis(path=None, path2=None):
 # helper methods:
 
 def check_music_status():
-    while True:
+    with app.app_context():
+      while True:
         print('check status...')
         track = int(redis_client.get('track').decode('utf-8'))
         if track == 0:
@@ -194,6 +195,7 @@ def check_music_status():
             time.sleep(5)
             continue
         process_running = os.popen("pgrep mpv").read().strip()
+        print(f'process_running: {process_running}')
         if not process_running:
             album_id = redis_client.get('album_id').decode('utf-8')
             album = Album.query.get(album_id)
