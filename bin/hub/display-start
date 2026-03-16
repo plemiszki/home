@@ -1,3 +1,3 @@
 #!/bin/bash
 rm -rf ~/.cache/chromium
-DISPLAY=:0 chromium --start-fullscreen --enable-features=OverlayScrollbar --incognito --kiosk http://127.0.0.1:5000
+chromium --start-fullscreen --enable-features=OverlayScrollbar --incognito --kiosk --touch-events=enabled --ozone-platform=wayland http://127.0.0.1:5000
