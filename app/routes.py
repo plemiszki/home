@@ -31,7 +31,7 @@ if os.environ.get('FLASK_ENV') == 'production' and os.environ.get('TEMP_SENSOR_E
 
 @app.route('/api/indoor_temp', methods=['GET'])
 def api_indoor_temp():
-    temp_c, temp_f = read_temp() if os.environ.get('FLASK_ENV') == 'production' else ['TEMP_C', 'TEMP_F']
+    temp_c, temp_f = read_temp() if os.environ.get('FLASK_ENV') == 'production' and os.environ.get('TEMP_SENSOR_ENABLED') == 'true' else ['TEMP_C', 'TEMP_F']
     return { 'tempC': temp_c, 'tempF': temp_f }
 
 @app.route('/api/music/start_loop', methods=['GET'])
