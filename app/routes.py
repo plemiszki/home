@@ -111,6 +111,10 @@ def api_subway():
 
 # admin:
 
+@app.route('/admin/files')
+def files():
+    return render_template('admin/files.html')
+
 @app.route('/admin/debug')
 def debug():
     return render_template('admin/debug.html')
