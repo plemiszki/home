@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from "react";
+import { Spinner } from "handy-components";
 
 function Album({ album }) {
   return (
@@ -91,18 +92,20 @@ function Artist({ artist }) {
 
 function Files() {
   const [artists, setArtists] = useState([]);
+  const [spinner, setSpinner] = useState(true);
 
   useEffect(() => {
     fetch("/api/files")
       .then((res) => res.json())
-      .then((body) => setArtists(body.artists));
+      .then((body) => { setArtists(body.artists); setSpinner(false); });
   }, []);
 
   return (
     <div className="handy-component">
       <h1>Files</h1>
       <div className="white-box">
-        {artists.map((artist) => (
+        <Spinner visible={spinner} />
+        {!spinner && artists.map((artist) => (
           <Artist key={artist.name} artist={artist} />
         ))}
       </div>
