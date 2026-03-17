@@ -115,19 +115,6 @@ def api_subway():
 def debug():
     return render_template('admin/debug.html')
 
-@app.route('/api/debug')
-def api_debug():
-    track = redis_client.get('track')
-    album_id = redis_client.get('album_id')
-    processes = redis_client.smembers('processes')
-    mpv_pids = os.popen("pgrep mpv").read().strip()
-    return {
-        'track': track.decode('utf-8') if track else None,
-        'albumId': album_id.decode('utf-8') if album_id else None,
-        'processes': [p.decode('utf-8') for p in processes],
-        'mpvPids': mpv_pids or None,
-    }
-
 @app.route('/admin/albums')
 def albums_index():
     return render_template('admin/albums_index.html')
@@ -141,6 +128,19 @@ def album_details_redirect(album_id):
     return redirect(f'/admin/albums/{album_id}')
 
 # admin apis:
+
+@app.route('/api/debug')
+def api_debug():
+    track = redis_client.get('track')
+    album_id = redis_client.get('album_id')
+    processes = redis_client.smembers('processes')
+    mpv_pids = os.popen("pgrep mpv").read().strip()
+    return {
+        'track': track.decode('utf-8') if track else None,
+        'albumId': album_id.decode('utf-8') if album_id else None,
+        'processes': [p.decode('utf-8') for p in processes],
+        'mpvPids': mpv_pids or None,
+    }
 
 @app.route('/api/albums', methods=['GET', 'POST'])
 def api_albums_index():
