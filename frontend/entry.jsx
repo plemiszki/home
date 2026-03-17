@@ -13,6 +13,7 @@ import ReactModal from 'react-modal'
 import { FullIndex } from 'handy-components'
 import NewEntity from './components/new-entity'
 import AlbumDetails from './components/album-details'
+import Debug from './components/debug'
 
 window.addEventListener('DOMContentLoaded', () => {
 
@@ -93,6 +94,12 @@ window.addEventListener('DOMContentLoaded', () => {
   })
 
   window.Errors = {}
+
+  if (document.querySelector('#debug')) {
+    createRoot(document.querySelector('#debug')).render(
+      <Debug />
+    );
+  }
 
   if (document.querySelector('#albums-index')) {
     createRoot(document.querySelector('#albums-index')).render(
