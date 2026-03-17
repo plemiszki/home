@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { Spinner } from "handy-components";
+import { Button } from "handy-components";
 
 function Album({ album }) {
   return (
@@ -93,6 +94,7 @@ function Artist({ artist }) {
 function Files() {
   const [artists, setArtists] = useState([]);
   const [spinner, setSpinner] = useState(true);
+  const [adding, setAdding] = useState(false);
 
   useEffect(() => {
     fetch("/api/files")
@@ -100,9 +102,17 @@ function Files() {
       .then((body) => { setArtists(body.artists); setSpinner(false); });
   }, []);
 
+  function addMissingAlbums() {
+    setAdding(true);
+    fetch("/api/files/add_missing", { method: "POST" })
+      .then((res) => res.json())
+      .then((body) => { setArtists(body.artists); setAdding(false); });
+  }
+
   return (
     <div className="handy-component">
       <h1>Files</h1>
+      <Button text="Add Missing Albums" onClick={addMissingAlbums} disabled={adding} float />
       <div className="white-box">
         <Spinner visible={spinner} />
         {!spinner && artists.map((artist) => (

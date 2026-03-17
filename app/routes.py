@@ -134,6 +134,22 @@ def api_files():
         artists.append({ 'name': artist, 'albums': albums })
     return { 'artists': artists }
 
+@app.route('/api/files/add_missing', methods=['POST'])
+def api_files_add_missing():
+    music_directory = os.getenv('MUSIC_DIRECTORY')
+    for artist in os.listdir(music_directory):
+        artist_path = os.path.join(music_directory, artist)
+        if not os.path.isdir(artist_path):
+            continue
+        for album in os.listdir(artist_path):
+            album_path = os.path.join(artist_path, album)
+            if not os.path.isdir(album_path):
+                continue
+            if not Album.query.filter_by(artist_name=artist, name=album).first():
+                db.session.add(Album(artist_name=artist, name=album, order=0, category=1))
+    db.session.commit()
+    return api_files()
+
 @app.route('/admin/debug')
 def debug():
     return render_template('admin/debug.html')
