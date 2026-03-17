@@ -35,15 +35,13 @@ def api_indoor_temp():
     temp_c, temp_f = read_temp() if os.environ.get('FLASK_ENV') == 'production' and os.environ.get('TEMP_SENSOR_ENABLED') == 'true' else ['TEMP_C', 'TEMP_F']
     return { 'tempC': temp_c, 'tempF': temp_f }
 
-_music_loop_started = False
-
 @app.route('/api/music/start_loop', methods=['GET'])
 def start_loop():
-    global _music_loop_started
-    if not _music_loop_started:
-        _music_loop_started = True
+    active_loops = len(redis_client.keys('loop_heartbeat:*'))
+    if active_loops == 0:
         threading.Thread(target=check_music_status).start()
     return { 'message': 'OK' }
+
 
 @app.route('/api/music/now_playing', methods=['GET'])
 def api_now_playing():
@@ -179,11 +177,19 @@ def api_debug():
     album_id = redis_client.get('album_id')
     processes = redis_client.smembers('processes')
     mpv_pids = os.popen("pgrep mpv").read().strip()
+    loop_keys = redis_client.keys('loop_heartbeat:*')
+    active_loops = []
+    for key in loop_keys:
+        val = redis_client.get(key)
+        if val:
+            seconds_ago = round(time.time() - float(val.decode('utf-8')))
+            active_loops.append({ 'id': key.decode('utf-8').split(':')[1], 'secondsAgo': seconds_ago })
     return {
         'track': track.decode('utf-8') if track else None,
         'albumId': album_id.decode('utf-8') if album_id else None,
         'processes': [p.decode('utf-8') for p in processes],
         'mpvPids': mpv_pids or None,
+        'activeLoops': active_loops,
     }
 
 @app.route('/api/albums', methods=['GET', 'POST'])
@@ -251,8 +257,11 @@ def jarvis(path=None, path2=None):
 # helper methods:
 
 def check_music_status():
+    import uuid
+    loop_id = str(uuid.uuid4())[:8]
     with app.app_context():
       while True:
+        redis_client.setex(f'loop_heartbeat:{loop_id}', 5, time.time())
         print('check status...')
         track = int(redis_client.get('track').decode('utf-8'))
         if track == 0:
