@@ -79,6 +79,18 @@ source ~/.bashrc
 nvm install 24
 ```
 
+### Display resolution
+
+The correct resolution for the EVICIV 7" touchscreen is **1366x768**. Set it with:
+
+```bash
+DISPLAY=:0 xrandr -s 1366x768
+```
+
+### Audio output
+
+mpv uses `alsa/plughw:{card},0` for the headphone jack. The card number is determined dynamically at runtime by parsing `aplay -l` for `bcm2835 Headphones` (see `get_headphone_card()` in `app/routes.py`). The card number can change between reboots.
+
 ### Enable Redis on boot
 
 ```bash
