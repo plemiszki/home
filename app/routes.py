@@ -115,6 +115,24 @@ def api_subway():
 def files():
     return render_template('admin/files.html')
 
+@app.route('/api/files')
+def api_files():
+    music_directory = os.getenv('MUSIC_DIRECTORY')
+    artists = []
+    for artist in sorted(os.listdir(music_directory)):
+        artist_path = os.path.join(music_directory, artist)
+        if not os.path.isdir(artist_path):
+            continue
+        albums = []
+        for album in sorted(os.listdir(artist_path)):
+            album_path = os.path.join(artist_path, album)
+            if not os.path.isdir(album_path):
+                continue
+            files = sorted(os.listdir(album_path))
+            albums.append({ 'name': album, 'files': files })
+        artists.append({ 'name': artist, 'albums': albums })
+    return { 'artists': artists }
+
 @app.route('/admin/debug')
 def debug():
     return render_template('admin/debug.html')
