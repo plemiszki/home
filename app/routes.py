@@ -35,9 +35,14 @@ def api_indoor_temp():
     temp_c, temp_f = read_temp() if os.environ.get('FLASK_ENV') == 'production' and os.environ.get('TEMP_SENSOR_ENABLED') == 'true' else ['TEMP_C', 'TEMP_F']
     return { 'tempC': temp_c, 'tempF': temp_f }
 
+_music_loop_started = False
+
 @app.route('/api/music/start_loop', methods=['GET'])
 def start_loop():
-    threading.Thread(target=check_music_status).start()
+    global _music_loop_started
+    if not _music_loop_started:
+        _music_loop_started = True
+        threading.Thread(target=check_music_status).start()
     return { 'message': 'OK' }
 
 @app.route('/api/music/now_playing', methods=['GET'])
