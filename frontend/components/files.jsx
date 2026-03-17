@@ -31,10 +31,15 @@ function Album({ album }) {
 }
 
 function Artist({ artist }) {
+  const [expanded, setExpanded] = useState(false)
+
   return (
     <div className="artist">
-      <p className="artist-name">{artist.name}</p>
-      {artist.albums.map((album) => (
+      <p className="artist-name" onClick={() => setExpanded(!expanded)}>
+        <span className="arrow">{expanded ? '▼' : '▶'}</span>
+        {artist.name}
+      </p>
+      {expanded && artist.albums.map((album) => (
         <Album key={album.name} album={album} />
       ))}
       <style jsx>{`
@@ -48,6 +53,12 @@ function Artist({ artist }) {
           margin-bottom: 10px;
           border-bottom: solid 1px #e0e0e0;
           padding-bottom: 5px;
+          cursor: pointer;
+          user-select: none;
+        }
+        .arrow {
+          margin-right: 8px;
+          font-size: 12px;
         }
       `}</style>
     </div>
