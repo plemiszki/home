@@ -4,4 +4,4 @@ DISPLAY=:0 xset s off
 DISPLAY=:0 xset -dpms
 DISPLAY=:0 xset s noblank
 DISPLAY=:0 unclutter-xfixes --hide-on-touch &
-DISPLAY=:0 chromium --start-fullscreen --enable-features=OverlayScrollbar --incognito --kiosk --touch-events=enabled --password-store=basic --enable-gpu-vsync http://127.0.0.1:5000
+DISPLAY=:0 chromium --start-fullscreen --enable-features=OverlayScrollbar --incognito --kiosk --touch-events=enabled --password-store=basic --disable-gpu http://127.0.0.1:5000
