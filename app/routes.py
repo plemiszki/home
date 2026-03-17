@@ -129,7 +129,8 @@ def api_files():
             if not os.path.isdir(album_path):
                 continue
             files = sorted(os.listdir(album_path))
-            albums.append({ 'name': album, 'files': files })
+            record = Album.query.filter_by(artist_name=artist, name=album).first()
+            albums.append({ 'name': album, 'files': files, 'recordExists': record is not None, 'albumId': record.id if record else None })
         artists.append({ 'name': artist, 'albums': albums })
     return { 'artists': artists }
 
