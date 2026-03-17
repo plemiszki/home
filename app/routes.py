@@ -61,8 +61,15 @@ def api_albums(category):
     result['albums'] = album_dicts
     return result
 
+def get_headphone_card():
+    for line in os.popen("aplay -l").readlines():
+        if 'bcm2835 Headphones' in line:
+            return line.split(':')[0].replace('card ', '').strip()
+    return '0'
+
 def play_song(filepath):
-    proc = Popen(['mpv', '--no-audio-display', '--audio-device=alsa/plughw:1,0', filepath], stdin=subprocess.DEVNULL)
+    card = get_headphone_card()
+    proc = Popen(['mpv', '--no-audio-display', f'--audio-device=alsa/plughw:{card},0', filepath], stdin=subprocess.DEVNULL)
     redis_client.sadd('processes', proc.pid)
     threading.Thread(target=proc.wait, daemon=True).start()
 
