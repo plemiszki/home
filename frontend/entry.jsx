@@ -7,7 +7,6 @@ import Tabs from './components/tabs'
 import AlbumList from './components/album-list'
 import NowPlaying from './components/now-playing'
 import Subway from './components/subway'
-import WakeButton from './components/wake-button'
 
 import ReactModal from 'react-modal'
 import { FullIndex } from 'handy-components'
@@ -24,9 +23,6 @@ window.addEventListener('DOMContentLoaded', () => {
   // PUBLIC:
 
   if (document.querySelector('#app')) {
-    createRoot(document.querySelector('#wake-button')).render(
-      <WakeButton />
-    );
     createRoot(document.querySelector('#app')).render(
       <Router>
         <Routes>
