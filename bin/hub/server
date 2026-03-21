@@ -1,2 +1,8 @@
 #!/bin/bash
+
+# explicitly initialize pyenv (cron environment won't use .bashrc)
+export PYENV_ROOT="$HOME/.pyenv"
+export PATH="$PYENV_ROOT/bin:$PATH"
+eval "$(pyenv init -)"
+
 cd "$(dirname "$0")/../.." && python3 -m flask --app app run --host 0.0.0.0
