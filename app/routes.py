@@ -72,7 +72,7 @@ def get_headphone_card():
 
 def play_song(filepath):
     card = get_headphone_card()
-    proc = Popen(['mpv', '--no-audio-display', f'--audio-device=alsa/plughw:{card},0', filepath], stdin=subprocess.DEVNULL)
+    proc = Popen(['mpv', '--no-audio-display', '--volume=100', f'--audio-device=alsa/plughw:{card},0', filepath], stdin=subprocess.DEVNULL)
     redis_client.sadd('processes', proc.pid)
     threading.Thread(target=proc.wait, daemon=True).start()
 
