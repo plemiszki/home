@@ -72,7 +72,9 @@ def get_headphone_card():
 
 def play_song(filepath):
     card = get_headphone_card()
-    proc = Popen(['mpv', '--no-audio-display', '--volume=100', f'--audio-device=alsa/plughw:{card},0', filepath], stdin=subprocess.DEVNULL)
+    volume_raw = redis_client.get('volume')
+    volume = int(volume_raw.decode('utf-8')) if volume_raw else 100
+    proc = Popen(['mpv', '--no-audio-display', f'--volume={volume}', f'--audio-device=alsa/plughw:{card},0', filepath], stdin=subprocess.DEVNULL)
     redis_client.sadd('processes', proc.pid)
     threading.Thread(target=proc.wait, daemon=True).start()
 
@@ -184,13 +186,23 @@ def api_debug():
         if val:
             seconds_ago = round(time.time() - float(val.decode('utf-8')))
             active_loops.append({ 'id': key.decode('utf-8').split(':')[1], 'secondsAgo': seconds_ago })
+    volume_raw = redis_client.get('volume')
+    volume = int(volume_raw.decode('utf-8')) if volume_raw else 100
     return {
         'track': track.decode('utf-8') if track else None,
         'albumId': album_id.decode('utf-8') if album_id else None,
         'processes': [p.decode('utf-8') for p in processes],
         'mpvPids': mpv_pids or None,
         'activeLoops': active_loops,
+        'volume': volume,
     }
+
+@app.route('/api/debug/volume', methods=['POST'])
+def api_set_volume():
+    body = request.get_json()
+    volume = int(body['volume'])
+    redis_client.set('volume', volume)
+    return { 'volume': volume }
 
 @app.route('/api/albums', methods=['GET', 'POST'])
 def api_albums_index():
