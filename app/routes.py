@@ -294,8 +294,9 @@ def check_music_status():
             end_of_album = track > len(filenames)
             if end_of_album:
                 albums = Album.query.filter(Album.id != album_id, Album.category == album.category).all()
-                album = random.choice(albums)
-                filenames = os.listdir(f"{music_directory}/{album.artist_name}/{album.name}")
+                if albums:
+                    album = random.choice(albums)
+                    filenames = os.listdir(f"{music_directory}/{album.artist_name}/{album.name}")
                 track = 1
             filenames.sort()
             next_song_file = filenames[track - 1]
